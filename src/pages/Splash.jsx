@@ -5,7 +5,8 @@ export default function Splash() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const t = setTimeout(() => navigate("/home", { replace: true }), 2000);
+    // 2 second baad direct login page pr bhej dega
+    const t = setTimeout(() => navigate("/login", { replace: true }), 2000);
     return () => clearTimeout(t);
   }, [navigate]);
 
@@ -22,9 +23,8 @@ export default function Splash() {
         }
       `}</style>
 
-      {/* wall + diagonal window-light streaks */}
+      {/* Background Light Effects */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        {/* diagonal light/shadow bands (rise left -> right like the reference) */}
         <div
           className="absolute -left-[60%] -top-[60%] h-[220%] w-[220%] -rotate-[24deg] blur-2xl"
           style={{
@@ -32,7 +32,6 @@ export default function Splash() {
               "linear-gradient(to bottom, #e3d4cd 0%, #f2e2d6 6%, #fff8f1 11%, #f6e2cf 16%, #efdcd3 21%, #fffaf4 27%, #f8e6d4 33%, #fffdf9 39%, #f3e3da 45%, #fff9f3 51%, #f5e1d0 56%, #fffcf8 62%, #efdfd8 68%, #fbf0e7 74%, #f4e3da 80%, #fffaf6 86%, #eadbd5 93%, #e2d4d0 100%)",
           }}
         />
-        {/* warm glow top-right */}
         <div
           className="absolute inset-0"
           style={{
@@ -40,7 +39,6 @@ export default function Splash() {
               "radial-gradient(60% 28% at 75% 4%, rgba(250,225,198,0.85), transparent 70%), radial-gradient(55% 25% at 10% 0%, rgba(222,206,200,0.8), transparent 70%)",
           }}
         />
-        {/* soft pink-grey corners at the bottom */}
         <div
           className="absolute inset-0"
           style={{
@@ -48,7 +46,6 @@ export default function Splash() {
               "radial-gradient(60% 22% at 0% 100%, rgba(226,210,206,0.9), transparent 70%), radial-gradient(60% 22% at 100% 100%, rgba(228,212,208,0.85), transparent 70%)",
           }}
         />
-        {/* bright centre so the logo pops */}
         <div
           className="absolute inset-0"
           style={{
@@ -58,7 +55,7 @@ export default function Splash() {
         />
       </div>
 
-      {/* logo */}
+      {/* Logo & Tagline */}
       <div className="relative w-[88vw] max-w-[440px]">
         <svg
           viewBox="100 390 850 700"
@@ -90,21 +87,18 @@ export default function Splash() {
             </linearGradient>
           </defs>
 
-          {/* circle arcs */}
           <g fill="none" stroke="url(#greenArc)" strokeWidth="14">
             <path d="M 305 548 A 250 250 0 0 1 735 568" strokeLinecap="round" />
             <path d="M 342 795 A 250 250 0 0 0 435 880" strokeLinecap="butt" />
             <path d="M 722 768 A 250 250 0 0 1 620 865" strokeLinecap="butt" />
           </g>
 
-          {/* person */}
           <circle cx="517" cy="486" r="47" fill="url(#green)" />
           <path
             d="M 386 504 Q 384 494 398 497 L 517 565 L 636 497 Q 650 494 648 504 L 575 600 Q 565 640 575 680 L 600 800 L 540 800 L 517 735 L 495 800 L 435 800 L 462 680 Q 470 640 458 600 Z"
             fill="url(#green)"
           />
 
-          {/* leaves under person */}
           <path
             d="M 405 795 Q 500 790 518 905 Q 430 892 405 795 Z"
             fill="url(#leaf)"
@@ -124,7 +118,6 @@ export default function Splash() {
             <path d="M 620 803 Q 568 840 528 895" />
           </g>
 
-          {/* glucometer */}
           <rect
             x="298"
             y="762"
@@ -152,7 +145,6 @@ export default function Splash() {
             <circle cx="355" cy="725" r="12" />
           </g>
 
-          {/* dumbbell */}
           <g fill="url(#blueDumb)">
             <rect x="597" y="597" width="98" height="168" rx="49" />
             <rect x="722" y="597" width="98" height="168" rx="49" />
@@ -165,7 +157,6 @@ export default function Splash() {
             <path d="M 780 636 Q 800 680 780 726" opacity="0.8" />
           </g>
 
-          {/* small leaf by wordmark */}
           <path
             d="M 262 950 Q 252 888 337 872 Q 337 938 262 950 Z"
             fill="url(#leaf)"
@@ -178,7 +169,6 @@ export default function Splash() {
             strokeLinecap="round"
           />
 
-          {/* wordmark */}
           <text
             x="113"
             y="1068"
@@ -195,7 +185,6 @@ export default function Splash() {
           </text>
         </svg>
 
-        {/* tagline: words appear one by one, finishes within ~2s */}
         <div className="mt-1 flex items-center justify-center gap-3 px-1">
           <span
             className="dm-line h-[3px] w-[8%] shrink-0 origin-right rounded-full bg-[#1a8a1f]"

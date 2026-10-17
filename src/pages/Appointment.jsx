@@ -3,16 +3,14 @@ import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
   HelpCircle,
-  X,
-  Check,
-  User,
-  Phone,
   Calendar as CalendarIcon,
   ChevronLeft,
   ChevronRight,
   Search,
-  Clock,
 } from "lucide-react";
+
+// Naya Reusable Modal import kiya
+import PatientModal from "../components/PatientModal";
 
 /* ============ DOCTORS DATA ============ */
 const doctors = [
@@ -72,7 +70,7 @@ const doctors = [
   },
 ];
 
-/* ============ DATES GENERATOR (next 30 days) ============ */
+/* ============ DATES GENERATOR ============ */
 const generateDates = () => {
   const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const monthNames = [
@@ -123,7 +121,6 @@ const slots = [
   "04:00 PM",
 ];
 
-/* ============ SPECIALTY CHIPS ============ */
 const specialties = [
   "All",
   "Endocrine",
@@ -155,7 +152,6 @@ export default function Appointment() {
     setCurrentWeek(next);
   };
 
-  // Filter doctors
   const filteredDoctors = doctors.filter((d) => {
     const matchSearch =
       d.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -169,7 +165,7 @@ export default function Appointment() {
   return (
     <div className="min-h-screen bg-[#faf8ff] flex justify-center">
       <div className="w-full max-w-md bg-[#faf8ff] min-h-screen flex flex-col relative">
-        {/* ============ TOP BAR ============ */}
+        {/* TOP BAR */}
         <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-gray-100">
           <div className="h-14 px-4 flex items-center justify-between">
             <button
@@ -194,10 +190,9 @@ export default function Appointment() {
           </div>
         </header>
 
-        {/* ============ MAIN ============ */}
+        {/* MAIN */}
         <main className="flex-1 pb-8 overflow-y-auto">
           {selectedDoctor ? (
-            /* ===== SELECTED DOCTOR VIEW ===== */
             <div className="px-4 pt-4">
               <div className="bg-white rounded-3xl border border-[#eaedff] shadow-[0_4px_20px_rgba(15,23,42,0.06)] p-5 flex flex-col items-center text-center mb-5">
                 <div
@@ -248,7 +243,6 @@ export default function Appointment() {
                 ))}
               </div>
 
-              {/* Date section */}
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-[13px] font-bold text-gray-900">
                   Select Date
@@ -282,11 +276,7 @@ export default function Appointment() {
                     <button
                       key={absIndex}
                       onClick={() => setSelectedDate(absIndex)}
-                      className={`flex-shrink-0 w-[58px] py-2.5 rounded-xl flex flex-col items-center gap-0.5 snap-start transition ${
-                        isSelected
-                          ? "bg-[#005c55] text-white shadow-lg shadow-[#005c55]/25"
-                          : "bg-white border border-[#eaedff] text-gray-700 hover:border-[#005c55]/30"
-                      }`}
+                      className={`flex-shrink-0 w-[58px] py-2.5 rounded-xl flex flex-col items-center gap-0.5 snap-start transition ${isSelected ? "bg-[#005c55] text-white shadow-lg shadow-[#005c55]/25" : "bg-white border border-[#eaedff] text-gray-700 hover:border-[#005c55]/30"}`}
                     >
                       <span className="text-[10px] font-semibold opacity-80">
                         {d.day}
@@ -313,11 +303,7 @@ export default function Appointment() {
                   <button
                     key={s}
                     onClick={() => setSelectedSlot(s)}
-                    className={`py-2.5 rounded-xl text-[11px] font-bold transition ${
-                      selectedSlot === s
-                        ? "bg-[#005c55] text-white shadow-md shadow-[#005c55]/25"
-                        : "bg-white border border-[#eaedff] text-gray-700 hover:border-[#005c55]/30"
-                    }`}
+                    className={`py-2.5 rounded-xl text-[11px] font-bold transition ${selectedSlot === s ? "bg-[#005c55] text-white shadow-md shadow-[#005c55]/25" : "bg-white border border-[#eaedff] text-gray-700 hover:border-[#005c55]/30"}`}
                   >
                     {s}
                   </button>
@@ -335,9 +321,7 @@ export default function Appointment() {
               </button>
             </div>
           ) : (
-            /* ===== DOCTOR LIST VIEW ===== */
             <div className="px-4 pt-5">
-              {/* Heading */}
               <h2 className="text-[20px] font-bold text-gray-900 mb-1">
                 Our Doctors
               </h2>
@@ -345,7 +329,6 @@ export default function Appointment() {
                 Choose a specialist to book
               </p>
 
-              {/* Search bar */}
               <div className="flex items-center gap-2 px-3.5 py-3 rounded-2xl bg-white border border-[#eaedff] shadow-[0_2px_8px_rgba(15,23,42,0.04)] mb-3">
                 <Search size={16} className="text-gray-400 flex-shrink-0" />
                 <input
@@ -356,24 +339,18 @@ export default function Appointment() {
                 />
               </div>
 
-              {/* Specialty chips */}
               <div className="flex gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4 pb-3 mb-3">
                 {specialties.map((s) => (
                   <button
                     key={s}
                     onClick={() => setActiveChip(s)}
-                    className={`flex-shrink-0 px-3 py-1.5 rounded-full text-[11px] font-semibold transition ${
-                      activeChip === s
-                        ? "bg-[#005c55] text-white shadow-md shadow-[#005c55]/25"
-                        : "bg-white border border-[#eaedff] text-gray-600 hover:border-[#005c55]/30"
-                    }`}
+                    className={`flex-shrink-0 px-3 py-1.5 rounded-full text-[11px] font-semibold transition ${activeChip === s ? "bg-[#005c55] text-white shadow-md shadow-[#005c55]/25" : "bg-white border border-[#eaedff] text-gray-600 hover:border-[#005c55]/30"}`}
                   >
                     {s}
                   </button>
                 ))}
               </div>
 
-              {/* Circle grid */}
               {filteredDoctors.length === 0 ? (
                 <div className="bg-white rounded-2xl border border-[#eaedff] p-6 text-center mb-6">
                   <p className="text-[13px] font-semibold text-gray-700">
@@ -398,15 +375,11 @@ export default function Appointment() {
                     >
                       <div
                         className="w-20 h-20 rounded-full flex items-center justify-center shadow-[0_4px_14px_rgba(15,23,42,0.08)] border-2 border-white relative"
-                        style={{
-                          backgroundColor: d.color,
-                          color: d.colorDark,
-                        }}
+                        style={{ backgroundColor: d.color, color: d.colorDark }}
                       >
                         <span className="text-[22px] font-black">
                           {d.initials}
                         </span>
-                        {/* Online dot */}
                         <span className="absolute bottom-1 right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></span>
                       </div>
                       <div className="text-center">
@@ -428,166 +401,18 @@ export default function Appointment() {
           )}
         </main>
 
-        {/* ============ BOOKING MODAL ============ */}
+        {/* REUSABLE MODAL */}
         {showModal && (
-          <BookingModal
-            doctor={selectedDoctor}
-            date={allDates[selectedDate]}
-            slot={selectedSlot}
+          <PatientModal
+            title="Patient Details"
+            subtitle={`${selectedDoctor.name} · ${allDates[selectedDate].full} · ${selectedSlot}`}
+            confirmText="Confirm Booking"
             onClose={() => setShowModal(false)}
+            onConfirm={(data) => {
+              console.log("Booked data:", data);
+              // Yaha API call ya navigation kar sakte ho
+            }}
           />
-        )}
-      </div>
-    </div>
-  );
-}
-
-/* ============ BOOKING MODAL ============ */
-function BookingModal({ doctor, date, slot, onClose }) {
-  const [form, setForm] = useState({
-    name: "",
-    age: "",
-    phone: "",
-    sex: "male",
-  });
-  const [booked, setBooked] = useState(false);
-
-  const update = (k, v) => setForm({ ...form, [k]: v });
-
-  const canBook = form.name.trim() && form.age && form.phone.trim() && form.sex;
-
-  const handleBook = () => {
-    setBooked(true);
-    setTimeout(() => {
-      onClose();
-    }, 2000);
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center">
-      <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-        onClick={booked ? undefined : onClose}
-      ></div>
-
-      <div
-        className="relative w-full max-w-md bg-white rounded-t-3xl p-5 max-h-[90vh] overflow-y-auto"
-        style={{ animation: "slideUp 0.3s ease" }}
-      >
-        {booked ? (
-          <div className="py-10 flex flex-col items-center text-center">
-            <div className="w-16 h-16 rounded-full bg-[#9cf2e8] flex items-center justify-center mb-3">
-              <Check size={32} className="text-[#005c55]" strokeWidth={3} />
-            </div>
-            <h3 className="text-[18px] font-bold text-gray-900">
-              Appointment Confirmed!
-            </h3>
-            <p className="text-[12px] text-gray-500 mt-1">
-              {doctor.name} · {date.full} · {slot}
-            </p>
-          </div>
-        ) : (
-          <>
-            <div className="flex items-start justify-between mb-4">
-              <div>
-                <h3 className="text-[16px] font-bold text-gray-900">
-                  Patient Details
-                </h3>
-                <p className="text-[11px] text-gray-500 mt-0.5">
-                  {doctor.name} · {date.full} · {slot}
-                </p>
-              </div>
-              <button
-                onClick={onClose}
-                className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 active:scale-95"
-              >
-                <X size={16} />
-              </button>
-            </div>
-
-            <div className="space-y-3.5">
-              <div>
-                <label className="text-[11px] font-semibold text-gray-700">
-                  Full Name
-                </label>
-                <div className="mt-1 flex items-center gap-2 px-3 py-3 rounded-xl border border-[#eaedff] bg-[#f4f5fb] focus-within:bg-white focus-within:border-[#005c55] transition">
-                  <User size={16} className="text-gray-400 flex-shrink-0" />
-                  <input
-                    value={form.name}
-                    onChange={(e) => update("name", e.target.value)}
-                    placeholder="e.g. Rahul Gupta"
-                    className="flex-1 bg-transparent outline-none text-[13px] text-gray-800 placeholder-gray-400"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-[1fr_1.6fr] gap-3">
-                <div>
-                  <label className="text-[11px] font-semibold text-gray-700">
-                    Age
-                  </label>
-                  <input
-                    type="number"
-                    value={form.age}
-                    onChange={(e) => update("age", e.target.value)}
-                    placeholder="32"
-                    className="mt-1 w-full px-3 py-3 rounded-xl border border-[#eaedff] bg-[#f4f5fb] focus:bg-white focus:border-[#005c55] outline-none text-[13px] text-gray-800 placeholder-gray-400 transition"
-                  />
-                </div>
-                <div>
-                  <label className="text-[11px] font-semibold text-gray-700">
-                    Sex
-                  </label>
-                  <div className="mt-1 bg-[#eef1f8] rounded-xl p-1 flex gap-1">
-                    {["male", "female", "other"].map((g) => (
-                      <button
-                        key={g}
-                        type="button"
-                        onClick={() => update("sex", g)}
-                        className={`flex-1 py-2 rounded-lg text-[11px] font-semibold capitalize transition ${
-                          form.sex === g
-                            ? "bg-white text-[#005c55] shadow-sm"
-                            : "text-gray-500"
-                        }`}
-                      >
-                        {g}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <label className="text-[11px] font-semibold text-gray-700">
-                  Mobile Number
-                </label>
-                <div className="mt-1 flex items-center gap-2 px-3 py-3 rounded-xl border border-[#eaedff] bg-[#f4f5fb] focus-within:bg-white focus-within:border-[#005c55] transition">
-                  <Phone size={16} className="text-gray-400 flex-shrink-0" />
-                  <span className="text-[13px] font-medium text-gray-700">
-                    +91
-                  </span>
-                  <input
-                    type="tel"
-                    value={form.phone}
-                    onChange={(e) =>
-                      update("phone", e.target.value.replace(/\D/g, ""))
-                    }
-                    placeholder="98765 43210"
-                    maxLength={10}
-                    className="flex-1 bg-transparent outline-none text-[13px] text-gray-800 placeholder-gray-400"
-                  />
-                </div>
-              </div>
-
-              <button
-                onClick={handleBook}
-                disabled={!canBook}
-                className="w-full bg-[#005c55] text-white font-bold py-3.5 rounded-xl disabled:opacity-40 active:scale-[0.98] transition mt-2 shadow-lg shadow-[#005c55]/25"
-              >
-                Confirm Booking
-              </button>
-            </div>
-          </>
         )}
       </div>
     </div>

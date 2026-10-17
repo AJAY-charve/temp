@@ -9,9 +9,11 @@ import {
   Smartphone,
 } from "lucide-react";
 import logo from "../assets/daibmetalogo.jpeg";
+import PatientModal from "../components/PatientModal"; // Modal Import
 
 export default function Login() {
   const [agree, setAgree] = useState(false);
+  const [showModal, setShowModal] = useState(false); // Modal State
   const navigate = useNavigate();
 
   return (
@@ -32,44 +34,32 @@ export default function Login() {
 
         {/* BODY */}
         <div className="flex-1 px-5 pt-4 pb-8 overflow-y-auto">
-          {/* Logo (no settings icon) */}
           <div className="flex justify-center mb-1">
             <LogoBlock />
           </div>
 
-          {/* Register link */}
-          <div className="flex justify-end mt-2 mb-3">
-            <button
-              onClick={() => navigate("/register")}
-              className="inline-flex items-center gap-1 text-blue-600 text-[13px] font-semibold hover:text-blue-700 transition"
-            >
-              <span className="underline underline-offset-2 decoration-blue-600">
-                Register
-              </span>
-              <ArrowRight size={14} />
-            </button>
-          </div>
-
-          {/* Heading */}
           <div className="text-center mb-5 mt-5">
             <h2 className="text-[19px] font-bold text-gray-900">
               Welcome Back
             </h2>
           </div>
 
-          {/* Login Card */}
           <div className="bg-white rounded-2xl p-4 shadow-[0_1px_3px_rgba(0,0,0,0.04)] border border-gray-100">
-            <PatientForm agree={agree} setAgree={setAgree} />
+            {/* Modal open karne ka function pass kiya */}
+            <PatientForm
+              agree={agree}
+              setAgree={setAgree}
+              onVerify={() => setShowModal(true)}
+            />
           </div>
 
-          {/* Secure badge */}
           <p className="text-center text-[11px] text-gray-500 mt-4 flex items-center justify-center gap-1">
             <ShieldCheck size={13} className="text-[#0d6b63]" />
             Secure & Confidential Medical Portal
           </p>
         </div>
 
-        {/* FAKE SYSTEM NAV (UI demo only) */}
+        {/* FAKE SYSTEM NAV */}
         <div className="bg-white border-t border-gray-100 py-3 flex items-center justify-around">
           <div className="flex flex-col gap-[3px] items-center">
             <div className="w-4 h-[1.5px] bg-gray-500 rounded-full"></div>
@@ -79,12 +69,25 @@ export default function Login() {
           <div className="w-4 h-4 rounded-full border-[1.5px] border-gray-500"></div>
           <div className="w-2 h-2 border-l-[1.5px] border-b-[1.5px] border-gray-500 rotate-45"></div>
         </div>
+
+        {/* PATIENT MODAL */}
+        {showModal && (
+          <PatientModal
+            title="Patient Details"
+            subtitle="Please fill your details to continue"
+            confirmText="Submit"
+            onClose={() => setShowModal(false)}
+            onConfirm={(data) => {
+              console.log("Patient Data:", data);
+              navigate("/home", { replace: true });
+            }}
+          />
+        )}
       </div>
     </div>
   );
 }
 
-/* ==================== LOGO ==================== */
 function LogoBlock() {
   return (
     <div className="flex flex-col items-center">
@@ -93,8 +96,7 @@ function LogoBlock() {
   );
 }
 
-/* ==================== PATIENT FORM ==================== */
-function PatientForm({ agree, setAgree }) {
+function PatientForm({ agree, setAgree, onVerify }) {
   const navigate = useNavigate();
   const [mobile, setMobile] = useState("");
   const [codeSent, setCodeSent] = useState(false);
@@ -155,14 +157,14 @@ function PatientForm({ agree, setAgree }) {
         />
       </div>
 
-      {/* Send Code */}
+      {/* Get OTP */}
       {!codeSent && (
         <button
           onClick={sendCode}
           disabled={mobile.length < 10}
           className="w-full bg-[#0d6b63] hover:bg-[#0a564f] disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.99] text-white text-[13px] font-semibold py-3 rounded-xl transition"
         >
-          Send Code
+          Get OTP
         </button>
       )}
 
@@ -174,7 +176,7 @@ function PatientForm({ agree, setAgree }) {
               Enter OTP / Verification Code
             </label>
             <span className="text-[11px] text-[#0d6b63] font-medium">
-              Code sent
+              OTP sent
             </span>
           </div>
 
@@ -192,12 +194,11 @@ function PatientForm({ agree, setAgree }) {
             ))}
           </div>
 
-          {/* Timer / Resend */}
           <div className="flex justify-between items-center text-[11px] mb-3">
-            <span className="text-gray-500">Didn't receive code?</span>
+            <span className="text-gray-500">Didn't receive OTP?</span>
             {timer > 0 ? (
               <span className="text-gray-400 font-medium">
-                Resend code in {formatTime(timer)}
+                Resend OTP in {formatTime(timer)}
               </span>
             ) : (
               <button
@@ -205,12 +206,11 @@ function PatientForm({ agree, setAgree }) {
                 className="text-[#0d6b63] font-semibold hover:underline flex items-center gap-1"
               >
                 <RotateCw size={12} />
-                Resend Code
+                Resend OTP
               </button>
             )}
           </div>
 
-          {/* Terms */}
           <label className="flex items-start gap-2 mb-4 cursor-pointer">
             <input
               type="checkbox"
@@ -230,9 +230,9 @@ function PatientForm({ agree, setAgree }) {
             </span>
           </label>
 
-          {/* Verify */}
+          {/* Verify - Opens Modal */}
           <button
-            onClick={() => navigate("/splash")}
+            onClick={onVerify}
             disabled={!agree || otp.some((d) => !d)}
             className="w-full bg-[#0d6b63] hover:bg-[#0a564f] disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.99] text-white text-[14px] font-semibold py-3.5 rounded-xl transition flex items-center justify-center gap-2"
           >

@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import {
   UserPlus,
   Bell,
-  CircleUserRound,
   Stethoscope,
   Activity,
   BookOpen,
@@ -27,6 +26,7 @@ import {
   Headset,
   Check,
   Users,
+  Smartphone,
 } from "lucide-react";
 
 // ============ LOGO ============
@@ -47,6 +47,8 @@ import scanFoodImg from "../assets/cards/scan-food.jpeg";
 import caloriesImg from "../assets/cards/calories.jpeg";
 import recordsImg from "../assets/cards/records.png";
 import periodImg from "../assets/cards/period.jpeg";
+import supplementsImg from "../assets/cards/supplements.png";
+import devicesImg from "../assets/cards/devices.png";
 
 import Sidebar from "../components/Sidebar";
 
@@ -62,12 +64,10 @@ export default function Home() {
   const [bannerIndex, setBannerIndex] = useState(0);
   const scrollRef = useRef(null);
 
-  // Auto slide banner
   useEffect(() => {
     const timer = setInterval(() => {
       let nextIndex = bannerIndex + 1;
       if (nextIndex >= BANNERS.length) nextIndex = 0;
-
       setBannerIndex(nextIndex);
       if (scrollRef.current) {
         scrollRef.current.scrollTo({
@@ -75,19 +75,15 @@ export default function Home() {
           behavior: "smooth",
         });
       }
-    }, 3000); // 3 seconds
-
+    }, 3000);
     return () => clearInterval(timer);
   }, [bannerIndex]);
 
-  // Handle manual scroll
   const handleBannerScroll = (e) => {
     const scrollLeft = e.target.scrollLeft;
     const width = e.target.offsetWidth;
     const newIndex = Math.round(scrollLeft / width);
-    if (newIndex !== bannerIndex) {
-      setBannerIndex(newIndex);
-    }
+    if (newIndex !== bannerIndex) setBannerIndex(newIndex);
   };
 
   const familyMembers = [
@@ -97,21 +93,23 @@ export default function Home() {
     { name: "Sunita", relation: "Mother" },
   ];
 
+  // Mini Cards (Heading Only)
   const row1 = [
-    { image: bmiImg, title: "BMI", subtitle: "Check BMI", path: "/bmi" },
-    { image: diabetesImg, title: "Diabetes", subtitle: "Risk check" },
-    { image: sugarImg, title: "Sugar", subtitle: "Log sugar" },
-    { image: diseaseImg, title: "Disease", subtitle: "Care guide" },
+    { image: bmiImg, title: "BMI", path: "/bmi" },
+    { image: diabetesImg, title: "Diabetes" },
+    { image: sugarImg, title: "Sugar" },
+    { image: diseaseImg, title: "Disease" },
   ];
 
   const row2 = [
-    { image: reminderImg, title: "Reminder", subtitle: "Medicine" },
-    { image: scanFoodImg, title: "Scan Food", subtitle: "AI meal scan" },
-    { image: caloriesImg, title: "Calories", subtitle: "Track food" },
-    { image: recordsImg, title: "Records", subtitle: "Cloud locker" },
-    { image: periodImg, title: "Period", subtitle: "Cycle log" },
+    { image: reminderImg, title: "Reminder" },
+    { image: scanFoodImg, title: "Scan Food" },
+    { image: caloriesImg, title: "Calories" },
+    { image: recordsImg, title: "Records" },
+    { image: periodImg, title: "Period" },
   ];
 
+  // Main Diagnostics
   const diagnostics = [
     {
       image: bmiImg,
@@ -131,24 +129,27 @@ export default function Home() {
       desc: "Radiology partner slots",
       path: "/diagnostic/xray",
     },
+  ];
+
+  // Store Services (Navigate to /store)
+  const storeServices = [
     {
-      image: bmiImg,
+      image: supplementsImg,
       title: "Supplements",
       desc: "Vitamins & metabolic aids",
-      path: "/diagnostic/supplements",
+      path: "/store",
     },
     {
-      image: bmiImg,
+      image: devicesImg,
       title: "Medical Devices",
       desc: "CGM, strips & BP meters",
-      path: "/diagnostic/devices",
+      path: "/store",
     },
   ];
 
   return (
     <div className="min-h-screen bg-[#faf8ff] flex justify-center">
       <div className="w-full max-w-md bg-[#faf8ff] min-h-screen flex flex-col relative">
-        {/* COMMON SIDEBAR */}
         <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
         {/* HEADER */}
@@ -157,12 +158,12 @@ export default function Home() {
             <div className="flex items-center gap-1.5 min-w-0">
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="w-9 h-9 flex items-center justify-center rounded-full bg-[#9cf2e8]/60 text-[#005c55] active:scale-95 flex-shrink-0"
+                className="w-9 h-9 rounded-full bg-[#9cf2e8]/60 text-[#005c55] flex items-center justify-center text-[11px] font-bold active:scale-95 flex-shrink-0"
               >
-                <CircleUserRound size={18} />
+                {activeMember.substring(0, 2).toUpperCase()}
               </button>
 
-              <button className="inline-flex items-center gap-1 bg-[#9cf2e8]/60 text-[#005c55] px-2.5 py-1.5 rounded-full text-[11px] font-semibold active:scale-95 flex-shrink-0 whitespace-nowrap">
+              <button className="inline-flex items-center gap-1 bg-[#9cf2e8]/60 text-[#005c55] px-2.5 py-1.5 rounded-full text-[11px] font-semibold active:scale-95 flex-shrink-0 whitespace-nowrap ml-1">
                 <UserPlus size={13} />
                 <span>Add Member</span>
               </button>
@@ -188,22 +189,19 @@ export default function Home() {
 
         {/* MAIN */}
         <main className="flex-1 pb-24">
-          {/* Greeting + Family dropdown */}
+          {/* Greeting + Family dropdown (Inline) */}
           <section className="px-4 pt-5 pb-2 relative">
             <div className="flex items-center justify-between gap-3">
-              <h1 className="text-[20px] font-bold text-gray-900 tracking-tight truncate">
-                Hello, {activeMember}
-              </h1>
-
               <button
                 onClick={() => setFamilyOpen((p) => !p)}
-                className="flex-shrink-0 inline-flex items-center gap-1.5 bg-[#9cf2e8]/60 text-[#005c55] px-3 py-1.5 rounded-full text-[11px] font-semibold active:scale-95 border border-[#005c55]/15"
+                className="flex items-center gap-1.5 active:scale-95 transition"
               >
-                <Users size={13} />
-                <span>Family Member</span>
+                <h1 className="text-[20px] font-bold text-gray-900 tracking-tight truncate">
+                  Hello, {activeMember}
+                </h1>
                 <ChevronDown
-                  size={13}
-                  className={`transition-transform ${
+                  size={18}
+                  className={`text-gray-700 transition-transform ${
                     familyOpen ? "rotate-180" : ""
                   }`}
                 />
@@ -217,7 +215,7 @@ export default function Home() {
                   onClick={() => setFamilyOpen(false)}
                 ></div>
 
-                <div className="absolute right-4 top-[54px] z-50 w-56 bg-white rounded-2xl shadow-[0_8px_28px_rgba(15,23,42,0.12)] border border-[#eaedff] overflow-hidden">
+                <div className="absolute left-4 top-[54px] z-50 w-56 bg-white rounded-2xl shadow-[0_8px_28px_rgba(15,23,42,0.12)] border border-[#eaedff] overflow-hidden">
                   <div className="px-3 py-2 border-b border-[#eaedff] bg-[#faf8ff]">
                     <p className="text-[10px] font-bold text-[#005c55] uppercase tracking-wide">
                       Switch Member
@@ -259,8 +257,8 @@ export default function Home() {
             )}
           </section>
 
-          {/* ============ BANNER SLIDER ============ */}
-          <section className="px-4 mb-4">
+          {/* Banner Slider */}
+          <section className="px-4 mb-4 mt-2">
             <div
               ref={scrollRef}
               className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide"
@@ -269,7 +267,6 @@ export default function Home() {
             >
               {BANNERS.map((banner, i) => (
                 <div key={i} className="w-full flex-shrink-0 snap-center px-1">
-                  {/* object-contain taaki poori image dikhe, crop na ho */}
                   <img
                     src={banner}
                     alt={`Banner ${i + 1}`}
@@ -278,26 +275,19 @@ export default function Home() {
                 </div>
               ))}
             </div>
-
-            {/* Banner Pointers (Dots) */}
             <div className="flex items-center justify-center gap-1.5 mt-2">
               {BANNERS.map((_, i) => (
                 <div
                   key={i}
                   onClick={() => {
                     setBannerIndex(i);
-                    if (scrollRef.current) {
+                    if (scrollRef.current)
                       scrollRef.current.scrollTo({
                         left: i * scrollRef.current.offsetWidth,
                         behavior: "smooth",
                       });
-                    }
                   }}
-                  className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-                    bannerIndex === i
-                      ? "w-4 bg-[#005c55]"
-                      : "w-1.5 bg-gray-300 hover:bg-gray-400"
-                  }`}
+                  className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${bannerIndex === i ? "w-4 bg-[#005c55]" : "w-1.5 bg-gray-300 hover:bg-gray-400"}`}
                 />
               ))}
             </div>
@@ -342,19 +332,16 @@ export default function Home() {
                       key={i}
                       image={c.image}
                       title={c.title}
-                      subtitle={c.subtitle}
                       onClick={() => c.path && navigate(c.path)}
                     />
                   ))}
                 </div>
-
                 <div className="flex overflow-x-auto gap-2 py-0.5 scrollbar-hide snap-x snap-mandatory">
                   {row2.map((c, i) => (
                     <MiniCard
                       key={i}
                       image={c.image}
                       title={c.title}
-                      subtitle={c.subtitle}
                       onClick={() => c.path && navigate(c.path)}
                     />
                   ))}
@@ -376,7 +363,6 @@ export default function Home() {
                 DiabMeta Exclusive
               </span>
             </div>
-
             <div className="flex gap-2.5 overflow-x-auto scrollbar-hide -mx-4 px-4">
               <PrivilegeCard
                 icon={<Star size={16} />}
@@ -436,18 +422,36 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-[1.25fr_0.75fr] gap-2">
-              <div className="flex flex-col gap-2">
-                {diagnostics.map((d, i) => (
-                  <DiagnosticRow
-                    key={i}
-                    image={d.image}
-                    title={d.title}
-                    desc={d.desc}
-                    onClick={() => d.path && navigate(d.path)}
-                  />
-                ))}
+              {/* LEFT SIDE COLUMN */}
+              <div className="flex flex-col">
+                {/* First 3 Diagnostics */}
+                <div className="flex flex-col gap-2">
+                  {diagnostics.map((d, i) => (
+                    <DiagnosticRow
+                      key={i}
+                      image={d.image}
+                      title={d.title}
+                      desc={d.desc}
+                      onClick={() => d.path && navigate(d.path)}
+                    />
+                  ))}
+                </div>
+
+                {/* Store Services (With 10px gap) */}
+                <div className="flex flex-col gap-2 mt-[10px]">
+                  {storeServices.map((d, i) => (
+                    <DiagnosticRow
+                      key={i}
+                      image={d.image}
+                      title={d.title}
+                      desc={d.desc}
+                      onClick={() => d.path && navigate(d.path)}
+                    />
+                  ))}
+                </div>
               </div>
 
+              {/* RIGHT SIDE TIPS COLUMN */}
               <div className="bg-white p-2.5 rounded-2xl border border-[#eaedff] flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between mb-2">
@@ -463,7 +467,6 @@ export default function Home() {
                       Daily
                     </span>
                   </div>
-
                   <div className="flex flex-col gap-1.5">
                     <TipItem
                       tag="POST-MEAL"
@@ -520,7 +523,11 @@ export default function Home() {
             />
             <NavItem icon={<ClipboardList size={20} />} label="Quiz" />
             <NavItem icon={<Headset size={20} />} label="Contact" />
-            <NavItem icon={<ShoppingBag size={20} />} label="Store" />
+            <NavItem
+              icon={<ShoppingBag size={20} />}
+              label="Store"
+              onClick={() => navigate("/store")}
+            />
           </div>
         </nav>
       </div>
@@ -528,23 +535,25 @@ export default function Home() {
   );
 }
 
-/* ============ Mini Card ============ */
-function MiniCard({ image, title, subtitle, onClick }) {
+/* ============ Mini Card (70% Image, 30% Heading, Shadow, Border, Less Rounded) ============ */
+function MiniCard({ image, title, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="w-[78px] flex-shrink-0 bg-white rounded-xl shadow-[0_1px_6px_rgba(0,0,0,0.04)] border border-[#eaedff] flex flex-col items-center text-center overflow-hidden active:scale-[0.96] transition snap-start"
+      // 'rounded-md' use kiya taaki corner thoda sharp lage
+      // 'border-[#eaedff]' aur shadow lagaya
+      className="w-[78px] h-[105px] flex-shrink-0 bg-white rounded-md shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-[#eaedff] flex flex-col items-center overflow-hidden active:scale-[0.96] transition snap-start"
     >
-      <div className="w-full h-[42px] flex items-center justify-center overflow-hidden bg-[#f4f6fb]">
+      {/* 70% Image */}
+      <div className="w-full h-[70%] flex items-center justify-center overflow-hidden bg-[#f4f6fb] border-b border-[#f0f2f8]">
         <img src={image} alt={title} className="w-full h-full object-cover" />
       </div>
-      <div className="px-1.5 py-1.5 w-full">
-        <h4 className="text-[10px] font-bold text-gray-900 leading-tight truncate">
+
+      {/* 30% Heading */}
+      <div className="w-full h-[30%] flex items-center justify-center px-1">
+        <h4 className="text-[10px] font-bold text-gray-900 leading-tight text-center truncate">
           {title}
         </h4>
-        <p className="text-[8.5px] text-gray-500 leading-tight mt-0.5 truncate">
-          {subtitle}
-        </p>
       </div>
     </button>
   );
@@ -636,11 +645,7 @@ function NavItem({ icon, label, active, onClick }) {
   return (
     <button
       onClick={onClick}
-      className={`flex flex-col items-center justify-center flex-1 min-w-0 py-2 ${
-        active
-          ? "text-[#005c55] font-bold"
-          : "text-gray-500 hover:text-[#005c55]"
-      }`}
+      className={`flex flex-col items-center justify-center flex-1 min-w-0 py-2 ${active ? "text-[#005c55] font-bold" : "text-gray-500 hover:text-[#005c55]"}`}
     >
       {icon}
       <span className="text-[9px] leading-tight mt-1 truncate w-full text-center px-0.5">
