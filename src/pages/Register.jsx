@@ -5,7 +5,6 @@ import {
   HelpCircle,
   User,
   Phone,
-  Lock,
   RotateCw,
   ArrowRight,
   ShieldCheck,
@@ -20,7 +19,6 @@ export default function Register() {
     name: "",
     age: "",
     mobile: "",
-    password: "",
   });
   const [otpSent, setOtpSent] = useState(false);
   const [timer, setTimer] = useState(44);
@@ -39,11 +37,7 @@ export default function Register() {
     update("mobile", v.replace(/\D/g, "").slice(0, 10));
   };
 
-  const canSubmit =
-    form.name.trim() &&
-    form.age &&
-    form.mobile.length === 10 &&
-    form.password.trim();
+  const canSubmit = form.name.trim() && form.age && form.mobile.length === 10;
 
   const sendOtp = () => {
     if (!canSubmit) return;
@@ -104,7 +98,7 @@ export default function Register() {
             </button>
           </div>
 
-          {/* Heading (no subtitle) */}
+          {/* Heading */}
           <div className="text-center mb-4 mt-2">
             <h2 className="text-[19px] font-bold text-gray-900">
               New Patient Registration
@@ -123,7 +117,7 @@ export default function Register() {
                 type="text"
                 value={form.name}
                 onChange={(e) => update("name", e.target.value)}
-                placeholder="e.g. Rahul Gupta"
+                placeholder="Enter Name"
                 disabled={otpSent}
                 className="flex-1 bg-transparent outline-none text-[13px] text-gray-700 placeholder-gray-400 disabled:opacity-70"
               />
@@ -139,7 +133,7 @@ export default function Register() {
                   type="number"
                   value={form.age}
                   onChange={(e) => update("age", e.target.value)}
-                  placeholder="e.g. 32"
+                  placeholder="Enter Age"
                   disabled={otpSent}
                   className="mt-1.5 w-full px-3 py-3 rounded-xl border border-gray-200 bg-[#f4f5fb] focus:border-[#0d6b63] focus:bg-white outline-none text-[13px] text-gray-700 placeholder-gray-400 transition disabled:opacity-70"
                 />
@@ -173,14 +167,14 @@ export default function Register() {
             <label className="text-[12px] font-semibold text-gray-700">
               Mobile Number
             </label>
-            <div className="mt-1.5 mb-3 flex items-center gap-2 px-3 py-3 rounded-xl border border-gray-200 bg-[#f4f5fb] focus-within:border-[#0d6b63] focus-within:bg-white transition">
+            <div className="mt-1.5 mb-4 flex items-center gap-2 px-3 py-3 rounded-xl border border-gray-200 bg-[#f4f5fb] focus-within:border-[#0d6b63] focus-within:bg-white transition">
               <Phone size={16} className="text-gray-400 shrink-0" />
               <span className="text-[13px] text-gray-700 font-medium">+91</span>
               <input
                 type="tel"
                 value={form.mobile}
                 onChange={(e) => handleMobile(e.target.value)}
-                placeholder="98765 43210"
+                placeholder="Enter Mobile Number"
                 maxLength={10}
                 inputMode="numeric"
                 disabled={otpSent}
@@ -188,23 +182,7 @@ export default function Register() {
               />
             </div>
 
-            {/* Password */}
-            <label className="text-[12px] font-semibold text-gray-700">
-              Password
-            </label>
-            <div className="mt-1.5 mb-4 flex items-center gap-2 px-3 py-3 rounded-xl border border-gray-200 bg-[#f4f5fb] focus-within:border-[#0d6b63] focus-within:bg-white transition">
-              <Lock size={16} className="text-gray-400 shrink-0" />
-              <input
-                type="password"
-                value={form.password}
-                onChange={(e) => update("password", e.target.value)}
-                placeholder="Create a password"
-                disabled={otpSent}
-                className="flex-1 bg-transparent outline-none text-[13px] text-gray-700 placeholder-gray-400 disabled:opacity-70"
-              />
-            </div>
-
-            {/* ============ OTP SECTION (after send) ============ */}
+            {/* OTP SECTION */}
             {otpSent && (
               <>
                 <div className="flex justify-between items-center mb-2">
@@ -250,7 +228,7 @@ export default function Register() {
               </>
             )}
 
-            {/* Register & Get OTP button (before OTP sent) */}
+            {/* Register & Get OTP button */}
             {!otpSent && (
               <button
                 onClick={sendOtp}
@@ -261,7 +239,7 @@ export default function Register() {
               </button>
             )}
 
-            {/* Verify & Create Account button (after OTP sent) */}
+            {/* Verify & Create Account button */}
             {otpSent && (
               <button
                 onClick={() => navigate("/splash")}
@@ -272,7 +250,7 @@ export default function Register() {
               </button>
             )}
 
-            {/* Terms checkbox (only after OTP sent) */}
+            {/* Terms checkbox */}
             {otpSent && (
               <label className="flex items-start gap-2 mb-3 cursor-pointer">
                 <input
@@ -294,7 +272,7 @@ export default function Register() {
               </label>
             )}
 
-            {/* Terms text (before OTP sent) */}
+            {/* Terms text (before OTP) */}
             {!otpSent && (
               <p className="text-center text-[11px] text-gray-500 leading-snug">
                 By registering, you agree to DiabMeta Medical{" "}

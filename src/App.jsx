@@ -5,6 +5,8 @@ import Splash from "./pages/Splash";
 import Home from "./pages/Home";
 import Appointment from "./pages/Appointment";
 import BmiCheck from "./pages/BmiCheck";
+import DiagnosticDetail from "./pages/DiagnosticDetail";
+import HealthPlanDetail from "./pages/HealthPlanDetail";
 
 export default function App() {
   return (
@@ -15,6 +17,11 @@ export default function App() {
       <Route path="/home" element={<Home />} />
       <Route path="/appointment" element={<Appointment />} />
       <Route path="/bmi" element={<BmiCheck />} />
+      <Route path="/diagnostic/:slug" element={<DiagnosticDetail />} />
+      <Route
+        path="/health-plan/:category/:planType"
+        element={<HealthPlanDetail />}
+      />
       <Route path="*" element={<Login />} />
     </Routes>
   );

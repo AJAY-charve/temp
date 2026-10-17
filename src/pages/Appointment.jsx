@@ -424,36 +424,6 @@ export default function Appointment() {
                   ))}
                 </div>
               )}
-
-              {/* Avg wait time */}
-              <div className="bg-white rounded-2xl border border-[#eaedff] p-4 flex items-start gap-3 mb-3">
-                <div className="w-9 h-9 rounded-lg bg-[#E0F2F1] flex items-center justify-center text-[#005c55] flex-shrink-0">
-                  <Clock size={18} />
-                </div>
-                <div>
-                  <p className="text-[12px] font-bold text-gray-900">
-                    Avg. wait time
-                  </p>
-                  <p className="text-[11px] text-gray-500 leading-snug mt-0.5">
-                    Most appointments are confirmed within 2 hours
-                  </p>
-                </div>
-              </div>
-
-              {/* Info card */}
-              <div className="bg-white rounded-2xl border border-[#eaedff] p-4 flex items-start gap-3">
-                <div className="w-9 h-9 rounded-lg bg-[#E0F2F1] flex items-center justify-center text-[#005c55] flex-shrink-0">
-                  <CalendarIcon size={18} />
-                </div>
-                <div>
-                  <p className="text-[12px] font-bold text-gray-900">
-                    Easy Booking
-                  </p>
-                  <p className="text-[11px] text-gray-500 leading-snug mt-0.5">
-                    Select a doctor → choose date & time → confirm your details
-                  </p>
-                </div>
-              </div>
             </div>
           )}
         </main>

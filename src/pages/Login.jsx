@@ -147,7 +147,7 @@ function PatientForm({ agree, setAgree }) {
           type="tel"
           value={mobile}
           onChange={(e) => handleMobile(e.target.value)}
-          placeholder="98765 43210"
+          placeholder="Enter Mobile Number"
           disabled={codeSent}
           maxLength={10}
           inputMode="numeric"
