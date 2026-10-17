@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   UserPlus,
@@ -17,9 +17,6 @@ import {
   Star,
   Heart,
   Droplet,
-  ScanLine,
-  Syringe,
-  Smartphone,
   Lightbulb,
   ChevronRight,
   ChevronDown,
@@ -31,12 +28,67 @@ import {
   Check,
   Users,
 } from "lucide-react";
+
+// ============ LOGO ============
 import logo from "../assets/daibmetalogo.jpeg";
+
+// ============ BANNER IMAGES ============
+import banner1 from "../assets/banner/homebanner1.png";
+import banner2 from "../assets/banner/homebanner2.png";
+
+// ============ QUICK ACTION IMAGES ============
+import bookApptImg from "../assets/cards/book-appt.png";
+import bmiImg from "../assets/cards/bmi.jpeg";
+import diabetesImg from "../assets/cards/diabetes.jpeg";
+import sugarImg from "../assets/cards/sugar.jpeg";
+import diseaseImg from "../assets/cards/disease.png";
+import reminderImg from "../assets/cards/reminder.jpeg";
+import scanFoodImg from "../assets/cards/scan-food.jpeg";
+import caloriesImg from "../assets/cards/calories.jpeg";
+import recordsImg from "../assets/cards/records.png";
+import periodImg from "../assets/cards/period.jpeg";
+
+import Sidebar from "../components/Sidebar";
+
+const BANNERS = [banner1, banner2];
 
 export default function Home() {
   const navigate = useNavigate();
   const [familyOpen, setFamilyOpen] = useState(false);
   const [activeMember, setActiveMember] = useState("Rahul");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Banner State
+  const [bannerIndex, setBannerIndex] = useState(0);
+  const scrollRef = useRef(null);
+
+  // Auto slide banner
+  useEffect(() => {
+    const timer = setInterval(() => {
+      let nextIndex = bannerIndex + 1;
+      if (nextIndex >= BANNERS.length) nextIndex = 0;
+
+      setBannerIndex(nextIndex);
+      if (scrollRef.current) {
+        scrollRef.current.scrollTo({
+          left: nextIndex * scrollRef.current.offsetWidth,
+          behavior: "smooth",
+        });
+      }
+    }, 3000); // 3 seconds
+
+    return () => clearInterval(timer);
+  }, [bannerIndex]);
+
+  // Handle manual scroll
+  const handleBannerScroll = (e) => {
+    const scrollLeft = e.target.scrollLeft;
+    const width = e.target.offsetWidth;
+    const newIndex = Math.round(scrollLeft / width);
+    if (newIndex !== bannerIndex) {
+      setBannerIndex(newIndex);
+    }
+  };
 
   const familyMembers = [
     { name: "Rahul", relation: "Self" },
@@ -45,42 +97,98 @@ export default function Home() {
     { name: "Sunita", relation: "Mother" },
   ];
 
+  const row1 = [
+    { image: bmiImg, title: "BMI", subtitle: "Check BMI", path: "/bmi" },
+    { image: diabetesImg, title: "Diabetes", subtitle: "Risk check" },
+    { image: sugarImg, title: "Sugar", subtitle: "Log sugar" },
+    { image: diseaseImg, title: "Disease", subtitle: "Care guide" },
+  ];
+
+  const row2 = [
+    { image: reminderImg, title: "Reminder", subtitle: "Medicine" },
+    { image: scanFoodImg, title: "Scan Food", subtitle: "AI meal scan" },
+    { image: caloriesImg, title: "Calories", subtitle: "Track food" },
+    { image: recordsImg, title: "Records", subtitle: "Cloud locker" },
+    { image: periodImg, title: "Period", subtitle: "Cycle log" },
+  ];
+
+  const diagnostics = [
+    {
+      image: bmiImg,
+      title: "Blood & Pathology",
+      desc: "HbA1c, Fasting, Lipid",
+      path: "/diagnostic/blood-test",
+    },
+    {
+      image: bmiImg,
+      title: "ECG Testing",
+      desc: "12–Lead Clinical ECG",
+      path: "/diagnostic/ecg",
+    },
+    {
+      image: bmiImg,
+      title: "USG / X-Ray / CT",
+      desc: "Radiology partner slots",
+      path: "/diagnostic/xray",
+    },
+    {
+      image: bmiImg,
+      title: "Supplements",
+      desc: "Vitamins & metabolic aids",
+      path: "/diagnostic/supplements",
+    },
+    {
+      image: bmiImg,
+      title: "Medical Devices",
+      desc: "CGM, strips & BP meters",
+      path: "/diagnostic/devices",
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-[#faf8ff] flex justify-center">
-      <div className="w-full max-w-md bg-[#faf8ff] min-h-screen flex flex-col">
-        {/* ============ HEADER ============ */}
+      <div className="w-full max-w-md bg-[#faf8ff] min-h-screen flex flex-col relative">
+        {/* COMMON SIDEBAR */}
+        <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+        {/* HEADER */}
         <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-gray-100">
-          <div className="h-14 px-4 flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <button className="w-10 h-10 flex items-center justify-center rounded-full bg-[#9cf2e8]/60 text-[#005c55] active:scale-95">
-                <CircleUserRound size={20} />
+          <div className="h-14 px-2 flex items-center justify-between gap-1.5">
+            <div className="flex items-center gap-1.5 min-w-0">
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="w-9 h-9 flex items-center justify-center rounded-full bg-[#9cf2e8]/60 text-[#005c55] active:scale-95 flex-shrink-0"
+              >
+                <CircleUserRound size={18} />
               </button>
-              <button className="inline-flex items-center gap-1.5 bg-[#9cf2e8]/60 text-[#005c55] px-3 py-1.5 rounded-full text-[12px] font-semibold active:scale-95">
-                <UserPlus size={14} />
+
+              <button className="inline-flex items-center gap-1 bg-[#9cf2e8]/60 text-[#005c55] px-2.5 py-1.5 rounded-full text-[11px] font-semibold active:scale-95 flex-shrink-0 whitespace-nowrap">
+                <UserPlus size={13} />
                 <span>Add Member</span>
               </button>
-              <button className="inline-flex items-center gap-1.5 bg-[#9cf2e8]/60 text-[#005c55] px-3 py-1.5 rounded-full text-[12px] font-semibold active:scale-95">
+
+              <button className="inline-flex items-center gap-1 bg-[#9cf2e8]/60 text-[#005c55] px-2.5 py-1.5 rounded-full text-[11px] font-semibold active:scale-95 flex-shrink-0 whitespace-nowrap">
                 <span>Health Guide</span>
               </button>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 flex-shrink-0">
               <button className="relative w-9 h-9 flex items-center justify-center text-gray-500 active:scale-95">
-                <Bell size={20} />
+                <Bell size={19} />
                 <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-pink-500 rounded-full ring-2 ring-white"></span>
               </button>
               <img
                 src={logo}
                 alt="DiabMeta"
-                className="h-10 w-auto object-contain"
+                className="h-9 w-auto object-contain"
               />
             </div>
           </div>
         </header>
 
-        {/* ============ MAIN ============ */}
+        {/* MAIN */}
         <main className="flex-1 pb-24">
-          {/* Greeting with Family Member dropdown */}
+          {/* Greeting + Family dropdown */}
           <section className="px-4 pt-5 pb-2 relative">
             <div className="flex items-center justify-between gap-3">
               <h1 className="text-[20px] font-bold text-gray-900 tracking-tight truncate">
@@ -89,12 +197,12 @@ export default function Home() {
 
               <button
                 onClick={() => setFamilyOpen((p) => !p)}
-                className="flex-shrink-0 inline-flex items-center gap-1.5 bg-[#9cf2e8]/60 text-[#005c55] px-3 py-1.5 rounded-full text-[12px] font-semibold active:scale-95 border border-[#005c55]/15"
+                className="flex-shrink-0 inline-flex items-center gap-1.5 bg-[#9cf2e8]/60 text-[#005c55] px-3 py-1.5 rounded-full text-[11px] font-semibold active:scale-95 border border-[#005c55]/15"
               >
-                <Users size={14} />
+                <Users size={13} />
                 <span>Family Member</span>
                 <ChevronDown
-                  size={14}
+                  size={13}
                   className={`transition-transform ${
                     familyOpen ? "rotate-180" : ""
                   }`}
@@ -151,108 +259,105 @@ export default function Home() {
             )}
           </section>
 
+          {/* ============ BANNER SLIDER ============ */}
+          <section className="px-4 mb-4">
+            <div
+              ref={scrollRef}
+              className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide"
+              onScroll={handleBannerScroll}
+              style={{ scrollBehavior: "smooth" }}
+            >
+              {BANNERS.map((banner, i) => (
+                <div key={i} className="w-full flex-shrink-0 snap-center px-1">
+                  {/* object-contain taaki poori image dikhe, crop na ho */}
+                  <img
+                    src={banner}
+                    alt={`Banner ${i + 1}`}
+                    className="w-full h-auto max-h-[180px] object-contain rounded-xl"
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* Banner Pointers (Dots) */}
+            <div className="flex items-center justify-center gap-1.5 mt-2">
+              {BANNERS.map((_, i) => (
+                <div
+                  key={i}
+                  onClick={() => {
+                    setBannerIndex(i);
+                    if (scrollRef.current) {
+                      scrollRef.current.scrollTo({
+                        left: i * scrollRef.current.offsetWidth,
+                        behavior: "smooth",
+                      });
+                    }
+                  }}
+                  className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                    bannerIndex === i
+                      ? "w-4 bg-[#005c55]"
+                      : "w-1.5 bg-gray-300 hover:bg-gray-400"
+                  }`}
+                />
+              ))}
+            </div>
+          </section>
+
           {/* Quick Actions */}
           <section className="px-4 mb-6 mt-1">
             <div className="flex gap-2.5 items-stretch">
-              {/* Book Appt tall card */}
-              <div className="flex-shrink-0 w-[122px] bg-white rounded-2xl shadow-[0_2px_12px_rgba(15,23,42,0.04)] border border-[#eaedff] p-2.5 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <div className="w-8 h-8 rounded-lg bg-[#9cf2e8] flex items-center justify-center text-[#005c55]">
-                      <Stethoscope size={16} />
-                    </div>
-                    <span className="text-[8.5px] font-bold text-white bg-[#005c55] px-1.5 py-0.5 rounded">
-                      TOP
-                    </span>
-                  </div>
-                  <h3 className="text-[13px] font-bold text-gray-900 leading-tight">
-                    Book Appt.
-                  </h3>
-                  <p className="text-[10px] font-semibold text-[#005c55] mt-0.5">
-                    Doctor Consult
-                  </p>
-                  <p className="text-[9px] text-gray-500 mt-1 leading-snug line-clamp-2">
-                    Endocrinologists & Diabetologists
-                  </p>
+              <div className="flex-shrink-0 w-[110px] bg-white rounded-2xl shadow-[0_2px_12px_rgba(15,23,42,0.04)] border border-[#eaedff] overflow-hidden flex flex-col">
+                <div className="w-full h-[70px] flex items-center justify-center overflow-hidden">
+                  <img
+                    src={bookApptImg}
+                    alt="Book Appointment"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                <button
-                  onClick={() => navigate("/appointment")}
-                  className="mt-2 w-full h-7 bg-[#005c55] text-white text-[10px] font-bold rounded-lg flex items-center justify-center gap-0.5 active:scale-95"
-                >
-                  Book Now <ArrowRight size={12} />
-                </button>
+                <div className="p-2.5 flex-1 flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-[13px] font-bold text-gray-900 leading-tight">
+                      Book Appt.
+                    </h3>
+                    <p className="text-[10px] font-semibold text-[#005c55] mt-0.5">
+                      Doctor Consult
+                    </p>
+                    <p className="text-[9px] text-gray-500 mt-1 leading-snug line-clamp-2">
+                      Endocrinologists & Diabetologists
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => navigate("/appointment")}
+                    className="mt-2 w-full h-7 bg-[#005c55] text-white text-[10px] font-bold rounded-lg flex items-center justify-center gap-0.5 active:scale-95"
+                  >
+                    Book Now <ArrowRight size={12} />
+                  </button>
+                </div>
               </div>
 
-              {/* Right: 2 scrollable rows */}
               <div className="flex-1 min-w-0 flex flex-col gap-2 justify-between">
-                <div className="flex overflow-x-auto gap-2 py-0.5 scrollbar-hide">
-                  <QCard
-                    icon={<Activity size={20} />}
-                    iconBg="bg-[#9cf2e8]"
-                    iconColor="text-[#005c55]"
-                    title="BMI"
-                    desc="Check Your BMI Level"
-                    onClick={() => navigate("/bmi")}
-                  />
-                  <QCard
-                    icon={<Heart size={20} />}
-                    iconBg="bg-[#dce1ff]"
-                    iconColor="text-[#4059aa]"
-                    title="Diabetes"
-                    desc="Check diabetes"
-                  />
-                  <QCard
-                    icon={<BookOpen size={20} />}
-                    iconBg="bg-[#ffd8e7]"
-                    iconColor="text-[#932265]"
-                    title="Sugar"
-                    desc="Log sugar & BP"
-                  />
-                  <QCard
-                    icon={<ClipboardList size={20} />}
-                    iconBg="bg-[#9cf2e8]"
-                    iconColor="text-[#005c55]"
-                    title="Disease"
-                    desc="Guide & care tips"
-                  />
+                <div className="flex overflow-x-auto gap-2 py-0.5 scrollbar-hide snap-x snap-mandatory">
+                  {row1.map((c, i) => (
+                    <MiniCard
+                      key={i}
+                      image={c.image}
+                      title={c.title}
+                      subtitle={c.subtitle}
+                      onClick={() => c.path && navigate(c.path)}
+                    />
+                  ))}
                 </div>
 
-                <div className="flex overflow-x-auto gap-2 py-0.5 scrollbar-hide">
-                  <QCard
-                    icon={<Pill size={20} />}
-                    iconBg="bg-[#9cf2e8]"
-                    iconColor="text-[#005c55]"
-                    title="Reminder"
-                    desc="Medicine alerts"
-                  />
-                  <QCard
-                    icon={<Camera size={20} />}
-                    iconBg="bg-[#dce1ff]"
-                    iconColor="text-[#4059aa]"
-                    title="Scan Food"
-                    desc="Scan your meal"
-                  />
-                  <QCard
-                    icon={<Flame size={20} />}
-                    iconBg="bg-[#ffd8e7]"
-                    iconColor="text-[#932265]"
-                    title="Calories"
-                    desc="Track your food"
-                  />
-                  <QCard
-                    icon={<Folder size={20} />}
-                    iconBg="bg-[#9cf2e8]"
-                    iconColor="text-[#005c55]"
-                    title="Records"
-                    desc="Cloud locker"
-                  />
-                  <QCard
-                    icon={<Calendar size={20} />}
-                    iconBg="bg-[#ffd8e7]"
-                    iconColor="text-[#932265]"
-                    title="Period"
-                    desc="Cycle log"
-                  />
+                <div className="flex overflow-x-auto gap-2 py-0.5 scrollbar-hide snap-x snap-mandatory">
+                  {row2.map((c, i) => (
+                    <MiniCard
+                      key={i}
+                      image={c.image}
+                      title={c.title}
+                      subtitle={c.subtitle}
+                      onClick={() => c.path && navigate(c.path)}
+                    />
+                  ))}
                 </div>
               </div>
             </div>
@@ -314,7 +419,7 @@ export default function Home() {
                   <Stethoscope size={20} />
                 </div>
                 <div>
-                  <h2 className="text-[16px] font-bold text-gray-900 leading-tight">
+                  <h2 className="text-[15px] font-bold text-gray-900 leading-tight">
                     Diagnostic & Clinic Services
                   </h2>
                   <p className="text-[10px] text-gray-500 mt-0.5">
@@ -324,7 +429,7 @@ export default function Home() {
               </div>
               <a
                 href="#"
-                className="text-[12px] text-[#005c55] font-bold hover:underline"
+                className="text-[12px] text-[#005c55] font-bold hover:underline flex-shrink-0"
               >
                 View All
               </a>
@@ -332,44 +437,17 @@ export default function Home() {
 
             <div className="grid grid-cols-[1.25fr_0.75fr] gap-2">
               <div className="flex flex-col gap-2">
-                <ServiceRow
-                  icon={<Droplet size={18} />}
-                  iconBg="bg-[#EDE7F6]"
-                  iconColor="text-[#7E57C2]"
-                  title="Blood & Pathology"
-                  desc="HbA1c, Fasting, Lipid"
-                />
-                <ServiceRow
-                  icon={<Heart size={18} />}
-                  iconBg="bg-[#E0F2F1]"
-                  iconColor="text-[#00897B]"
-                  title="ECG Testing"
-                  desc="12–Lead Clinical ECG"
-                />
-                <ServiceRow
-                  icon={<ScanLine size={18} />}
-                  iconBg="bg-[#E8EAF6]"
-                  iconColor="text-[#3F51B5]"
-                  title="USG / X-Ray / CT"
-                  desc="Radiology partner slots"
-                />
-                <ServiceRow
-                  icon={<Syringe size={18} />}
-                  iconBg="bg-[#E0F7FA]"
-                  iconColor="text-[#0097A7]"
-                  title="Supplements"
-                  desc="Vitamins & metabolic aids"
-                />
-                <ServiceRow
-                  icon={<Smartphone size={18} />}
-                  iconBg="bg-[#E8EAF6]"
-                  iconColor="text-[#5C6BC0]"
-                  title="Medical Devices"
-                  desc="CGM, strips & BP meters"
-                />
+                {diagnostics.map((d, i) => (
+                  <DiagnosticRow
+                    key={i}
+                    image={d.image}
+                    title={d.title}
+                    desc={d.desc}
+                    onClick={() => d.path && navigate(d.path)}
+                  />
+                ))}
               </div>
 
-              {/* Health Tips */}
               <div className="bg-white p-2.5 rounded-2xl border border-[#eaedff] flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between mb-2">
@@ -426,9 +504,9 @@ export default function Home() {
           </section>
         </main>
 
-        {/* ============ BOTTOM NAV ============ */}
-        <nav className="fixed bottom-0 inset-x-0 z-50 bg-white/95 backdrop-blur-xl border-t border-gray-100 shadow-[0_-4px_20px_rgba(15,23,42,0.05)]">
-          <div className="max-w-md mx-auto flex items-center justify-around h-16 px-2">
+        {/* BOTTOM NAV */}
+        <nav className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-xl border-t border-gray-100 shadow-[0_-4px_20px_rgba(15,23,42,0.05)]">
+          <div className="max-w-md mx-auto flex items-stretch justify-around h-16 px-1">
             <NavItem
               icon={<HomeIcon size={20} />}
               label="Home"
@@ -440,8 +518,8 @@ export default function Home() {
               label="Appointment"
               onClick={() => navigate("/appointment")}
             />
-            <NavItem icon={<ClipboardList size={20} />} label="Health Quiz" />
-            <NavItem icon={<Headset size={20} />} label="Contact Us" />
+            <NavItem icon={<ClipboardList size={20} />} label="Quiz" />
+            <NavItem icon={<Headset size={20} />} label="Contact" />
             <NavItem icon={<ShoppingBag size={20} />} label="Store" />
           </div>
         </nav>
@@ -450,26 +528,48 @@ export default function Home() {
   );
 }
 
-/* ============ Helper Components ============ */
-
-function QCard({ icon, iconBg, iconColor, title, desc, onClick }) {
+/* ============ Mini Card ============ */
+function MiniCard({ image, title, subtitle, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="w-[110px] flex-shrink-0 bg-white p-2.5 rounded-2xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] border border-[#eaedff] flex flex-col items-center text-center gap-1.5 active:scale-[0.97] transition"
+      className="w-[78px] flex-shrink-0 bg-white rounded-xl shadow-[0_1px_6px_rgba(0,0,0,0.04)] border border-[#eaedff] flex flex-col items-center text-center overflow-hidden active:scale-[0.96] transition snap-start"
     >
-      <div
-        className={`w-12 h-12 rounded-full ${iconBg} ${iconColor} flex items-center justify-center flex-shrink-0`}
-      >
-        {icon}
+      <div className="w-full h-[42px] flex items-center justify-center overflow-hidden bg-[#f4f6fb]">
+        <img src={image} alt={title} className="w-full h-full object-cover" />
       </div>
-      <div className="flex flex-col items-center leading-tight">
-        <h4 className="text-[12px] font-bold text-gray-900">{title}</h4>
+      <div className="px-1.5 py-1.5 w-full">
+        <h4 className="text-[10px] font-bold text-gray-900 leading-tight truncate">
+          {title}
+        </h4>
+        <p className="text-[8.5px] text-gray-500 leading-tight mt-0.5 truncate">
+          {subtitle}
+        </p>
       </div>
-      <p className="text-[10px] text-gray-500 leading-snug line-clamp-2">
-        {desc}
-      </p>
     </button>
+  );
+}
+
+/* ============ Diagnostic Row ============ */
+function DiagnosticRow({ image, title, desc, onClick }) {
+  return (
+    <div
+      onClick={onClick}
+      className="bg-white rounded-2xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] border border-[#eaedff] flex items-center gap-2 p-2 cursor-pointer active:scale-[0.99] transition"
+    >
+      <div className="w-9 h-9 rounded-xl overflow-hidden bg-[#f4f6fb] flex-shrink-0">
+        <img src={image} alt={title} className="w-full h-full object-cover" />
+      </div>
+      <div className="flex-1 min-w-0 flex flex-col justify-center">
+        <h3 className="text-[11px] font-bold text-gray-900 leading-tight truncate">
+          {title}
+        </h3>
+        <p className="text-[9px] text-gray-500 leading-tight mt-0.5 truncate">
+          {desc}
+        </p>
+      </div>
+      <ChevronRight size={16} className="text-gray-300 flex-shrink-0" />
+    </div>
   );
 }
 
@@ -513,27 +613,6 @@ function PrivilegeCard({
   );
 }
 
-function ServiceRow({ icon, iconBg, iconColor, title, desc }) {
-  return (
-    <div className="bg-white p-2 rounded-2xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] border border-[#eaedff] flex items-center justify-between gap-1.5 cursor-pointer active:scale-[0.99] transition">
-      <div className="flex items-center gap-2 min-w-0 flex-1">
-        <div
-          className={`w-9 h-9 rounded-xl ${iconBg} ${iconColor} flex items-center justify-center flex-shrink-0`}
-        >
-          {icon}
-        </div>
-        <div className="flex flex-col min-w-0 flex-1">
-          <h3 className="text-[11px] font-bold text-gray-900 truncate leading-tight">
-            {title}
-          </h3>
-          <p className="text-[9px] text-gray-500 truncate mt-0.5">{desc}</p>
-        </div>
-      </div>
-      <ChevronRight size={16} className="text-gray-300 flex-shrink-0" />
-    </div>
-  );
-}
-
 function TipItem({ tag, tagColor, time, title, desc, bg }) {
   return (
     <div className={`${bg} p-1.5 rounded-lg flex flex-col`}>
@@ -557,14 +636,16 @@ function NavItem({ icon, label, active, onClick }) {
   return (
     <button
       onClick={onClick}
-      className={`flex flex-col items-center justify-center flex-1 min-w-0 min-h-[44px] ${
+      className={`flex flex-col items-center justify-center flex-1 min-w-0 py-2 ${
         active
           ? "text-[#005c55] font-bold"
           : "text-gray-500 hover:text-[#005c55]"
       }`}
     >
       {icon}
-      <span className="text-[10px] leading-none mt-1 truncate">{label}</span>
+      <span className="text-[9px] leading-tight mt-1 truncate w-full text-center px-0.5">
+        {label}
+      </span>
     </button>
   );
 }
