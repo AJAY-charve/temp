@@ -11,9 +11,10 @@ import HealthPlanDetail from "./pages/HealthPlanDetail";
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<Login />} />
+      {/* Start me Splash aayega */}
+      <Route path="/" element={<Splash />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/splash" element={<Splash />} />
       <Route path="/home" element={<Home />} />
       <Route path="/appointment" element={<Appointment />} />
       <Route path="/bmi" element={<BmiCheck />} />
