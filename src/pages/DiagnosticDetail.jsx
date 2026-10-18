@@ -297,9 +297,6 @@ export default function DiagnosticDetail() {
   }
 
   const allItems = service.items;
-  const totalPrice = allItems.reduce((sum, i) => sum + i.price, 0);
-  const totalMrp = allItems.reduce((sum, i) => sum + i.mrp, 0);
-  const totalSave = totalMrp - totalPrice;
 
   const handleBookClick = () => setShowConfirm(true);
   const handleConfirm = () => {
@@ -329,7 +326,7 @@ export default function DiagnosticDetail() {
         </header>
 
         {/* MAIN */}
-        <main className="flex-1 pb-36">
+        <main className="flex-1 pb-32">
           {/* Hero card */}
           <div className="px-4 pt-4">
             <div className="bg-white rounded-2xl border border-[#eaedff] shadow-[0_2px_12px_rgba(15,23,42,0.04)] p-5 flex items-center gap-4">
@@ -367,11 +364,8 @@ export default function DiagnosticDetail() {
               {allItems.map((item, i) => (
                 <div
                   key={item.id}
-                  className={`flex items-center gap-2.5 p-3 ${
-                    i !== allItems.length - 1 ? "border-b border-[#f0f2f8]" : ""
-                  }`}
+                  className={`flex items-center gap-2.5 p-3 ${i !== allItems.length - 1 ? "border-b border-[#f0f2f8]" : ""}`}
                 >
-                  {/* Small image */}
                   <div className="w-9 h-9 rounded-lg overflow-hidden bg-[#f4f6fb] flex-shrink-0">
                     <img
                       src={bmiImg}
@@ -379,8 +373,6 @@ export default function DiagnosticDetail() {
                       className="w-full h-full object-cover"
                     />
                   </div>
-
-                  {/* Name + Detail */}
                   <div className="flex-1 min-w-0">
                     <h4 className="text-[12px] font-bold text-gray-900 leading-tight truncate">
                       {item.name}
@@ -391,8 +383,6 @@ export default function DiagnosticDetail() {
                       </p>
                     )}
                   </div>
-
-                  {/* Price */}
                   <div className="text-right flex-shrink-0">
                     <p className="text-[10px] text-gray-400 line-through leading-none">
                       ₹{item.mrp}
@@ -425,32 +415,19 @@ export default function DiagnosticDetail() {
           </div>
         </main>
 
-        {/* BOOK BAR — always visible */}
+        {/* ===== BOOK BAR ===== */}
         <div className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-xl border-t border-gray-100 shadow-[0_-4px_20px_rgba(15,23,42,0.08)] px-4 py-3">
-          <div className="max-w-md mx-auto flex items-center gap-3">
-            <div className="flex-1 min-w-0">
-              <div className="flex items-baseline gap-2">
-                <span className="text-[11px] text-gray-400 line-through">
-                  ₹{totalMrp}
-                </span>
-                <span className="text-[18px] font-black text-[#005c55]">
-                  ₹{totalPrice}
-                </span>
-              </div>
-              <p className="text-[10px] font-semibold text-emerald-600 mt-0.5">
-                You save ₹{totalSave} ({allItems.length} items)
-              </p>
-            </div>
+          <div className="max-w-md mx-auto">
             <button
               onClick={handleBookClick}
-              className="flex-shrink-0 bg-[#005c55] hover:bg-[#0a564f] active:scale-[0.98] text-white font-bold px-6 py-3.5 rounded-xl transition shadow-lg shadow-[#005c55]/25 flex items-center gap-2 text-[13px]"
+              className="w-full bg-[#0d6b63] hover:bg-[#0a564f] active:scale-[0.98] text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-[#005c55]/25 flex items-center justify-center gap-2 text-[14px]"
             >
-              Book <ArrowRight size={15} />
+              Book your request <ArrowRight size={16} />
             </button>
           </div>
         </div>
 
-        {/* CONFIRM MODAL */}
+        {/* ===== SIMPLE CONFIRM MODAL ===== */}
         {showConfirm && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-6">
             <div
@@ -459,7 +436,7 @@ export default function DiagnosticDetail() {
             ></div>
 
             <div
-              className="relative bg-white rounded-3xl p-6 max-w-sm w-full"
+              className="relative bg-white rounded-3xl p-6 max-w-sm w-full text-center"
               style={{ animation: "popIn 0.25s ease" }}
             >
               <button
@@ -469,69 +446,25 @@ export default function DiagnosticDetail() {
                 <X size={16} />
               </button>
 
-              <div className="w-14 h-14 rounded-full bg-[#9cf2e8] flex items-center justify-center mx-auto mb-3">
-                <AlertCircle size={28} className="text-[#005c55]" />
+              <div className="w-16 h-16 rounded-full bg-[#9cf2e8] flex items-center justify-center mx-auto mb-4">
+                <AlertCircle size={30} className="text-[#005c55]" />
               </div>
 
-              <h3 className="text-[18px] font-bold text-gray-900 text-center">
-                Confirm Booking
-              </h3>
-              <p className="text-[11px] text-gray-500 mt-1 text-center">
-                All {allItems.length} items will be booked together
+              {/* Single line message */}
+              <p className="text-[16px] font-bold text-gray-900 px-2 leading-snug">
+                Are you sure? Do you want to proceed with this booking?
               </p>
 
-              <div className="mt-4 bg-[#faf8ff] rounded-2xl p-3.5">
-                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wide mb-2">
-                  {service.title} · {allItems.length} items
-                </p>
-                <div className="flex flex-col gap-1.5 max-h-32 overflow-y-auto">
-                  {allItems.map((it) => (
-                    <div
-                      key={it.id}
-                      className="flex items-center justify-between text-[11px]"
-                    >
-                      <span className="text-gray-700 truncate pr-2">
-                        {it.name}
-                      </span>
-                      <span className="font-bold text-gray-900 flex-shrink-0">
-                        ₹{it.price}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="border-t border-[#eaedff] mt-2.5 pt-2.5 flex flex-col gap-1">
-                  <div className="flex items-center justify-between text-[11px]">
-                    <span className="text-gray-500">Total MRP</span>
-                    <span className="text-gray-400 line-through">
-                      ₹{totalMrp}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-[12px] font-bold text-gray-900">
-                      Total Amount
-                    </span>
-                    <span className="text-[16px] font-black text-[#005c55]">
-                      ₹{totalPrice}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between text-[10px] font-semibold text-emerald-600">
-                    <span>You Save</span>
-                    <span>₹{totalSave}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex gap-2.5 mt-4">
+              <div className="flex gap-3 mt-6">
                 <button
                   onClick={() => setShowConfirm(false)}
-                  className="flex-1 border border-gray-300 text-gray-700 font-bold py-3 rounded-xl active:scale-[0.98] transition text-[13px]"
+                  className="flex-1 border border-gray-300 text-gray-700 font-bold py-3.5 rounded-xl active:scale-[0.98] transition text-[14px]"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleConfirm}
-                  className="flex-1 bg-[#005c55] hover:bg-[#0a564f] text-white font-bold py-3 rounded-xl active:scale-[0.98] transition shadow-md shadow-[#005c55]/25 text-[13px]"
+                  className="flex-1 bg-[#0d6b63] hover:bg-[#0a564f] text-white font-bold py-3.5 rounded-xl active:scale-[0.98] transition shadow-md shadow-[#005c55]/25 text-[14px]"
                 >
                   Confirm
                 </button>
@@ -540,7 +473,7 @@ export default function DiagnosticDetail() {
           </div>
         )}
 
-        {/* SUCCESS MODAL */}
+        {/* ===== SUCCESS MODAL ===== */}
         {showSuccess && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-6">
             <div
@@ -558,55 +491,23 @@ export default function DiagnosticDetail() {
               >
                 <X size={16} />
               </button>
-
               <div className="w-20 h-20 rounded-full bg-[#9cf2e8] flex items-center justify-center mx-auto mb-4">
                 <div className="w-14 h-14 rounded-full bg-[#005c55] flex items-center justify-center">
                   <Check size={30} className="text-white" strokeWidth={3} />
                 </div>
               </div>
-
               <h3 className="text-[20px] font-bold text-gray-900">
                 Booking Confirmed!
               </h3>
-              <p className="text-[12px] text-gray-500 mt-1.5 leading-snug px-2">
-                Your {service.title} booking has been placed successfully.
+              <p className="text-[13px] text-gray-500 mt-2">
+                Your booking has been placed successfully.
               </p>
-
-              <div className="mt-4 bg-[#faf8ff] rounded-2xl p-3.5 text-left">
-                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wide mb-2">
-                  Items ({allItems.length})
-                </p>
-                <div className="flex flex-col gap-1.5 max-h-32 overflow-y-auto">
-                  {allItems.map((it) => (
-                    <div
-                      key={it.id}
-                      className="flex items-center justify-between text-[11px]"
-                    >
-                      <span className="text-gray-700 truncate pr-2">
-                        {it.name}
-                      </span>
-                      <span className="font-bold text-gray-900 flex-shrink-0">
-                        ₹{it.price}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-                <div className="border-t border-[#eaedff] mt-2.5 pt-2.5 flex items-center justify-between">
-                  <span className="text-[12px] font-bold text-gray-900">
-                    Total Paid
-                  </span>
-                  <span className="text-[16px] font-black text-[#005c55]">
-                    ₹{totalPrice}
-                  </span>
-                </div>
-              </div>
-
               <button
                 onClick={() => {
                   setShowSuccess(false);
                   navigate("/home");
                 }}
-                className="w-full mt-4 bg-[#005c55] hover:bg-[#0a564f] active:scale-[0.98] text-white font-bold py-3.5 rounded-xl transition"
+                className="w-full mt-6 bg-[#005c55] hover:bg-[#0a564f] active:scale-[0.98] text-white font-bold py-3.5 rounded-xl transition"
               >
                 Back to Home
               </button>

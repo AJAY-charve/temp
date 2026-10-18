@@ -93,7 +93,6 @@ export default function Home() {
     { name: "Sunita", relation: "Mother" },
   ];
 
-  // Mini Cards (Heading Only)
   const row1 = [
     { image: bmiImg, title: "BMI", path: "/bmi" },
     { image: diabetesImg, title: "Diabetes" },
@@ -109,7 +108,6 @@ export default function Home() {
     { image: periodImg, title: "Period" },
   ];
 
-  // Main Diagnostics
   const diagnostics = [
     {
       image: bmiImg,
@@ -131,7 +129,6 @@ export default function Home() {
     },
   ];
 
-  // Store Services (Navigate to /store)
   const storeServices = [
     {
       image: supplementsImg,
@@ -189,7 +186,7 @@ export default function Home() {
 
         {/* MAIN */}
         <main className="flex-1 pb-24">
-          {/* Greeting + Family dropdown (Inline) */}
+          {/* Greeting */}
           <section className="px-4 pt-5 pb-2 relative">
             <div className="flex items-center justify-between gap-3">
               <button
@@ -201,9 +198,7 @@ export default function Home() {
                 </h1>
                 <ChevronDown
                   size={18}
-                  className={`text-gray-700 transition-transform ${
-                    familyOpen ? "rotate-180" : ""
-                  }`}
+                  className={`text-gray-700 transition-transform ${familyOpen ? "rotate-180" : ""}`}
                 />
               </button>
             </div>
@@ -214,7 +209,6 @@ export default function Home() {
                   className="fixed inset-0 z-40"
                   onClick={() => setFamilyOpen(false)}
                 ></div>
-
                 <div className="absolute left-4 top-[54px] z-50 w-56 bg-white rounded-2xl shadow-[0_8px_28px_rgba(15,23,42,0.12)] border border-[#eaedff] overflow-hidden">
                   <div className="px-3 py-2 border-b border-[#eaedff] bg-[#faf8ff]">
                     <p className="text-[10px] font-bold text-[#005c55] uppercase tracking-wide">
@@ -296,35 +290,44 @@ export default function Home() {
           {/* Quick Actions */}
           <section className="px-4 mb-6 mt-1">
             <div className="flex gap-2.5 items-stretch">
-              <div className="flex-shrink-0 w-[110px] bg-white rounded-2xl shadow-[0_2px_12px_rgba(15,23,42,0.04)] border border-[#eaedff] overflow-hidden flex flex-col">
-                <div className="w-full h-[70px] flex items-center justify-center overflow-hidden">
+              {/* BOOK APPOINTMENT TALL CARD */}
+              <div
+                className="flex-shrink-0 w-[110px] h-[220px] bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-[#eaedff] overflow-hidden flex flex-col justify-between active:scale-[0.98] transition cursor-pointer"
+                onClick={() => navigate("/appointment")}
+              >
+                {/* 60% Image Area */}
+                <div className="w-full h-[60%] flex items-center justify-center overflow-hidden bg-[#f4f6fb] border-b border-[#f0f2f8]">
                   <img
                     src={bookApptImg}
                     alt="Book Appointment"
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="p-2.5 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-[13px] font-bold text-gray-900 leading-tight">
-                      Book Appt.
-                    </h3>
-                    <p className="text-[10px] font-semibold text-[#005c55] mt-0.5">
-                      Doctor Consult
-                    </p>
-                    <p className="text-[9px] text-gray-500 mt-1 leading-snug line-clamp-2">
-                      Endocrinologists & Diabetologists
+
+                {/* 40% Text & Button Area */}
+                <div className="w-full h-[40%] px-2 py-2 flex flex-col justify-between items-center text-center">
+                  {/* Sub-heading (3-4 words) */}
+                  <div className="flex flex-col items-center justify-center h-full mb-2">
+                    <p className="text-[9.5px] text-gray-700 font-bold leading-tight">
+                      Book Doctor
+                      <br />
+                      Consultation
                     </p>
                   </div>
-                  <button
-                    onClick={() => navigate("/appointment")}
-                    className="mt-2 w-full h-7 bg-[#005c55] text-white text-[10px] font-bold rounded-lg flex items-center justify-center gap-0.5 active:scale-95"
-                  >
-                    Book Now <ArrowRight size={12} />
-                  </button>
+
+                  {/* Green Button with Arrow (2 Line Text) */}
+                  <div className="w-full py-1.5 bg-[#0d6b63] text-white text-[8px] font-bold rounded-lg flex items-center justify-center text-center leading-tight gap-1">
+                    <span>
+                      Book
+                      <br />
+                      Appointment
+                    </span>
+                    <ArrowRight size={10} />
+                  </div>
                 </div>
               </div>
 
+              {/* RIGHT SIDE (Mini Cards) */}
               <div className="flex-1 min-w-0 flex flex-col gap-2 justify-between">
                 <div className="flex overflow-x-auto gap-2 py-0.5 scrollbar-hide snap-x snap-mandatory">
                   {row1.map((c, i) => (
@@ -422,9 +425,7 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-[1.25fr_0.75fr] gap-2">
-              {/* LEFT SIDE COLUMN */}
               <div className="flex flex-col">
-                {/* First 3 Diagnostics */}
                 <div className="flex flex-col gap-2">
                   {diagnostics.map((d, i) => (
                     <DiagnosticRow
@@ -436,8 +437,6 @@ export default function Home() {
                     />
                   ))}
                 </div>
-
-                {/* Store Services (With 10px gap) */}
                 <div className="flex flex-col gap-2 mt-[10px]">
                   {storeServices.map((d, i) => (
                     <DiagnosticRow
@@ -451,7 +450,6 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* RIGHT SIDE TIPS COLUMN */}
               <div className="bg-white p-2.5 rounded-2xl border border-[#eaedff] flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between mb-2">
@@ -535,21 +533,16 @@ export default function Home() {
   );
 }
 
-/* ============ Mini Card (70% Image, 30% Heading, Shadow, Border, Less Rounded) ============ */
+/* ============ Mini Card ============ */
 function MiniCard({ image, title, onClick }) {
   return (
     <button
       onClick={onClick}
-      // 'rounded-md' use kiya taaki corner thoda sharp lage
-      // 'border-[#eaedff]' aur shadow lagaya
-      className="w-[78px] h-[105px] flex-shrink-0 bg-white rounded-md shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-[#eaedff] flex flex-col items-center overflow-hidden active:scale-[0.96] transition snap-start"
+      className="w-[78px] h-[105px] flex-shrink-0 bg-white rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-[#eaedff] flex flex-col items-center overflow-hidden active:scale-[0.96] transition snap-start"
     >
-      {/* 70% Image */}
       <div className="w-full h-[70%] flex items-center justify-center overflow-hidden bg-[#f4f6fb] border-b border-[#f0f2f8]">
         <img src={image} alt={title} className="w-full h-full object-cover" />
       </div>
-
-      {/* 30% Heading */}
       <div className="w-full h-[30%] flex items-center justify-center px-1">
         <h4 className="text-[10px] font-bold text-gray-900 leading-tight text-center truncate">
           {title}

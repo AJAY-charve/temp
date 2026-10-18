@@ -2,75 +2,101 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
-  HelpCircle,
   Calendar as CalendarIcon,
   ChevronLeft,
   ChevronRight,
-  Search,
+  Bell,
+  AlertCircle,
+  GraduationCap,
+  Briefcase,
+  Clock,
+  User,
+  Award,
+  MapPin,
 } from "lucide-react";
 
-// Naya Reusable Modal import kiya
 import PatientModal from "../components/PatientModal";
+import logo from "../assets/daibmetalogo.jpeg";
 
 /* ============ DOCTORS DATA ============ */
 const doctors = [
   {
     id: 1,
-    name: "Dr. Sharma",
-    specialty: "Endocrinologist",
-    degree: "MBBS, MD",
-    color: "#9cf2e8",
-    colorDark: "#005c55",
-    initials: "DS",
+    name: "Dr. Rakesh Gupta",
+    specialty: "General Physician",
+    image: null,
+    bg: "#ebf8fb",
+    details: [
+      { icon: GraduationCap, label: "Qualifications", value: "MBBS, MD" },
+      { icon: Briefcase, label: "Experience", value: "12+ Years" },
+      { icon: Clock, label: "Timings", value: "10:00 AM - 05:00 PM" },
+      { icon: Award, label: "Achievements", value: "Gold Medalist" },
+      { icon: MapPin, label: "Hospital", value: "Apollo Clinic, Indore" },
+    ],
   },
   {
     id: 2,
-    name: "Dr. Patel",
-    specialty: "Diabetologist",
-    degree: "MBBS, DM",
-    color: "#dce1ff",
-    colorDark: "#4059aa",
-    initials: "DP",
+    name: "Dr. Neha Sharma",
+    specialty: "Dietician",
+    image: null,
+    bg: "#fff8e1",
+    details: [
+      {
+        icon: GraduationCap,
+        label: "Qualifications",
+        value: "BSc, MSc Nutrition",
+      },
+      { icon: Briefcase, label: "Experience", value: "8+ Years" },
+      { icon: Clock, label: "Timings", value: "09:00 AM - 02:00 PM" },
+      { icon: Award, label: "Achievements", value: "Certified Nutritionist" },
+      { icon: MapPin, label: "Hospital", value: "Health Hub, Indore" },
+    ],
   },
   {
     id: 3,
-    name: "Dr. Mehta",
-    specialty: "Cardiologist",
-    degree: "MBBS, MD, DM",
-    color: "#ffd8e7",
-    colorDark: "#932265",
-    initials: "DM",
+    name: "Dr. Pooja Mehta",
+    specialty: "Dermatologist",
+    image: null,
+    bg: "#ffebee",
+    details: [
+      { icon: GraduationCap, label: "Qualifications", value: "MBBS, MD" },
+      { icon: Briefcase, label: "Experience", value: "10+ Years" },
+      { icon: Clock, label: "Timings", value: "11:00 AM - 06:00 PM" },
+      { icon: Award, label: "Achievements", value: "Skin Specialist" },
+      { icon: MapPin, label: "Hospital", value: "Skin Care Center" },
+    ],
   },
   {
     id: 4,
-    name: "Dr. Iyer",
-    specialty: "Dietician",
-    degree: "BSc, MSc Nutrition",
-    color: "#9cf2e8",
-    colorDark: "#005c55",
-    initials: "DI",
+    name: "Dr. Arjun Verma",
+    specialty: "Physiotherapist",
+    image: null,
+    bg: "#e8f5e9",
+    details: [
+      { icon: GraduationCap, label: "Qualifications", value: "BPT, MPT" },
+      { icon: Briefcase, label: "Experience", value: "5+ Years" },
+      { icon: Clock, label: "Timings", value: "08:00 AM - 01:00 PM" },
+      { icon: Award, label: "Achievements", value: "Sports Rehab Expert" },
+      { icon: MapPin, label: "Hospital", value: "Physio Care, Indore" },
+    ],
   },
   {
     id: 5,
-    name: "Dr. Khan",
-    specialty: "Physician",
-    degree: "MBBS, MD",
-    color: "#dce1ff",
-    colorDark: "#4059aa",
-    initials: "DK",
-  },
-  {
-    id: 6,
-    name: "Dr. Reddy",
-    specialty: "Nephrologist",
-    degree: "MBBS, DM",
-    color: "#ffd8e7",
-    colorDark: "#932265",
-    initials: "DR",
+    name: "Dr. Shalini Desai",
+    specialty: "Gynecologist",
+    image: null,
+    bg: "#f3e5f5",
+    details: [
+      { icon: GraduationCap, label: "Qualifications", value: "MBBS, DGO" },
+      { icon: Briefcase, label: "Experience", value: "15+ Years" },
+      { icon: Clock, label: "Timings", value: "10:00 AM - 04:00 PM" },
+      { icon: Award, label: "Achievements", value: "Women's Health Expert" },
+      { icon: MapPin, label: "Hospital", value: "City Maternity, Indore" },
+    ],
   },
 ];
 
-/* ============ DATES GENERATOR ============ */
+/* ============ DATES & SLOTS ============ */
 const generateDates = () => {
   const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const monthNames = [
@@ -121,16 +147,6 @@ const slots = [
   "04:00 PM",
 ];
 
-const specialties = [
-  "All",
-  "Endocrine",
-  "Diabetes",
-  "Cardio",
-  "Diet",
-  "Physician",
-  "Nephro",
-];
-
 export default function Appointment() {
   const navigate = useNavigate();
   const [selectedDoctor, setSelectedDoctor] = useState(null);
@@ -138,10 +154,6 @@ export default function Appointment() {
   const [currentWeek, setCurrentWeek] = useState(0);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [search, setSearch] = useState("");
-  const [activeChip, setActiveChip] = useState("All");
-
-  const otherDoctors = doctors.filter((d) => d.id !== selectedDoctor?.id);
 
   const weekStart = currentWeek * 7;
   const weekDates = allDates.slice(weekStart, weekStart + 7);
@@ -151,16 +163,6 @@ export default function Appointment() {
     if (next < 0 || next >= WEEKS) return;
     setCurrentWeek(next);
   };
-
-  const filteredDoctors = doctors.filter((d) => {
-    const matchSearch =
-      d.name.toLowerCase().includes(search.toLowerCase()) ||
-      d.specialty.toLowerCase().includes(search.toLowerCase());
-    const matchChip =
-      activeChip === "All" ||
-      d.specialty.toLowerCase().includes(activeChip.toLowerCase());
-    return matchSearch && matchChip;
-  });
 
   return (
     <div className="min-h-screen bg-[#faf8ff] flex justify-center">
@@ -177,72 +179,78 @@ export default function Appointment() {
                   navigate(-1);
                 }
               }}
-              className="w-9 h-9 flex items-center justify-center rounded-full text-gray-700 hover:bg-gray-100 active:scale-95 transition"
+              className="w-9 h-9 flex items-center justify-center text-gray-700 active:scale-95 transition"
             >
-              <ArrowLeft size={20} />
+              <ArrowLeft size={22} strokeWidth={2.5} />
             </button>
-            <h1 className="font-bold text-gray-900 text-[15px]">
-              Book Appointment
-            </h1>
-            <button className="w-9 h-9 flex items-center justify-center text-gray-500 hover:text-[#005c55] transition">
-              <HelpCircle size={20} />
+            <img
+              src={logo}
+              alt="DiabMeta"
+              className="h-7 w-auto object-contain"
+            />
+            <button className="w-9 h-9 flex items-center justify-center text-gray-700 active:scale-95 transition">
+              <Bell size={20} strokeWidth={2.5} />
             </button>
           </div>
         </header>
 
         {/* MAIN */}
-        <main className="flex-1 pb-8 overflow-y-auto">
+        <main className="flex-1 pb-28 overflow-y-auto">
           {selectedDoctor ? (
+            /* ===== SELECTED DOCTOR VIEW ===== */
             <div className="px-4 pt-4">
-              <div className="bg-white rounded-3xl border border-[#eaedff] shadow-[0_4px_20px_rgba(15,23,42,0.06)] p-5 flex flex-col items-center text-center mb-5">
-                <div
-                  className="w-24 h-24 rounded-full flex items-center justify-center mb-3 shadow-lg"
-                  style={{
-                    backgroundColor: selectedDoctor.color,
-                    color: selectedDoctor.colorDark,
-                  }}
-                >
-                  <span className="text-[32px] font-black">
-                    {selectedDoctor.initials}
-                  </span>
-                </div>
-                <h2 className="text-[18px] font-bold text-gray-900">
-                  {selectedDoctor.name}
-                </h2>
-                <p className="text-[12px] text-[#005c55] font-semibold mt-0.5">
-                  {selectedDoctor.specialty}
-                </p>
-                <p className="text-[11px] text-gray-500 mt-1">
-                  {selectedDoctor.degree}
-                </p>
-              </div>
-
-              <h3 className="text-[12px] font-bold text-gray-700 mb-2">
-                Switch Doctor
-              </h3>
-              <div className="flex gap-2.5 overflow-x-auto scrollbar-hide pb-2 mb-5 -mx-4 px-4">
-                {otherDoctors.map((d) => (
-                  <button
-                    key={d.id}
-                    onClick={() => {
-                      setSelectedDoctor(d);
-                      setSelectedSlot(null);
-                    }}
-                    className="flex-shrink-0 flex flex-col items-center gap-1 active:scale-95 transition"
+              {/* DOCTOR PROFILE CARD */}
+              <div className="bg-[#f8fbff] rounded-2xl p-4 flex gap-4 mb-6 border border-[#e6f0fa]">
+                {/* COLUMN 1: Badi Image (Vertically Centered) */}
+                <div className="w-[140px] flex-shrink-0 flex items-center justify-center">
+                  <div
+                    className="w-[130px] h-[180px] rounded-xl overflow-hidden border border-white shadow-sm flex items-center justify-center"
+                    style={{ backgroundColor: selectedDoctor.bg }}
                   >
-                    <div
-                      className="w-12 h-12 rounded-full flex items-center justify-center text-[14px] font-bold"
-                      style={{ backgroundColor: d.color, color: d.colorDark }}
-                    >
-                      {d.initials}
-                    </div>
-                    <span className="text-[9px] font-semibold text-gray-600 truncate w-14 text-center">
-                      {d.name.replace("Dr. ", "")}
-                    </span>
-                  </button>
-                ))}
+                    {selectedDoctor.image ? (
+                      <img
+                        src={selectedDoctor.image}
+                        alt={selectedDoctor.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <User size={64} className="text-gray-400 opacity-40" />
+                    )}
+                  </div>
+                </div>
+
+                {/* COLUMN 2: Name, Specialty, Details */}
+                <div className="flex-1 flex flex-col justify-center py-1">
+                  <h2 className="text-[15px] font-extrabold text-[#1a2b4c] leading-tight">
+                    {selectedDoctor.name}
+                  </h2>
+                  <p className="text-[11px] text-[#4059aa] font-semibold mb-2.5">
+                    {selectedDoctor.specialty}
+                  </p>
+
+                  {/* Details List (5 items) */}
+                  <div className="flex flex-col gap-2">
+                    {selectedDoctor.details.map((item, idx) => (
+                      <div key={idx} className="flex items-start gap-2">
+                        <item.icon
+                          size={13}
+                          className="text-[#4059aa] flex-shrink-0 mt-0.5"
+                        />
+                        <div className="flex flex-col">
+                          <span className="text-[8px] text-gray-500 font-bold uppercase tracking-wider leading-tight">
+                            {item.label}
+                          </span>
+                          <span className="text-[10px] text-gray-800 font-semibold leading-tight mt-0.5">
+                            {item.value}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
 
+              {/* Date Selection */}
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-[13px] font-bold text-gray-900">
                   Select Date
@@ -251,7 +259,7 @@ export default function Appointment() {
                   <button
                     onClick={() => changeWeek(-1)}
                     disabled={currentWeek === 0}
-                    className="w-7 h-7 flex items-center justify-center rounded-full bg-white border border-[#eaedff] text-gray-700 disabled:opacity-30 disabled:cursor-not-allowed active:scale-95 transition"
+                    className="w-7 h-7 flex items-center justify-center rounded-full bg-white border border-[#eaedff] text-gray-700 disabled:opacity-30 active:scale-95 transition"
                   >
                     <ChevronLeft size={14} />
                   </button>
@@ -261,7 +269,7 @@ export default function Appointment() {
                   <button
                     onClick={() => changeWeek(1)}
                     disabled={currentWeek === WEEKS - 1}
-                    className="w-7 h-7 flex items-center justify-center rounded-full bg-white border border-[#eaedff] text-gray-700 disabled:opacity-30 disabled:cursor-not-allowed active:scale-95 transition"
+                    className="w-7 h-7 flex items-center justify-center rounded-full bg-white border border-[#eaedff] text-gray-700 disabled:opacity-30 active:scale-95 transition"
                   >
                     <ChevronRight size={14} />
                   </button>
@@ -295,6 +303,7 @@ export default function Appointment() {
                 </span>
               </div>
 
+              {/* Slots */}
               <h3 className="text-[13px] font-bold text-gray-900 mb-2">
                 Available Slots
               </h3>
@@ -321,85 +330,63 @@ export default function Appointment() {
               </button>
             </div>
           ) : (
-            <div className="px-4 pt-5">
-              <h2 className="text-[20px] font-bold text-gray-900 mb-1">
-                Our Doctors
-              </h2>
-              <p className="text-[12px] text-gray-500 mb-4">
-                Choose a specialist to book
-              </p>
-
-              <div className="flex items-center gap-2 px-3.5 py-3 rounded-2xl bg-white border border-[#eaedff] shadow-[0_2px_8px_rgba(15,23,42,0.04)] mb-3">
-                <Search size={16} className="text-gray-400 flex-shrink-0" />
-                <input
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search doctor or specialty..."
-                  className="flex-1 bg-transparent outline-none text-[13px] text-gray-800 placeholder-gray-400"
-                />
+            /* ===== DOCTOR LIST VIEW ===== */
+            <div className="px-4 pt-3 pb-4">
+              <div className="text-center mb-6">
+                <h2 className="text-[19px] font-bold text-[#0f172a] mb-1">
+                  Schedule a Doctor's Consultation
+                </h2>
+                <p className="text-[12px] text-gray-500">
+                  Choose a doctor to book your appointment
+                </p>
               </div>
 
-              <div className="flex gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4 pb-3 mb-3">
-                {specialties.map((s) => (
+              <div className="grid grid-cols-3 gap-x-2.5 gap-y-4">
+                {doctors.map((d) => (
                   <button
-                    key={s}
-                    onClick={() => setActiveChip(s)}
-                    className={`flex-shrink-0 px-3 py-1.5 rounded-full text-[11px] font-semibold transition ${activeChip === s ? "bg-[#005c55] text-white shadow-md shadow-[#005c55]/25" : "bg-white border border-[#eaedff] text-gray-600 hover:border-[#005c55]/30"}`}
+                    key={d.id}
+                    onClick={() => {
+                      setSelectedDoctor(d);
+                      setSelectedSlot(null);
+                      setSelectedDate(0);
+                      setCurrentWeek(0);
+                    }}
+                    className="flex flex-col bg-white rounded-md overflow-hidden border border-[#eaedff] shadow-sm active:scale-95 transition text-left"
                   >
-                    {s}
+                    <div
+                      className="w-full h-[80px] relative flex items-center justify-center"
+                      style={{ backgroundColor: d.bg }}
+                    >
+                      <User size={30} className="text-gray-400 opacity-40" />
+                    </div>
+
+                    <div className="p-2 border-t border-gray-50">
+                      <p className="text-[10px] font-bold text-[#0f172a] leading-tight truncate">
+                        {d.name}
+                      </p>
+                      <p className="text-[8px] text-[#005c55] font-semibold mt-0.5 leading-tight truncate">
+                        {d.specialty}
+                      </p>
+                    </div>
                   </button>
                 ))}
               </div>
-
-              {filteredDoctors.length === 0 ? (
-                <div className="bg-white rounded-2xl border border-[#eaedff] p-6 text-center mb-6">
-                  <p className="text-[13px] font-semibold text-gray-700">
-                    No doctors found
-                  </p>
-                  <p className="text-[11px] text-gray-500 mt-1">
-                    Try a different search or specialty
-                  </p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-3 gap-x-3 gap-y-5 mb-6">
-                  {filteredDoctors.map((d) => (
-                    <button
-                      key={d.id}
-                      onClick={() => {
-                        setSelectedDoctor(d);
-                        setSelectedSlot(null);
-                        setSelectedDate(0);
-                        setCurrentWeek(0);
-                      }}
-                      className="flex flex-col items-center gap-2 active:scale-95 transition"
-                    >
-                      <div
-                        className="w-20 h-20 rounded-full flex items-center justify-center shadow-[0_4px_14px_rgba(15,23,42,0.08)] border-2 border-white relative"
-                        style={{ backgroundColor: d.color, color: d.colorDark }}
-                      >
-                        <span className="text-[22px] font-black">
-                          {d.initials}
-                        </span>
-                        <span className="absolute bottom-1 right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></span>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-[11px] font-bold text-gray-900 leading-tight">
-                          {d.name.replace("Dr. ", "")}
-                        </p>
-                        <p className="text-[9px] text-[#005c55] font-semibold mt-0.5">
-                          {d.specialty}
-                        </p>
-                        <p className="text-[8px] text-gray-400 mt-0.5 leading-tight">
-                          {d.degree}
-                        </p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              )}
             </div>
           )}
         </main>
+
+        {/* LOCATION BANNER */}
+        {!selectedDoctor && (
+          <div className="fixed bottom-4 inset-x-0 z-40 px-4 w-full max-w-md mx-auto">
+            <div className="bg-[#fffcf5] border border-[#f5eedc] rounded-xl px-3 py-3 flex items-center gap-2 shadow-sm">
+              <AlertCircle size={16} className="text-[#c99a45] flex-shrink-0" />
+              <p className="text-[10px] text-[#8f794a] leading-snug font-medium">
+                Doctor consultation services are currently available only Indore
+                (MP).
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* REUSABLE MODAL */}
         {showModal && (
@@ -410,7 +397,6 @@ export default function Appointment() {
             onClose={() => setShowModal(false)}
             onConfirm={(data) => {
               console.log("Booked data:", data);
-              // Yaha API call ya navigation kar sakte ho
             }}
           />
         )}
