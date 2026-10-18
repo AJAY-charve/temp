@@ -7,11 +7,13 @@ import Appointment from "./pages/Appointment";
 import BmiCheck from "./pages/BmiCheck";
 import DiagnosticDetail from "./pages/DiagnosticDetail";
 import HealthPlanDetail from "./pages/HealthPlanDetail";
+import DiabetesAssessment from "./pages/DiabetesAssessment";
+import DiabetesResult from "./pages/DiabetesResult";
+import DiabetesHealthPlanDetail from "./pages/DiabetesHealthPlanDetail"; // Naya Import
 
 export default function App() {
   return (
     <Routes>
-      {/* Start me Splash aayega */}
       <Route path="/" element={<Splash />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
@@ -23,6 +25,15 @@ export default function App() {
         path="/health-plan/:category/:planType"
         element={<HealthPlanDetail />}
       />
+
+      {/* Diabetes Routes */}
+      <Route path="/diabetes" element={<DiabetesAssessment />} />
+      <Route path="/diabetes/result" element={<DiabetesResult />} />
+      <Route
+        path="/diabetes/health-plan/:level/:planType"
+        element={<DiabetesHealthPlanDetail />}
+      />
+
       <Route path="*" element={<Login />} />
     </Routes>
   );
