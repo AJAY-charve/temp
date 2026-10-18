@@ -1,27 +1,14 @@
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  ArrowLeft,
-  HelpCircle,
-  Check,
-  ArrowRight,
-  Info,
-  Salad,
-  Dumbbell,
-  HeartPulse,
-} from "lucide-react";
+import { ArrowLeft, HelpCircle, Check, ArrowRight, Info } from "lucide-react";
 
-// Images
-import scanFoodImg from "../assets/cards/scan-food.jpeg";
-import caloriesImg from "../assets/cards/calories.jpeg";
-import diabetesImg from "../assets/cards/diabetes.jpeg";
+import { BMI_THEME, PLAN_ART } from "./BmiCheck";
+
+const NAVY = "#14284b";
 
 /* ============ BMI CATEGORIES DATA ============ */
 const BMI_CATEGORIES = {
   underweight: {
-    label: "Underweight",
     range: "<18.5",
-    color: "#4059aa",
-    bg: "#dce1ff",
     diet: [
       "Increase calories gradually with nutritious foods.",
       "Eat 3 main meals and 2–3 healthy snacks.",
@@ -43,10 +30,7 @@ const BMI_CATEGORIES = {
     ],
   },
   normal: {
-    label: "Normal Weight",
     range: "18.5–22.9",
-    color: "#005c55",
-    bg: "#9cf2e8",
     diet: [
       "Follow a balanced diet with vegetables, fruits, whole grains and protein.",
       "Maintain appropriate portion sizes.",
@@ -68,10 +52,7 @@ const BMI_CATEGORIES = {
     ],
   },
   overweight: {
-    label: "Overweight",
     range: "23.0–24.9",
-    color: "#c45d00",
-    bg: "#ffe2c2",
     diet: [
       "Create a modest calorie deficit if weight loss is appropriate.",
       "Increase vegetables, fibre and lean protein.",
@@ -92,10 +73,7 @@ const BMI_CATEGORIES = {
     ],
   },
   obesity1: {
-    label: "Obesity Class I",
     range: "25.0–29.9",
-    color: "#932265",
-    bg: "#ffd8e7",
     diet: [
       "Follow an individualised calorie-restricted diet.",
       "Prioritise protein, vegetables and fibre.",
@@ -116,10 +94,7 @@ const BMI_CATEGORIES = {
     ],
   },
   obesity2: {
-    label: "Obesity Class II",
     range: "30.0–34.9",
-    color: "#932265",
-    bg: "#ffd8e7",
     diet: [
       "Use a structured, individualised calorie-deficit plan.",
       "Ensure sufficient protein and nutritional adequacy.",
@@ -140,10 +115,7 @@ const BMI_CATEGORIES = {
     ],
   },
   obesity3: {
-    label: "Obesity Class III",
     range: "≥35.0",
-    color: "#932265",
-    bg: "#ffd8e7",
     diet: [
       "Follow a medically supervised, individualised nutrition plan.",
       "Prioritise adequate protein, vegetables and micronutrients.",
@@ -298,30 +270,9 @@ const DISCLAIMER = {
 
 /* ============ PLAN TYPE CONFIG ============ */
 const PLAN_TYPES = {
-  diet: {
-    title: "Diet Plan",
-    icon: <Salad size={24} />,
-    image: scanFoodImg,
-    color: "#e8f8f1",
-    colorDark: "#005c55",
-    emoji: "🥗",
-  },
-  activity: {
-    title: "Physical Activity",
-    icon: <Dumbbell size={24} />,
-    image: caloriesImg,
-    color: "#e8efff",
-    colorDark: "#4059aa",
-    emoji: "🏃",
-  },
-  advice: {
-    title: "Other Advice",
-    icon: <HeartPulse size={24} />,
-    image: diabetesImg,
-    color: "#fff8e1",
-    colorDark: "#c45d00",
-    emoji: "💡",
-  },
+  diet: { title: "Diet Plan", colorDark: "#2e8f3a" },
+  activity: { title: "Physical Activity", colorDark: "#2f8cf0" },
+  advice: { title: "Other Advice", colorDark: "#ea8a10" },
 };
 
 export default function HealthPlanDetail() {
@@ -329,9 +280,11 @@ export default function HealthPlanDetail() {
   const navigate = useNavigate();
 
   const cat = BMI_CATEGORIES[category];
+  const theme = BMI_THEME[category];
   const plan = PLAN_TYPES[planType];
+  const Art = PLAN_ART[planType];
 
-  if (!cat || !plan) {
+  if (!cat || !theme || !plan || !Art) {
     return (
       <div className="min-h-screen bg-[#faf8ff] flex items-center justify-center p-6">
         <div className="text-center">
@@ -351,18 +304,32 @@ export default function HealthPlanDetail() {
   const hindiItems = HINDI_PLANS[category][planType];
 
   return (
-    <div className="min-h-screen bg-[#faf8ff] flex justify-center">
-      <div className="w-full max-w-md bg-[#faf8ff] min-h-screen flex flex-col">
+    <div
+      className="min-h-screen flex justify-center"
+      style={{
+        background:
+          "linear-gradient(180deg,#e7f1fc 0%,#f2f7fd 45%,#fafcff 100%)",
+        fontFamily: "'Nunito','Noto Sans Devanagari',system-ui,sans-serif",
+      }}
+    >
+      <div className="w-full max-w-md min-h-screen flex flex-col">
         {/* TOP BAR */}
-        <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-gray-100">
+        <header
+          className="sticky top-0 z-40"
+          style={{
+            background: "rgba(231,241,252,0.9)",
+            backdropFilter: "blur(12px)",
+          }}
+        >
           <div className="h-14 px-4 flex items-center justify-between">
             <button
               onClick={() => navigate(-1)}
-              className="w-9 h-9 flex items-center justify-center rounded-full text-gray-700 hover:bg-gray-100 active:scale-95"
+              className="w-9 h-9 flex items-center justify-center rounded-full active:scale-95"
+              style={{ color: NAVY }}
             >
-              <ArrowLeft size={20} />
+              <ArrowLeft size={22} strokeWidth={2.5} />
             </button>
-            <h1 className="font-bold text-gray-900 text-[15px]">
+            <h1 className="font-extrabold text-[17px]" style={{ color: NAVY }}>
               {plan.title}
             </h1>
             <button className="w-9 h-9 flex items-center justify-center text-gray-500">
@@ -372,101 +339,61 @@ export default function HealthPlanDetail() {
         </header>
 
         {/* MAIN */}
-        <main className="flex-1 pb-8 px-4 pt-4">
-          {/* Hero */}
+        <main className="flex-1 pb-8 px-4 pt-3">
+          {/* HERO: same colours + SVG art as the BMI result page */}
           <div
-            className="rounded-2xl p-4 mb-4 flex items-center gap-3"
-            style={{ backgroundColor: plan.color }}
+            className="rounded-[20px] p-4 mb-3.5 flex items-center gap-3.5"
+            style={{ background: theme.cardBg }}
           >
-            <div
-              className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center flex-shrink-0"
-              style={{ color: plan.colorDark }}
-            >
-              {plan.icon}
+            <div className="w-[72px] h-[72px] rounded-2xl bg-white/90 p-1.5 flex-none shadow-sm overflow-hidden flex items-end">
+              <Art />
             </div>
             <div className="flex-1 min-w-0">
-              <h2 className="text-[16px] font-black text-gray-900">
+              <h2
+                className="text-[19px] font-black leading-tight"
+                style={{ color: NAVY }}
+              >
                 {plan.title}
               </h2>
-              <div className="flex items-center gap-1.5 mt-1">
+              <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
                 <span
-                  className="text-[9px] font-bold text-white px-2 py-0.5 rounded"
-                  style={{ backgroundColor: cat.color }}
+                  className="text-[9.5px] font-black text-white px-2.5 py-1 rounded-md tracking-wide whitespace-nowrap shadow-sm"
+                  style={{ background: theme.pill }}
                 >
-                  {cat.label.toUpperCase()}
+                  {theme.label}
                 </span>
-                <span className="text-[10px] text-gray-600">
+                <span className="text-[10px] text-gray-600 font-semibold">
                   BMI {cat.range}
                 </span>
               </div>
             </div>
-            <div className="text-[24px]">{plan.emoji}</div>
           </div>
 
           {/* ENGLISH SECTION */}
-          <div className="bg-white rounded-2xl border border-[#eaedff] p-4 mb-4">
-            <div className="flex items-center gap-2 mb-3">
-              <div
-                className="w-6 h-6 rounded-md flex items-center justify-center text-[11px] font-bold text-white"
-                style={{ backgroundColor: plan.colorDark }}
-              >
-                EN
-              </div>
-              <h3 className="text-[12px] font-bold text-gray-900">English</h3>
-            </div>
-            <ul className="flex flex-col gap-2.5">
-              {englishItems.map((item, i) => (
-                <li key={i} className="flex items-start gap-2.5">
-                  <span
-                    className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-                    style={{ backgroundColor: plan.colorDark }}
-                  >
-                    <Check size={10} className="text-white" strokeWidth={3} />
-                  </span>
-                  <span className="text-[12px] text-gray-700 leading-snug">
-                    {item}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <PlanList
+            badge="EN"
+            title="English"
+            items={englishItems}
+            color={plan.colorDark}
+          />
 
           {/* HINDI SECTION */}
-          <div className="bg-white rounded-2xl border border-[#eaedff] p-4 mb-4">
-            <div className="flex items-center gap-2 mb-3">
-              <div
-                className="w-6 h-6 rounded-md flex items-center justify-center text-[11px] font-bold text-white"
-                style={{ backgroundColor: plan.colorDark }}
-              >
-                हि
-              </div>
-              <h3 className="text-[12px] font-bold text-gray-900">हिंदी</h3>
-            </div>
-            <ul className="flex flex-col gap-2.5">
-              {hindiItems.map((item, i) => (
-                <li key={i} className="flex items-start gap-2.5">
-                  <span
-                    className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-                    style={{ backgroundColor: plan.colorDark }}
-                  >
-                    <Check size={10} className="text-white" strokeWidth={3} />
-                  </span>
-                  <span className="text-[12px] text-gray-700 leading-snug">
-                    {item}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <PlanList
+            badge="हि"
+            title="हिंदी"
+            items={hindiItems}
+            color={plan.colorDark}
+          />
 
           {/* Disclaimer */}
-          <div className="bg-[#eef6f9] rounded-2xl p-3.5 mb-4 flex items-start gap-2.5">
-            <div className="w-6 h-6 rounded-full bg-[#005c55] flex items-center justify-center flex-shrink-0 mt-0.5">
-              <Info size={13} className="text-white" />
+          <div className="bg-[#e6f0fb] border border-[#d3e4f7] rounded-2xl p-3.5 mb-4 flex items-start gap-2.5">
+            <div className="w-6 h-6 rounded-full bg-[#2f80ed] flex items-center justify-center flex-shrink-0 mt-0.5">
+              <Info size={14} strokeWidth={2.6} className="text-white" />
             </div>
-            <div className="text-[10px] text-gray-700 leading-relaxed">
+            <div className="text-[10px] text-[#3b4a66] leading-relaxed font-medium">
               <p>
-                <span className="font-bold">Disclaimer:</span> {DISCLAIMER.en}
+                <span className="font-extrabold">Disclaimer:</span>{" "}
+                {DISCLAIMER.en}
               </p>
               <p className="mt-1.5">{DISCLAIMER.hi}</p>
             </div>
@@ -475,12 +402,46 @@ export default function HealthPlanDetail() {
           {/* Book Doctor */}
           <button
             onClick={() => navigate("/appointment")}
-            className="w-full border border-[#005c55] text-[#005c55] font-bold py-3.5 rounded-xl active:scale-[0.98] transition flex items-center justify-center gap-2 hover:bg-[#e8f3f1]"
+            className="w-full bg-white border-2 border-[#0d6b63] text-[#0d6b63] font-bold py-3.5 rounded-xl active:scale-[0.98] transition flex items-center justify-center gap-2"
           >
-            Book Doctor Consult <ArrowRight size={16} />
+            Book Doctor Consultaion <ArrowRight size={16} />
           </button>
         </main>
       </div>
+    </div>
+  );
+}
+
+/* ============ LIST CARD (English / Hindi) ============ */
+function PlanList({ badge, title, items, color }) {
+  return (
+    <div className="bg-white rounded-[20px] border border-[#e3ecf7] shadow-[0_2px_10px_rgba(30,64,120,0.06)] p-4 mb-3.5">
+      <div className="flex items-center gap-2 mb-3">
+        <div
+          className="w-6 h-6 rounded-md flex items-center justify-center text-[11px] font-bold text-white"
+          style={{ backgroundColor: color }}
+        >
+          {badge}
+        </div>
+        <h3 className="text-[13px] font-extrabold" style={{ color: NAVY }}>
+          {title}
+        </h3>
+      </div>
+      <ul className="flex flex-col gap-2.5">
+        {items.map((item, i) => (
+          <li key={i} className="flex items-start gap-2.5">
+            <span
+              className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
+              style={{ backgroundColor: color }}
+            >
+              <Check size={10} className="text-white" strokeWidth={3} />
+            </span>
+            <span className="text-[12px] text-[#3b4a66] leading-snug font-medium">
+              {item}
+            </span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

@@ -1,72 +1,178 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   ArrowLeft,
   HelpCircle,
   ArrowRight,
-  RefreshCw,
   Weight,
   Info,
   Calendar,
   Activity,
+  Gauge,
+  ChevronRight,
+  Sparkles,
+  MessageCircle,
 } from "lucide-react";
 
-// Images
+// Banner (input view)
 import bmiImg from "../assets/cards/bmi.jpeg";
-import diabetesImg from "../assets/cards/diabetes.jpeg";
-import scanFoodImg from "../assets/cards/scan-food.jpeg";
-import caloriesImg from "../assets/cards/calories.jpeg";
-import bookApptImg from "../assets/cards/book-appt.png";
 
-/* ============ BMI CATEGORIES (Asian Indian) ============ */
-const BMI_CATEGORIES = {
+// Top result card images (only 3 - heavy weight image is used for overweight & all obesity classes)
+import imgUnderweight from "../assets/bmi/underweight.png";
+import imgNormal from "../assets/bmi/normal.png";
+import imgOverweight from "../assets/bmi/overweight.png";
+
+const NAVY = "#14284b";
+
+/* ============ CATEGORY COLORS (HealthPlanDetail bhi yahin se leta hai) ============ */
+export const BMI_THEME = {
   underweight: {
-    label: "Underweight",
-    range: "<18.5",
+    label: "UNDERWEIGHT",
     rangeLong: "BMI less than 18.5",
-    color: "#4059aa",
-    bg: "#dce1ff",
+    solid: "#1e88e5",
+    pill: "linear-gradient(180deg,#34a0ff,#1670d8)",
+    cardBg: "linear-gradient(135deg,#e6f3fe,#d3e8fb)",
   },
   normal: {
-    label: "Normal Weight",
-    range: "18.5–22.9",
+    label: "NORMAL WEIGHT",
     rangeLong: "BMI 18.5 to 22.9",
-    color: "#005c55",
-    bg: "#9cf2e8",
+    solid: "#2e9e3a",
+    pill: "linear-gradient(180deg,#4fbf5a,#2e8f3a)",
+    cardBg: "linear-gradient(135deg,#e6f6e8,#d3eed7)",
   },
   overweight: {
-    label: "Overweight",
-    range: "23.0–24.9",
+    label: "OVERWEIGHT",
     rangeLong: "BMI 23.0 to 24.9",
-    color: "#c45d00",
-    bg: "#ffe2c2",
+    solid: "#dd9c00",
+    pill: "linear-gradient(180deg,#f9c23f,#dd9c00)",
+    cardBg: "linear-gradient(135deg,#fff4d6,#ffe8b8)",
   },
   obesity1: {
-    label: "Obesity Class I",
-    range: "25.0–29.9",
+    label: "OBESITY CLASS I",
     rangeLong: "BMI 25.0 to 29.9",
-    color: "#932265",
-    bg: "#ffd8e7",
+    solid: "#ea7410",
+    pill: "linear-gradient(180deg,#fb9d3f,#ea7410)",
+    cardBg: "linear-gradient(135deg,#ffeadb,#ffdcc2)",
   },
   obesity2: {
-    label: "Obesity Class II",
-    range: "30.0–34.9",
+    label: "OBESITY CLASS II",
     rangeLong: "BMI 30.0 to 34.9",
-    color: "#932265",
-    bg: "#ffd8e7",
+    solid: "#d12a24",
+    pill: "linear-gradient(180deg,#f2504a,#d12a24)",
+    cardBg: "linear-gradient(135deg,#fdecde,#fbdcc3)",
   },
   obesity3: {
-    label: "Obesity Class III",
-    range: "≥35.0",
+    label: "OBESITY CLASS III",
     rangeLong: "BMI 35.0 or higher",
-    color: "#932265",
-    bg: "#ffd8e7",
+    solid: "#9a1a1a",
+    pill: "linear-gradient(180deg,#d32f2f,#9a1a1a)",
+    cardBg: "linear-gradient(135deg,#fde6e0,#fbd2c9)",
   },
 };
 
-const DISCLAIMER = {
-  en: "These are general recommendations. Consult your doctor for personalised advice.",
-  hi: "चिकित्सकीय सलाह: ये सामान्य सुझाव हैं। व्यक्तिगत सलाह के लिए अपने डॉक्टर से परामर्श करें।",
+/* ============ HINDI MESSAGES ============ */
+const MSG_LOSE = {
+  title: "धीरे-धीरे वजन कम करें।",
+  body: "स्वस्थ आहार, नियमित व्यायाम और जीवनशैली में बदलाव से आप सुरक्षित रूप से वजन कम कर सकते हैं और भविष्य में होने वाली बीमारियों के जोखिम को कम कर सकते हैं।",
+};
+
+/* ============ BMI CATEGORIES ============ */
+const BMI_CATEGORIES = {
+  underweight: {
+    img: imgUnderweight,
+    msg: {
+      title: "पौष्टिक आहार से वजन बढ़ाएं।",
+      body: "संतुलित और पौष्टिक आहार, प्रोटीन युक्त भोजन और हल्के व्यायाम से आप सुरक्षित रूप से अपना वजन बढ़ा सकते हैं और कमजोरी से बच सकते हैं।",
+    },
+  },
+  normal: {
+    img: imgNormal,
+    msg: {
+      title: "अपना वजन संतुलित बनाए रखें।",
+      body: "स्वस्थ आहार, नियमित व्यायाम और अच्छी जीवनशैली से आप अपना वजन सामान्य बनाए रख सकते हैं और भविष्य में होने वाली बीमारियों के जोखिम को कम कर सकते हैं।",
+    },
+  },
+  overweight: {
+    img: imgOverweight,
+    msg: MSG_LOSE,
+  },
+  obesity1: {
+    img: imgOverweight,
+    msg: MSG_LOSE,
+  },
+  obesity2: {
+    img: imgOverweight,
+    msg: MSG_LOSE,
+  },
+  obesity3: {
+    img: imgOverweight,
+    msg: MSG_LOSE,
+  },
+};
+
+/* ============ "WHERE DO YOU STAND" BAR ============ */
+const SEGMENTS = [
+  {
+    key: "underweight",
+    range: "< 18.5",
+    name: ["Underweight"],
+    color: "#1e90ff",
+    text: "#1e88e5",
+    lo: 12,
+    hi: 18.5,
+  },
+  {
+    key: "normal",
+    range: "18.5 – 22.9",
+    name: ["Normal", "weight"],
+    color: "#3fae49",
+    text: "#2e9e3a",
+    lo: 18.5,
+    hi: 22.9,
+  },
+  {
+    key: "overweight",
+    range: "23.0 – 24.9",
+    name: ["Overweight"],
+    color: "#f6b92b",
+    text: "#d99a00",
+    lo: 22.9,
+    hi: 24.9,
+  },
+  {
+    key: "obesity1",
+    range: "25.0 – 29.9",
+    name: ["Obesity", "Class I"],
+    color: "#f58220",
+    text: "#ee7410",
+    lo: 24.9,
+    hi: 29.9,
+  },
+  {
+    key: "obesity2",
+    range: "30.0 – 34.9",
+    name: ["Obesity", "Class II"],
+    color: "#e53935",
+    text: "#e53935",
+    lo: 29.9,
+    hi: 34.9,
+  },
+  {
+    key: "obesity3",
+    range: "≥ 35.0",
+    name: ["Obesity", "Class III"],
+    color: "#b71c1c",
+    text: "#b71c1c",
+    lo: 34.9,
+    hi: 45,
+  },
+];
+
+const getMarkerPos = (bmi, catKey) => {
+  const idx = SEGMENTS.findIndex((s) => s.key === catKey);
+  const s = SEGMENTS[idx];
+  const frac = Math.min(Math.max((bmi - s.lo) / (s.hi - s.lo), 0), 1);
+  return Math.min(Math.max(((idx + frac) / 6) * 100, 4), 96);
 };
 
 /* ============ HELPERS ============ */
@@ -88,31 +194,49 @@ const calcIdealWeightRange = (heightCm) => {
 
 const formatFtIn = (cm) => {
   const totalIn = cm / 2.54;
-  const ft = Math.floor(totalIn / 12);
-  const inch = Math.round(totalIn - ft * 12);
+  let ft = Math.floor(totalIn / 12);
+  let inch = Math.round(totalIn - ft * 12);
+  if (inch === 12) {
+    ft += 1;
+    inch = 0;
+  }
   return `${ft} ft ${inch} in`;
+};
+
+/* Result ko history state se rebuild karte hain (sirf plain numbers store hote hain) */
+const buildResult = ({ bmiNum, weight, heightCm }) => {
+  const catKey = getCategory(bmiNum);
+  const ideal = calcIdealWeightRange(heightCm);
+  return {
+    bmi: bmiNum.toFixed(1),
+    bmiNum,
+    catKey,
+    ...BMI_THEME[catKey],
+    ...BMI_CATEGORIES[catKey],
+    idealMin: ideal.min,
+    idealMax: ideal.max,
+    heightCm,
+    weight,
+  };
 };
 
 export default function BmiCheck() {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const [form, setForm] = useState({
-    weight: "",
-    age: "",
-    sex: "male",
-  });
+  const [form, setForm] = useState({ weight: "", age: "", sex: "male" });
   const [heightCm, setHeightCm] = useState("");
   const [heightFt, setHeightFt] = useState("");
   const [heightIn, setHeightIn] = useState("");
   const [heightUnit, setHeightUnit] = useState("cm");
-  const [result, setResult] = useState(null);
+  // result URL/history state se aata hai, isliye back karne par wapas wahi result dikhta hai
+  const saved = location.state?.bmi;
+  const result = saved ? buildResult(saved) : null;
 
   const update = (k, v) => setForm({ ...form, [k]: v });
 
   const getHeightInCm = () => {
-    if (heightUnit === "cm") {
-      return parseFloat(heightCm);
-    }
+    if (heightUnit === "cm") return parseFloat(heightCm);
     const ft = parseFloat(heightFt) || 0;
     const inch = parseFloat(heightIn) || 0;
     if (!ft && !inch) return 0;
@@ -121,7 +245,6 @@ export default function BmiCheck() {
 
   const finalHeightCm = getHeightInCm();
   const isHeightValid = finalHeightCm > 0;
-
   const canCalculate =
     isHeightValid && form.weight > 0 && form.age > 0 && form.sex;
 
@@ -129,72 +252,101 @@ export default function BmiCheck() {
     const h = finalHeightCm / 100;
     const w = parseFloat(form.weight);
     const bmi = w / (h * h);
-    const catKey = getCategory(bmi);
-    const cat = BMI_CATEGORIES[catKey];
-    const ideal = calcIdealWeightRange(finalHeightCm);
-
-    setResult({
-      bmi: bmi.toFixed(1),
-      bmiNum: bmi,
-      catKey,
-      ...cat,
-      idealMin: ideal.min,
-      idealMax: ideal.max,
-      heightCm: finalHeightCm,
+    navigate(location.pathname + location.search, {
+      state: {
+        bmi: { bmiNum: bmi, weight: form.weight, heightCm: finalHeightCm },
+      },
     });
   };
 
-  const reset = () => {
-    setForm({ weight: "", age: "", sex: "male" });
-    setHeightCm("");
-    setHeightFt("");
-    setHeightIn("");
-    setResult(null);
+  // result se input par wapas
+  const backFromResult = () => {
+    if (window.history.state?.idx > 0) navigate(-1);
+    else
+      navigate(location.pathname + location.search, {
+        replace: true,
+        state: null,
+      });
   };
 
+  const activeSeg = result
+    ? SEGMENTS.find((s) => s.key === result.catKey)
+    : null;
+
   return (
-    <div className="min-h-screen bg-[#faf8ff] flex justify-center">
-      <div className="w-full max-w-md bg-[#faf8ff] min-h-screen flex flex-col">
+    <div
+      className="min-h-screen flex justify-center"
+      style={{
+        background: result
+          ? "linear-gradient(180deg,#e7f1fc 0%,#f2f7fd 45%,#fafcff 100%)"
+          : "#faf8ff",
+        fontFamily: result
+          ? "'Nunito','Noto Sans Devanagari',system-ui,sans-serif"
+          : undefined,
+      }}
+    >
+      <div className="w-full max-w-md min-h-screen flex flex-col">
         {/* TOP BAR */}
-        <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-gray-100">
-          <div className="h-14 px-4 flex items-center justify-between">
-            <button
-              onClick={() => navigate(-1)}
-              className="w-9 h-9 flex items-center justify-center rounded-full text-gray-700 hover:bg-gray-100 active:scale-95"
-            >
-              <ArrowLeft size={20} />
-            </button>
-            <h1 className="font-bold text-gray-900 text-[15px]">
-              {result ? "Your BMI Result" : "BMI Calculator"}
-            </h1>
-            <button className="w-9 h-9 flex items-center justify-center text-gray-500">
-              <HelpCircle size={20} />
-            </button>
-          </div>
+        <header
+          className={
+            result
+              ? "sticky top-0 z-40"
+              : "sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-gray-100"
+          }
+          style={
+            result
+              ? {
+                  background: "rgba(231,241,252,0.9)",
+                  backdropFilter: "blur(12px)",
+                }
+              : undefined
+          }
+        >
+          {result ? (
+            <div className="h-14 px-4 flex items-center gap-3">
+              <button
+                onClick={backFromResult}
+                className="w-8 h-8 flex items-center justify-center rounded-full active:scale-95"
+                style={{ color: NAVY }}
+              >
+                <ArrowLeft size={22} strokeWidth={2.5} />
+              </button>
+              <h1
+                className="font-extrabold text-[17px]"
+                style={{ color: NAVY }}
+              >
+                Your BMI Result
+              </h1>
+            </div>
+          ) : (
+            <div className="h-14 px-4 flex items-center justify-between">
+              <button
+                onClick={() => navigate(-1)}
+                className="w-9 h-9 flex items-center justify-center rounded-full text-gray-700 active:scale-95"
+              >
+                <ArrowLeft size={20} />
+              </button>
+              <h1 className="font-bold text-gray-900 text-[15px]">
+                BMI Calculator
+              </h1>
+              <button className="w-9 h-9 flex items-center justify-center text-gray-500">
+                <HelpCircle size={20} />
+              </button>
+            </div>
+          )}
         </header>
 
         {/* MAIN */}
         <main className="flex-1 pb-8 px-4 pt-4">
           {!result ? (
-            /* ========== INPUT VIEW ========== */
+            /* ========== INPUT VIEW (unchanged) ========== */
             <>
-              <div className="bg-gradient-to-br from-[#e8f8f1] to-[#eef6f9] rounded-2xl p-4 mb-4 flex items-center justify-between overflow-hidden">
-                <div className="flex-1 pr-3">
-                  <h2 className="text-[20px] font-black text-gray-900 leading-tight">
-                    Check your{" "}
-                    <span className="text-[#005c55]">Obesity level</span>
-                  </h2>
-                  <p className="text-[11px] text-gray-600 mt-2 leading-snug">
-                    Enter your details to calculate your BMI
-                  </p>
-                </div>
-                <div className="w-20 h-20 rounded-2xl overflow-hidden flex-shrink-0 bg-white">
-                  <img
-                    src={bmiImg}
-                    alt="BMI"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+              <div className="w-full h-[140px] rounded-2xl overflow-hidden mb-4 border border-[#eaedff] shadow-sm">
+                <img
+                  src={bmiImg}
+                  alt="Banner"
+                  className="w-full h-full object-cover"
+                />
               </div>
 
               <div className="bg-white rounded-2xl p-4 border border-[#eaedff] shadow-[0_2px_12px_rgba(15,23,42,0.04)] mb-4">
@@ -221,11 +373,7 @@ export default function BmiCheck() {
                       key={g}
                       type="button"
                       onClick={() => update("sex", g)}
-                      className={`flex items-center justify-center gap-2 py-3 rounded-xl text-[13px] font-semibold capitalize transition border ${
-                        form.sex === g
-                          ? "bg-[#9cf2e8]/40 text-[#005c55] border-[#005c55]"
-                          : "bg-[#f4f5fb] text-gray-600 border-[#eaedff]"
-                      }`}
+                      className={`flex items-center justify-center gap-2 py-3 rounded-xl text-[13px] font-semibold capitalize transition border ${form.sex === g ? "bg-[#9cf2e8]/40 text-[#005c55] border-[#005c55]" : "bg-[#f4f5fb] text-gray-600 border-[#eaedff]"}`}
                     >
                       <span className="text-[16px]">
                         {g === "male" ? "♂" : "♀"}
@@ -260,22 +408,14 @@ export default function BmiCheck() {
                     <button
                       type="button"
                       onClick={() => setHeightUnit("cm")}
-                      className={`px-2.5 py-1 rounded-md text-[10px] font-bold transition ${
-                        heightUnit === "cm"
-                          ? "bg-white text-[#005c55] shadow-sm"
-                          : "text-gray-500"
-                      }`}
+                      className={`px-2.5 py-1 rounded-md text-[10px] font-bold transition ${heightUnit === "cm" ? "bg-white text-[#005c55] shadow-sm" : "text-gray-500"}`}
                     >
                       cm
                     </button>
                     <button
                       type="button"
                       onClick={() => setHeightUnit("ftin")}
-                      className={`px-2.5 py-1 rounded-md text-[10px] font-bold transition ${
-                        heightUnit === "ftin"
-                          ? "bg-white text-[#005c55] shadow-sm"
-                          : "text-gray-500"
-                      }`}
+                      className={`px-2.5 py-1 rounded-md text-[10px] font-bold transition ${heightUnit === "ftin" ? "bg-white text-[#005c55] shadow-sm" : "text-gray-500"}`}
                     >
                       ft + in
                     </button>
@@ -301,25 +441,25 @@ export default function BmiCheck() {
                   </div>
                 ) : (
                   <div className="grid grid-cols-2 gap-2">
-                    <div className="flex items-center gap-2 px-3 py-3 rounded-xl border border-[#eaedff] bg-[#f4f5fb] focus-within:bg-white focus-within:border-[#005c55] transition">
+                    <div className="flex items-center gap-2 px-3 py-3 rounded-xl border border-[#eaedff] bg-[#f4f5fb]">
                       <input
                         type="number"
                         value={heightFt}
                         onChange={(e) => setHeightFt(e.target.value)}
                         placeholder="5"
-                        className="flex-1 min-w-0 bg-transparent outline-none text-[13px] text-gray-800 placeholder-gray-400"
+                        className="flex-1 min-w-0 bg-transparent outline-none text-[13px]"
                       />
                       <span className="text-[11px] font-medium text-gray-400">
                         ft
                       </span>
                     </div>
-                    <div className="flex items-center gap-2 px-3 py-3 rounded-xl border border-[#eaedff] bg-[#f4f5fb] focus-within:bg-white focus-within:border-[#005c55] transition">
+                    <div className="flex items-center gap-2 px-3 py-3 rounded-xl border border-[#eaedff] bg-[#f4f5fb]">
                       <input
                         type="number"
                         value={heightIn}
                         onChange={(e) => setHeightIn(e.target.value)}
                         placeholder="2"
-                        className="flex-1 min-w-0 bg-transparent outline-none text-[13px] text-gray-800 placeholder-gray-400"
+                        className="flex-1 min-w-0 bg-transparent outline-none text-[13px]"
                       />
                       <span className="text-[11px] font-medium text-gray-400">
                         in
@@ -332,194 +472,271 @@ export default function BmiCheck() {
               <button
                 onClick={calculate}
                 disabled={!canCalculate}
-                className="w-full bg-[#005c55] text-white font-bold py-3.5 rounded-xl disabled:opacity-40 active:scale-[0.98] transition shadow-lg shadow-[#005c55]/20 flex items-center justify-center gap-2"
+                className="w-full bg-[#0d6b63] text-white font-bold py-3.5 rounded-xl disabled:opacity-40 active:scale-[0.98] transition shadow-lg flex items-center justify-center gap-2"
               >
                 Calculate BMI <ArrowRight size={16} />
               </button>
             </>
           ) : (
-            /* ========== RESULT VIEW ========== */
-            <div style={{ animation: "fadeIn 0.35s ease" }}>
-              <div className="bg-gradient-to-br from-[#e8f8f1] to-[#eef6f9] rounded-2xl p-4 mb-4 flex items-center justify-between overflow-hidden">
-                <div className="flex-1 pr-3">
-                  <p className="text-[11px] font-semibold text-gray-600">
+            /* ========== RESULT VIEW (matches reference) ========== */
+            <div
+              style={{ animation: "fadeIn 0.35s ease" }}
+              className="flex flex-col gap-3.5"
+            >
+              {/* 1. TOP CARD */}
+              <div
+                className="relative overflow-hidden rounded-[22px] min-h-[178px]"
+                style={{ background: result.cardBg }}
+              >
+                <div className="relative z-10 w-[58%] pl-5 pt-4 pb-4">
+                  <p
+                    className="text-[17px] font-extrabold leading-none"
+                    style={{ color: NAVY }}
+                  >
                     Your BMI is
                   </p>
-                  <p className="text-[40px] font-black text-[#005c55] leading-none mt-0.5">
+                  <p
+                    className="text-[64px] font-black leading-[1] mt-1.5 mb-2.5"
+                    style={{ color: NAVY }}
+                  >
                     {result.bmi}
                   </p>
                   <span
-                    className="inline-block text-[10px] font-bold text-white px-2 py-1 rounded mt-1.5"
-                    style={{ backgroundColor: result.color }}
+                    className="inline-block text-[13.5px] font-black text-white tracking-wide px-4 py-1.5 rounded-full shadow-[0_3px_8px_rgba(0,0,0,0.18)] whitespace-nowrap"
+                    style={{ background: result.pill }}
                   >
-                    {result.label.toUpperCase()}
+                    {result.label}
                   </span>
-                  <p className="text-[10px] text-gray-500 mt-1.5">
+                  <p className="text-[10.5px] text-gray-600 font-medium mt-2.5 leading-snug">
                     ({result.rangeLong} for Asian population)
                   </p>
                 </div>
-                <div className="w-20 h-20 rounded-2xl overflow-hidden flex-shrink-0 bg-white">
-                  <img
-                    src={bmiImg}
-                    alt="Result"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+
+                {/* sparkle */}
+                <Sparkles
+                  size={24}
+                  strokeWidth={2.4}
+                  className="absolute right-[8%] top-[18%] z-10 text-[#f58a2b]"
+                />
+
+                {/* person image */}
+                <img
+                  src={result.img}
+                  alt="BMI Result"
+                  className="absolute right-0 bottom-0 h-full w-[46%] object-contain object-bottom"
+                />
               </div>
 
-              <div className="bg-white rounded-2xl p-4 border border-[#eaedff] mb-4">
-                <h3 className="text-[13px] font-bold text-gray-900 mb-3">
-                  Where do you stand?
+              {/* 2. WHERE DO YOU STAND */}
+              <div className="bg-white rounded-[20px] border border-[#e3ecf7] shadow-[0_2px_10px_rgba(30,64,120,0.06)] px-3.5 pt-3.5 pb-3">
+                <h3 className="text-[17px] font-extrabold text-[#2e9e3a] mb-2">
+                  Where do you stand ?
                 </h3>
 
-                <div className="relative mb-2">
+                <div className="relative pt-8">
+                  {/* marker */}
                   <div
-                    className="absolute -top-1 z-10 flex flex-col items-center"
+                    className="absolute top-0 z-10 flex flex-col items-center"
                     style={{
-                      left: `${Math.min(
-                        Math.max((result.bmiNum / 40) * 100, 2),
-                        98,
-                      )}%`,
+                      left: `${getMarkerPos(result.bmiNum, result.catKey)}%`,
                       transform: "translateX(-50%)",
                     }}
                   >
-                    <span className="text-[10px] font-bold text-white bg-[#005c55] px-1.5 py-0.5 rounded">
+                    <span
+                      className="text-[13px] font-black leading-none"
+                      style={{ color: activeSeg.color }}
+                    >
                       {result.bmi}
                     </span>
-                    <div
-                      className="w-0 h-0"
-                      style={{
-                        borderLeft: "4px solid transparent",
-                        borderRight: "4px solid transparent",
-                        borderTop: "6px solid #005c55",
-                      }}
-                    ></div>
+                    <span
+                      className="mt-1 w-0 h-0 border-x-[6px] border-x-transparent border-t-[8px]"
+                      style={{ borderTopColor: activeSeg.color }}
+                    />
+                  </div>
+
+                  {/* bar */}
+                  <div className="flex h-[22px] rounded-full overflow-hidden">
+                    {SEGMENTS.map((s) => (
+                      <div
+                        key={s.key}
+                        className="flex-1 flex items-center justify-center text-[8.5px] font-extrabold text-white whitespace-nowrap tracking-tight"
+                        style={{ backgroundColor: s.color }}
+                      >
+                        {s.range}
+                      </div>
+                    ))}
                   </div>
                 </div>
 
-                <div className="flex h-2 rounded-full overflow-hidden mb-2">
-                  <div className="flex-1 bg-[#dce1ff]" />
-                  <div className="flex-1 bg-[#9cf2e8]" />
-                  <div className="flex-1 bg-[#ffe2c2]" />
-                  <div className="flex-1 bg-[#ffd8e7]" />
-                  <div className="flex-1 bg-[#ffc4d6]" />
-                  <div className="flex-1 bg-[#ff8fb0]" />
+                {/* labels */}
+                <div className="grid grid-cols-6 mt-1.5 text-center">
+                  {SEGMENTS.map((s) => (
+                    <p
+                      key={s.key}
+                      className={`text-[9px] leading-[1.2] ${s.key === result.catKey ? "font-black" : "font-bold"}`}
+                      style={{ color: s.text }}
+                    >
+                      {s.name.map((line, i) => (
+                        <span key={i} className="block">
+                          {line}
+                        </span>
+                      ))}
+                    </p>
+                  ))}
                 </div>
+              </div>
 
-                <div className="grid grid-cols-6 gap-0.5 mb-4">
-                  <ScaleLabel label="< 18.5" sub="Under" color="#4059aa" />
-                  <ScaleLabel label="18.5–22.9" sub="Normal" color="#005c55" />
-                  <ScaleLabel label="23.0–24.9" sub="Over" color="#c45d00" />
-                  <ScaleLabel label="25.0–29.9" sub="Class I" color="#932265" />
-                  <ScaleLabel
-                    label="30.0–34.9"
-                    sub="Class II"
-                    color="#932265"
-                  />
-                  <ScaleLabel label="≥ 35.0" sub="Class III" color="#932265" />
-                </div>
-
-                <div className="grid grid-cols-2 gap-2.5 mt-4">
-                  <div className="bg-[#fef4e8] rounded-xl p-3">
-                    <p className="text-[10px] font-semibold text-gray-600">
+              {/* 3. WEIGHT + IDEAL RANGE */}
+              <div className="bg-white rounded-[20px] border border-[#e3ecf7] shadow-[0_2px_10px_rgba(30,64,120,0.06)] px-3 py-3 flex items-center">
+                <div className="flex items-center gap-2.5 flex-none">
+                  <div
+                    className="w-[46px] h-[46px] rounded-2xl flex items-center justify-center flex-none"
+                    style={{
+                      background: "linear-gradient(180deg,#ff9a3c,#f2740f)",
+                    }}
+                  >
+                    <Weight size={25} strokeWidth={2} className="text-white" />
+                  </div>
+                  <div>
+                    <p className="text-[10.5px] font-semibold text-gray-500 leading-none">
                       Your weight
                     </p>
-                    <p className="text-[16px] font-black text-gray-900 mt-1">
-                      {form.weight}{" "}
-                      <span className="text-[11px] font-bold text-gray-500">
+                    <p
+                      className="text-[26px] font-black leading-none mt-1.5"
+                      style={{ color: NAVY }}
+                    >
+                      {result.weight}
+                      <span className="text-[13px] font-extrabold ml-1">
                         kg
                       </span>
                     </p>
                   </div>
-                  <div className="bg-[#e8f8f1] rounded-xl p-3 flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-[#005c55] flex items-center justify-center flex-shrink-0">
-                      <RefreshCw size={14} className="text-white" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-[10px] font-semibold text-gray-600">
-                        Ideal weight range
-                      </p>
-                      <p className="text-[12px] font-black text-[#005c55] mt-0.5 leading-tight">
-                        {result.idealMin} – {result.idealMax} kg
-                      </p>
-                      <p className="text-[9px] text-gray-500 mt-0.5">
-                        for height ({formatFtIn(result.heightCm)})
-                      </p>
-                    </div>
+                </div>
+
+                <div className="w-px self-stretch bg-[#e3eaf3] mx-3" />
+
+                <div className="flex items-center gap-2 flex-1 min-w-0">
+                  <div
+                    className="w-[44px] h-[44px] rounded-full flex items-center justify-center flex-none"
+                    style={{
+                      background: "linear-gradient(180deg,#3aa04a,#1f7a31)",
+                    }}
+                  >
+                    <Gauge size={24} strokeWidth={2.2} className="text-white" />
+                  </div>
+                  <div className="min-w-0">
+                    <p
+                      className="text-[10.5px] font-extrabold leading-none whitespace-nowrap"
+                      style={{ color: NAVY }}
+                    >
+                      Your ideal weight range
+                    </p>
+                    <p className="text-[16px] font-black text-[#2e9e3a] leading-none mt-1.5 whitespace-nowrap">
+                      {result.idealMin} – {result.idealMax} kg
+                    </p>
+                    <p className="text-[9.5px] text-gray-500 font-medium mt-1 whitespace-nowrap">
+                      for your height ({formatFtIn(result.heightCm)})
+                    </p>
                   </div>
                 </div>
               </div>
 
-              <h3 className="text-[13px] font-bold text-gray-900 mb-2 mt-2">
+              {/* 4. PERSONALISED GUIDANCE */}
+              <h3
+                className="text-[17px] font-extrabold mt-1.5 px-0.5"
+                style={{ color: NAVY }}
+              >
                 Get personalised guidance
               </h3>
 
-              <div className="grid grid-cols-2 gap-2.5 mb-5">
+              <div className="grid grid-cols-4 gap-2">
                 <GuidanceCard
-                  image={scanFoodImg}
-                  title="Diet Plan"
-                  color="#e8f8f1"
+                  Art={DietArt}
+                  title={["Diet Plan"]}
+                  bg="#e4f4e8"
+                  color="#2e9e48"
                   onClick={() => navigate(`/health-plan/${result.catKey}/diet`)}
                 />
                 <GuidanceCard
-                  image={caloriesImg}
-                  title="Physical Activity"
-                  color="#e8efff"
+                  Art={ActivityArt}
+                  title={["Physical", "Activity"]}
+                  bg="#e0eefc"
+                  color="#2f8cf0"
                   onClick={() =>
                     navigate(`/health-plan/${result.catKey}/activity`)
                   }
                 />
                 <GuidanceCard
-                  image={diabetesImg}
-                  title="Other Advice"
-                  color="#fff8e1"
+                  Art={AdviceArt}
+                  title={["Other", "Advice"]}
+                  bg="#fdf1d3"
+                  color="#f5a623"
                   onClick={() =>
                     navigate(`/health-plan/${result.catKey}/advice`)
                   }
                 />
                 <GuidanceCard
-                  image={bookApptImg}
-                  title="Consult a Doctor"
-                  color="#ffeef3"
+                  Art={DoctorArt}
+                  title={["Consult", "a Doctor"]}
+                  bg="#fde3e3"
+                  color="#ef5350"
                   onClick={() => navigate("/appointment")}
                 />
               </div>
 
-              {/* Disclaimer */}
-              <div className="bg-[#eef6f9] rounded-2xl p-3.5 mb-4 flex items-start gap-2.5">
-                <div className="w-6 h-6 rounded-full bg-[#005c55] flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <Info size={13} className="text-white" />
+              {/* 5. HINDI MESSAGE */}
+              <div className="bg-[#fdefd2] rounded-[18px] p-3.5 flex items-start gap-3 border border-[#f6d99b]">
+                <div className="w-[38px] h-[38px] rounded-full bg-[#f5a524] flex items-center justify-center flex-none">
+                  <MessageCircle
+                    size={20}
+                    strokeWidth={2.4}
+                    className="text-white"
+                  />
                 </div>
-                <div className="text-[10px] text-gray-700 leading-relaxed">
-                  <p>
-                    <span className="font-bold">Disclaimer:</span>{" "}
-                    {DISCLAIMER.en}
+                <div>
+                  <h4
+                    className="text-[14.5px] font-extrabold leading-tight"
+                    style={{ color: NAVY }}
+                  >
+                    {result.msg.title}
+                  </h4>
+                  <p className="text-[10.5px] text-[#3b4a66] leading-[1.5] mt-1 font-medium">
+                    {result.msg.body}
                   </p>
-                  <p className="mt-1.5">{DISCLAIMER.hi}</p>
                 </div>
               </div>
 
-              {/* Actions */}
-              <div className="space-y-2.5">
-                <button
-                  onClick={reset}
-                  className="w-full bg-[#005c55] text-white font-bold py-3.5 rounded-xl active:scale-[0.98] transition flex items-center justify-center gap-2 shadow-lg shadow-[#005c55]/20"
-                >
-                  <RefreshCw size={16} />
-                  Calculate Again
-                </button>
-                <button
-                  onClick={() => navigate("/appointment")}
-                  className="w-full border border-[#005c55] text-[#005c55] font-bold py-3.5 rounded-xl active:scale-[0.98] transition flex items-center justify-center gap-2 hover:bg-[#e8f3f1]"
-                >
-                  Book Doctor Consult <ArrowRight size={16} />
-                </button>
+              {/* 6. DISCLAIMER */}
+              <div className="bg-[#e6f0fb] rounded-[16px] p-3 flex items-start gap-2.5 border border-[#d3e4f7]">
+                <div className="w-6 h-6 rounded-full bg-[#2f80ed] flex items-center justify-center flex-none mt-0.5">
+                  <Info size={14} strokeWidth={2.6} className="text-white" />
+                </div>
+                <div className="text-[10px] text-[#3b4a66] leading-[1.45] font-medium">
+                  <p>
+                    Ideal weight range is calculated for Asian Indian adults
+                    with a BMI of 18.5–22.9.
+                  </p>
+                  <p>
+                    BMI is a screening tool and does not directly measure body
+                    fat or overall health. Other health parameters should also
+                    be considered.
+                  </p>
+                </div>
               </div>
+
+              {/* 7. BOOK DOCTOR */}
+              <button
+                onClick={() => navigate("/appointment")}
+                className="w-full bg-white border-2 border-[#0d6b63] text-[#0d6b63] font-bold py-3.5 rounded-xl active:scale-[0.98] transition flex items-center justify-center gap-2 mt-1"
+              >
+                Book Doctor Consultaion <ArrowRight size={18} />
+              </button>
             </div>
           )}
         </main>
 
         <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&family=Noto+Sans+Devanagari:wght@500;700&display=swap');
           @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -530,39 +747,288 @@ export default function BmiCheck() {
   );
 }
 
-/* ============ HELPER COMPONENTS ============ */
-
-function ScaleLabel({ label, sub, color }) {
-  return (
-    <div className="flex flex-col items-center text-center">
-      <span className="text-[7.5px] font-bold" style={{ color }}>
-        {label}
-      </span>
-      <span className="text-[7px] text-gray-500 mt-0.5">{sub}</span>
-    </div>
-  );
-}
-
-function GuidanceCard({ image, title, color, onClick }) {
+/* ============ GUIDANCE CARD ============ */
+function GuidanceCard({ Art, title, bg, color, onClick }) {
+  const lines = Array.isArray(title) ? title : [title];
   return (
     <button
       onClick={onClick}
-      className="bg-white rounded-2xl border border-[#eaedff] p-2.5 flex flex-col items-center text-center active:scale-[0.97] transition"
+      className="relative aspect-[10/13] rounded-2xl overflow-hidden text-left active:scale-95 transition border border-white/70 shadow-[0_2px_8px_rgba(30,64,120,0.08)]"
+      style={{ backgroundColor: bg }}
     >
-      <div
-        className="w-full h-16 rounded-xl flex items-center justify-center mb-2 overflow-hidden"
+      <div className="absolute inset-x-1.5 top-2 h-[52%] overflow-hidden flex items-end justify-center">
+        <Art />
+      </div>
+      <p
+        className="absolute left-2 bottom-2.5 text-[10px] font-extrabold leading-[1.15] whitespace-nowrap"
+        style={{ color: NAVY }}
+      >
+        {lines.map((l, i) => (
+          <span key={i} className="block">
+            {l}
+          </span>
+        ))}
+      </p>
+      <span
+        className="absolute bottom-2 right-1.5 w-[22px] h-[22px] rounded-full flex items-center justify-center shadow-sm"
         style={{ backgroundColor: color }}
       >
-        <img
-          src={image}
-          alt={title}
-          className="w-full h-full object-cover"
-          onError={(e) => {
-            e.currentTarget.style.display = "none";
-          }}
-        />
-      </div>
-      <p className="text-[11px] font-bold text-gray-900">{title}</p>
+        <ChevronRight size={14} strokeWidth={3.2} className="text-white" />
+      </span>
     </button>
   );
 }
+
+/* ============ SVG ILLUSTRATIONS ============ */
+const artProps = {
+  viewBox: "0 0 100 80",
+  className: "w-full h-full",
+  preserveAspectRatio: "xMidYMax meet",
+  xmlns: "http://www.w3.org/2000/svg",
+};
+
+export function DietArt() {
+  return (
+    <svg {...artProps}>
+      {/* plate */}
+      <ellipse cx="50" cy="56" rx="45" ry="22" fill="#cfcfcf" />
+      <ellipse
+        cx="50"
+        cy="52"
+        rx="45"
+        ry="22"
+        fill="#fff"
+        stroke="#d6d6d6"
+        strokeWidth="1"
+      />
+      <ellipse cx="50" cy="52" rx="35" ry="16" fill="#f3f3f3" />
+      {/* greens (back) */}
+      <ellipse cx="26" cy="38" rx="13" ry="8" fill="#4caf50" />
+      <ellipse cx="44" cy="31" rx="13" ry="7.5" fill="#2e8b3a" />
+      <ellipse cx="66" cy="32" rx="14" ry="8" fill="#66bb6a" />
+      <ellipse cx="80" cy="42" rx="10" ry="7" fill="#43a047" />
+      <ellipse cx="34" cy="34" rx="8" ry="5" fill="#7cc576" />
+      {/* veggies */}
+      <circle cx="19" cy="46" r="5" fill="#e53935" />
+      <circle cx="73" cy="27" r="4.5" fill="#ef5350" />
+      <circle cx="86" cy="48" r="4" fill="#e53935" />
+      <rect
+        x="50"
+        y="24"
+        width="9"
+        height="5"
+        rx="2"
+        fill="#fdd835"
+        transform="rotate(-15 54 26)"
+      />
+      <rect
+        x="28"
+        y="26"
+        width="8"
+        height="5"
+        rx="2"
+        fill="#fbc02d"
+        transform="rotate(20 32 28)"
+      />
+      <circle cx="58" cy="30" r="2.5" fill="#c62828" />
+      {/* cucumber slices */}
+      <g fill="#c5e1a5" stroke="#7cb342" strokeWidth="1.2">
+        <circle cx="17" cy="57" r="5.5" />
+        <circle cx="27" cy="64" r="5.5" />
+        <circle cx="38" cy="67" r="5" />
+      </g>
+      <g fill="#e6f3cf">
+        <circle cx="17" cy="57" r="2.8" />
+        <circle cx="27" cy="64" r="2.8" />
+        <circle cx="38" cy="67" r="2.6" />
+      </g>
+      {/* chicken */}
+      <g transform="rotate(-18 56 52)">
+        <ellipse cx="56" cy="52" rx="25" ry="13" fill="#e2a95b" />
+        <ellipse cx="54" cy="49" rx="20" ry="8" fill="#f2c987" />
+        <g stroke="#b9772c" strokeWidth="1.6" strokeLinecap="round">
+          <path d="M42 46 L48 56" />
+          <path d="M50 44 L56 56" />
+          <path d="M58 44 L64 56" />
+          <path d="M66 46 L71 55" />
+        </g>
+      </g>
+      {/* herbs */}
+      <ellipse cx="78" cy="60" rx="7" ry="4" fill="#66bb6a" />
+      <ellipse cx="68" cy="66" rx="5" ry="3" fill="#43a047" />
+    </svg>
+  );
+}
+
+export function ActivityArt() {
+  return (
+    <svg {...artProps}>
+      {/* ponytail */}
+      <path d="M26 22 Q6 28 12 54 Q20 44 30 34 Z" fill="#6b3a22" />
+      {/* torso (blue top) */}
+      <path d="M14 80 Q14 50 40 46 Q64 50 66 80 Z" fill="#26a6dc" />
+      {/* neck + chest skin */}
+      <rect x="35" y="34" width="10" height="12" rx="4" fill="#f0b088" />
+      <path
+        d="M30 47 Q40 58 50 47 Q45 44 40 44 Q35 44 30 47 Z"
+        fill="#f0b088"
+      />
+      {/* head */}
+      <ellipse cx="40" cy="22" rx="12.5" ry="14.5" fill="#f4b998" />
+      {/* hair */}
+      <path
+        d="M26 24 Q26 4 42 6 Q56 8 54 24 Q50 14 40 15 Q31 16 29 28 Z"
+        fill="#5a2e1a"
+      />
+      {/* face details */}
+      <path
+        d="M45 26 Q48 28 46 30"
+        stroke="#d98f6b"
+        strokeWidth="1"
+        fill="none"
+        strokeLinecap="round"
+      />
+      <path
+        d="M38 31 Q42 33 46 31"
+        stroke="#c4564b"
+        strokeWidth="1.4"
+        fill="none"
+        strokeLinecap="round"
+      />
+      {/* arm lifting dumbbell */}
+      <path
+        d="M60 54 L74 62"
+        stroke="#f0b088"
+        strokeWidth="10"
+        strokeLinecap="round"
+      />
+      <path
+        d="M74 62 L82 40"
+        stroke="#f0b088"
+        strokeWidth="9"
+        strokeLinecap="round"
+      />
+      {/* dumbbell */}
+      <g transform="rotate(25 86 30)">
+        <rect x="84.5" y="20" width="3" height="20" rx="1.5" fill="#1d6fb8" />
+        <rect x="80" y="16" width="12" height="7" rx="3" fill="#2f94e0" />
+        <rect x="80" y="37" width="12" height="7" rx="3" fill="#2f94e0" />
+      </g>
+      <circle cx="83" cy="38" r="4.5" fill="#f0b088" />
+    </svg>
+  );
+}
+
+export function AdviceArt() {
+  return (
+    <svg {...artProps}>
+      <rect x="27" y="10" width="46" height="66" rx="5" fill="#e68a2e" />
+      <rect x="32" y="17" width="36" height="55" rx="2.5" fill="#fff8ec" />
+      <rect x="38" y="6" width="24" height="12" rx="3.5" fill="#2c5f9e" />
+      <circle cx="50" cy="10" r="2.6" fill="#fff" />
+      {[
+        { y: 30, c: "#2e9e48" },
+        { y: 46, c: "#f5a623" },
+        { y: 62, c: "#2e9e48" },
+      ].map((r) => (
+        <g key={r.y}>
+          <circle cx="40" cy={r.y} r="4.6" fill={r.c} />
+          <path
+            d={`M37.6 ${r.y} L39.4 ${r.y + 1.8} L42.6 ${r.y - 2}`}
+            stroke="#fff"
+            strokeWidth="1.6"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <rect
+            x="48"
+            y={r.y - 3.5}
+            width="15"
+            height="2.8"
+            rx="1.4"
+            fill="#b8b8b8"
+          />
+          <rect
+            x="48"
+            y={r.y + 1}
+            width="11"
+            height="2.8"
+            rx="1.4"
+            fill="#cfcfcf"
+          />
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+export function DoctorArt() {
+  return (
+    <svg {...artProps}>
+      {/* coat */}
+      <path
+        d="M12 80 Q14 50 40 46 L50 62 L60 46 Q86 50 88 80 Z"
+        fill="#fff"
+        stroke="#dce3ee"
+        strokeWidth="1"
+      />
+      {/* shirt + tie */}
+      <path d="M40 46 L50 64 L60 46 L56 44 L50 50 L44 44 Z" fill="#6d9bd6" />
+      <path d="M48.5 52 L51.5 52 L53 66 L50 71 L47 66 Z" fill="#2f5fa8" />
+      {/* neck */}
+      <rect x="44" y="36" width="12" height="10" rx="4" fill="#e3a07a" />
+      {/* head */}
+      <ellipse cx="50" cy="24" rx="13" ry="15" fill="#e8a982" />
+      {/* hair */}
+      <path
+        d="M36 24 Q34 4 50 5 Q66 4 64 24 Q61 13 50 13 Q39 13 36 24 Z"
+        fill="#1f1a17"
+      />
+      {/* glasses */}
+      <g fill="none" stroke="#222" strokeWidth="1.5">
+        <rect x="38.5" y="22" width="9" height="7" rx="2.5" />
+        <rect x="52.5" y="22" width="9" height="7" rx="2.5" />
+        <path d="M47.5 25 L52.5 25" />
+      </g>
+      <path
+        d="M45 34 Q50 37 55 34"
+        stroke="#b5544a"
+        strokeWidth="1.5"
+        fill="none"
+        strokeLinecap="round"
+      />
+      {/* stethoscope */}
+      <path
+        d="M40 47 Q31 66 43 72"
+        stroke="#333"
+        strokeWidth="2"
+        fill="none"
+        strokeLinecap="round"
+      />
+      <path
+        d="M60 47 Q69 66 57 72"
+        stroke="#333"
+        strokeWidth="2"
+        fill="none"
+        strokeLinecap="round"
+      />
+      <circle
+        cx="63"
+        cy="70"
+        r="3.4"
+        fill="#555"
+        stroke="#333"
+        strokeWidth="1"
+      />
+    </svg>
+  );
+}
+
+// page type (route param) -> illustration
+// /health-plan/:catKey/:type   type = diet | activity | advice
+export const PLAN_ART = {
+  diet: DietArt,
+  activity: ActivityArt,
+  advice: AdviceArt,
+};
