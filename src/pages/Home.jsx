@@ -95,7 +95,7 @@ export default function Home() {
 
   const row1 = [
     { image: bmiImg, title: "BMI", path: "/bmi" },
-    { image: diabetesImg, title: "Diabetes" },
+    { image: diabetesImg, title: "Diabetes", path: "/diabetes" },
     { image: sugarImg, title: "Sugar" },
     { image: diseaseImg, title: "Disease" },
   ];
