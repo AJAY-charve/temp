@@ -41,14 +41,15 @@ import bookApptImg from "../assets/cards/book-appt.png";
 import bmiImg from "../assets/cards/bmi.jpeg";
 import diabetesImg from "../assets/cards/diabetes.jpeg";
 import sugarImg from "../assets/cards/sugar.jpeg";
-import diseaseImg from "../assets/cards/disease.png";
 import reminderImg from "../assets/cards/reminder.jpeg";
 import scanFoodImg from "../assets/cards/scan-food.jpeg";
 import caloriesImg from "../assets/cards/calories.jpeg";
-import recordsImg from "../assets/cards/records.png";
+import recordsImg from "../assets/cards/records.jpeg";
 import periodImg from "../assets/cards/period.jpeg";
 import supplementsImg from "../assets/cards/supplements.png";
 import devicesImg from "../assets/cards/devices.png";
+import knowYourDiseasesImg from "../assets/cards/knowyourdiseases.png";
+import knowYourSymptomsImg from "../assets/cards/knowyoursymptoms.png";
 
 import Sidebar from "../components/Sidebar";
 
@@ -96,15 +97,24 @@ export default function Home() {
   const row1 = [
     { image: bmiImg, title: "BMI", path: "/bmi" },
     { image: diabetesImg, title: "Diabetes", path: "/diabetes" },
-    { image: sugarImg, title: "Sugar" },
-    { image: diseaseImg, title: "Disease" },
+    { image: sugarImg, title: "Sugar & BP Logbook" },
+    {
+      image: knowYourDiseasesImg,
+      title: "Know Your Diseases",
+      path: "/diseases",
+    },
   ];
 
   const row2 = [
-    { image: reminderImg, title: "Reminder" },
-    { image: scanFoodImg, title: "Scan Food" },
+    {
+      image: knowYourSymptomsImg,
+      title: "Know Your Symptoms",
+      path: "/symptoms",
+    },
+    { image: scanFoodImg, title: "Scan Food", path: "/scan-food" },
+    { image: recordsImg, title: "Records", path: "/records" },
+    { image: reminderImg, title: "Pill Reminder" },
     { image: caloriesImg, title: "Calories" },
-    { image: recordsImg, title: "Records" },
     { image: periodImg, title: "Period" },
   ];
 
@@ -134,13 +144,13 @@ export default function Home() {
       image: supplementsImg,
       title: "Supplements",
       desc: "Vitamins & metabolic aids",
-      path: "/store",
+      path: "/store?type=supplements",
     },
     {
       image: devicesImg,
       title: "Medical Devices",
       desc: "CGM, strips & BP meters",
-      path: "/store",
+      path: "/store?type=devices",
     },
   ];
 
@@ -149,7 +159,6 @@ export default function Home() {
       <div className="w-full max-w-md bg-[#faf8ff] min-h-screen flex flex-col relative">
         <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-        {/* HEADER */}
         <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-gray-100">
           <div className="h-14 px-2 flex items-center justify-between gap-1.5">
             <div className="flex items-center gap-1.5 min-w-0">
@@ -160,7 +169,11 @@ export default function Home() {
                 {activeMember.substring(0, 2).toUpperCase()}
               </button>
 
-              <button className="inline-flex items-center gap-1 bg-[#9cf2e8]/60 text-[#005c55] px-2.5 py-1.5 rounded-full text-[11px] font-semibold active:scale-95 flex-shrink-0 whitespace-nowrap ml-1">
+              {/* UPDATED: Header Add Member Button */}
+              <button
+                onClick={() => navigate("/profile/add-member")}
+                className="inline-flex items-center gap-1 bg-[#9cf2e8]/60 text-[#005c55] px-2.5 py-1.5 rounded-full text-[11px] font-semibold active:scale-95 flex-shrink-0 whitespace-nowrap ml-1"
+              >
                 <UserPlus size={13} />
                 <span>Add Member</span>
               </button>
@@ -184,9 +197,7 @@ export default function Home() {
           </div>
         </header>
 
-        {/* MAIN */}
         <main className="flex-1 pb-24">
-          {/* Greeting */}
           <section className="px-4 pt-5 pb-2 relative">
             <div className="flex items-center justify-between gap-3">
               <button
@@ -242,7 +253,15 @@ export default function Home() {
                       </button>
                     ))}
                   </div>
-                  <button className="w-full flex items-center gap-2 px-3 py-2.5 border-t border-[#eaedff] text-[#005c55] hover:bg-[#f4f6fb] transition">
+
+                  {/* UPDATED: Dropdown Add Member Button */}
+                  <button
+                    onClick={() => {
+                      setFamilyOpen(false);
+                      navigate("/profile/add-member");
+                    }}
+                    className="w-full flex items-center gap-2 px-3 py-2.5 border-t border-[#eaedff] text-[#005c55] hover:bg-[#f4f6fb] transition"
+                  >
                     <UserPlus size={14} />
                     <span className="text-[12px] font-bold">Add Member</span>
                   </button>
@@ -251,7 +270,6 @@ export default function Home() {
             )}
           </section>
 
-          {/* Banner Slider */}
           <section className="px-4 mb-4 mt-2">
             <div
               ref={scrollRef}
@@ -287,15 +305,12 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Quick Actions */}
           <section className="px-4 mb-6 mt-1">
             <div className="flex gap-2.5 items-stretch">
-              {/* BOOK APPOINTMENT TALL CARD */}
               <div
                 className="flex-shrink-0 w-[110px] h-[220px] bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-[#eaedff] overflow-hidden flex flex-col justify-between active:scale-[0.98] transition cursor-pointer"
                 onClick={() => navigate("/appointment")}
               >
-                {/* 60% Image Area */}
                 <div className="w-full h-[60%] flex items-center justify-center overflow-hidden bg-[#f4f6fb] border-b border-[#f0f2f8]">
                   <img
                     src={bookApptImg}
@@ -304,9 +319,7 @@ export default function Home() {
                   />
                 </div>
 
-                {/* 40% Text & Button Area */}
                 <div className="w-full h-[40%] px-2 py-2 flex flex-col justify-between items-center text-center">
-                  {/* Sub-heading (3-4 words) */}
                   <div className="flex flex-col items-center justify-center h-full mb-2">
                     <p className="text-[9.5px] text-gray-700 font-bold leading-tight">
                       Book Doctor
@@ -315,7 +328,6 @@ export default function Home() {
                     </p>
                   </div>
 
-                  {/* Green Button with Arrow (2 Line Text) */}
                   <div className="w-full py-1.5 bg-[#0d6b63] text-white text-[8px] font-bold rounded-lg flex items-center justify-center text-center leading-tight gap-1">
                     <span>
                       Book
@@ -327,7 +339,6 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* RIGHT SIDE (Mini Cards) */}
               <div className="flex-1 min-w-0 flex flex-col gap-2 justify-between">
                 <div className="flex overflow-x-auto gap-2 py-0.5 scrollbar-hide snap-x snap-mandatory">
                   {row1.map((c, i) => (
@@ -353,7 +364,6 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Clinic Patient Privileges */}
           <section className="px-4 mb-6">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-1.5">
@@ -400,7 +410,6 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Diagnostic & Clinic Services */}
           <section className="px-4 mb-6">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2.5">
@@ -505,8 +514,7 @@ export default function Home() {
           </section>
         </main>
 
-        {/* BOTTOM NAV */}
-        <nav className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-xl border-t border-gray-100 shadow-[0_-4px_20px_rgba(15,23,42,0.05)]">
+        <nav className="fixed bottom-0 inset-x-0 z-50 bg-white/95 backdrop-blur-xl border-t border-gray-100 shadow-[0_-4px_20px_rgba(15,23,42,0.05)]">
           <div className="max-w-md mx-auto flex items-stretch justify-around h-16 px-1">
             <NavItem
               icon={<HomeIcon size={20} />}
@@ -519,8 +527,16 @@ export default function Home() {
               label="Appointment"
               onClick={() => navigate("/appointment")}
             />
-            <NavItem icon={<ClipboardList size={20} />} label="Quiz" />
-            <NavItem icon={<Headset size={20} />} label="Contact" />
+            <NavItem
+              icon={<ClipboardList size={20} />}
+              label="Quiz"
+              onClick={() => navigate("/quiz")}
+            />
+            <NavItem
+              icon={<Headset size={20} />}
+              label="Contact"
+              onClick={() => navigate("/contact")}
+            />
             <NavItem
               icon={<ShoppingBag size={20} />}
               label="Store"
@@ -540,11 +556,11 @@ function MiniCard({ image, title, onClick }) {
       onClick={onClick}
       className="w-[78px] h-[105px] flex-shrink-0 bg-white rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] border border-[#eaedff] flex flex-col items-center overflow-hidden active:scale-[0.96] transition snap-start"
     >
-      <div className="w-full h-[70%] flex items-center justify-center overflow-hidden bg-[#f4f6fb] border-b border-[#f0f2f8]">
+      <div className="w-full h-[65%] flex items-center justify-center overflow-hidden bg-[#f4f6fb] border-b border-[#f0f2f8]">
         <img src={image} alt={title} className="w-full h-full object-cover" />
       </div>
-      <div className="w-full h-[30%] flex items-center justify-center px-1">
-        <h4 className="text-[10px] font-bold text-gray-900 leading-tight text-center truncate">
+      <div className="w-full h-[35%] flex items-center justify-center px-1">
+        <h4 className="text-[9px] font-bold text-gray-900 leading-[1.15] text-center line-clamp-2">
           {title}
         </h4>
       </div>
@@ -638,7 +654,7 @@ function NavItem({ icon, label, active, onClick }) {
   return (
     <button
       onClick={onClick}
-      className={`flex flex-col items-center justify-center flex-1 min-w-0 py-2 ${active ? "text-[#005c55] font-bold" : "text-gray-500 hover:text-[#005c55]"}`}
+      className={`flex flex-col items-center justify-center flex-1 min-w-0 py-2 cursor-pointer ${active ? "text-[#005c55] font-bold" : "text-gray-500 hover:text-[#005c55]"}`}
     >
       {icon}
       <span className="text-[9px] leading-tight mt-1 truncate w-full text-center px-0.5">
