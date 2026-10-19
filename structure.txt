@@ -1,0 +1,73 @@
+E:\NetswapTechnology\DMT\dmt-template-app
+├── eslint.config.js
+├── index.html
+├── package-lock.json
+├── package.json
+├── public
+|  ├── favicon.svg
+|  └── icons.svg
+├── README.md
+├── src
+|  ├── App.css
+|  ├── App.jsx
+|  ├── assets
+|  |  ├── banner
+|  |  |  ├── homebanner1.png
+|  |  |  └── homebanner2.png
+|  |  ├── bmi
+|  |  |  ├── normal.png
+|  |  |  ├── overweight.png
+|  |  |  └── underweight.png
+|  |  ├── cards
+|  |  |  ├── blood-test.png
+|  |  |  ├── bmi.jpeg
+|  |  |  ├── book-appt.png
+|  |  |  ├── calories.jpeg
+|  |  |  ├── devices.png
+|  |  |  ├── diabetes.jpeg
+|  |  |  ├── disease.png
+|  |  |  ├── ecg.png
+|  |  |  ├── medical-device.png
+|  |  |  ├── period.jpeg
+|  |  |  ├── records.png
+|  |  |  ├── reminder.jpeg
+|  |  |  ├── scan-food.jpeg
+|  |  |  ├── sugar.jpeg
+|  |  |  ├── supplements.png
+|  |  |  └── xray.png
+|  |  ├── daibmetalogo.jpeg
+|  |  ├── diabetes
+|  |  |  ├── step1_age.png
+|  |  |  ├── step2_waist.png
+|  |  |  ├── step3_activity.png
+|  |  |  └── step4_family.png
+|  |  ├── hero.png
+|  |  ├── react.svg
+|  |  ├── splashscreen.png
+|  |  └── vite.svg
+|  ├── components
+|  |  ├── DeviceFrame.jsx
+|  |  ├── PatientModal.jsx
+|  |  └── Sidebar.jsx
+|  ├── index.css
+|  ├── main.jsx
+|  └── pages
+|     ├── 1.jsx
+|     ├── Appointment.jsx
+|     ├── BmiCheck.jsx
+|     ├── DiabetesAssessment.jsx
+|     ├── DiabetesHealthPlanDetail.jsx
+|     ├── DiabetesResult.jsx
+|     ├── DiagnosticDetail.jsx
+|     ├── HealthPlanDetail.jsx
+|     ├── Home.jsx
+|     ├── Login.jsx
+|     ├── Register.jsx
+|     ├── ScanFood.jsx
+|     └── Splash.jsx
+├── structure.txt
+└── vite.config.js
+
+directory: 366 file: 1465
+
+ignored: directory (61)

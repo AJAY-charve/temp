@@ -2,13 +2,15 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
-  HelpCircle,
   Check,
   ArrowRight,
   ShieldCheck,
   X,
   AlertCircle,
 } from "lucide-react";
+
+// LOGO IMPORT
+import logo from "../assets/daibmetalogo.jpeg";
 
 // Real images
 import bmiImg from "../assets/cards/bmi.jpeg";
@@ -307,7 +309,7 @@ export default function DiagnosticDetail() {
   return (
     <div className="min-h-screen bg-[#faf8ff] flex justify-center">
       <div className="w-full max-w-md min-h-screen bg-[#faf8ff] flex flex-col relative">
-        {/* TOP BAR */}
+        {/* HEADER */}
         <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-gray-100">
           <div className="h-14 px-4 flex items-center justify-between">
             <button
@@ -319,9 +321,12 @@ export default function DiagnosticDetail() {
             <h1 className="font-bold text-gray-900 text-[15px]">
               {service.title}
             </h1>
-            <button className="w-9 h-9 flex items-center justify-center text-gray-500">
-              <HelpCircle size={20} />
-            </button>
+            {/* TOP RIGHT LOGO */}
+            <img
+              src={logo}
+              alt="DiabMeta"
+              className="h-9 w-auto object-contain"
+            />
           </div>
         </header>
 
@@ -450,7 +455,6 @@ export default function DiagnosticDetail() {
                 <AlertCircle size={30} className="text-[#005c55]" />
               </div>
 
-              {/* Single line message */}
               <p className="text-[16px] font-bold text-gray-900 px-2 leading-snug">
                 Are you sure? Do you want to proceed with this booking?
               </p>
