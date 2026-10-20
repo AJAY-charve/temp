@@ -11,6 +11,8 @@ import DiabetesAssessment from "./pages/DiabetesAssessment";
 import DiabetesResult from "./pages/DiabetesResult";
 import DiabetesHealthPlanDetail from "./pages/DiabetesHealthPlanDetail";
 import ScanFood from "./pages/ScanFood";
+import ScanResult from "./pages/ScanResult";
+import SavedMeals from "./pages/SavedMeals"; // <-- Naya Import
 import Records from "./pages/Records";
 import Store from "./pages/Store";
 import BookingHistory from "./pages/BookingHistory";
@@ -24,7 +26,7 @@ import Profile from "./pages/Profile";
 import QuizStart from "./pages/QuizStart";
 import Quiz from "./pages/Quiz";
 import QuizResult from "./pages/QuizResult";
-import AddFamilyMember from "./pages/AddFamilyMember"; // <-- Naya Import
+import AddFamilyMember from "./pages/AddFamilyMember";
 
 export default function App() {
   return (
@@ -47,8 +49,11 @@ export default function App() {
         path="/diabetes/health-plan/:level/:planType"
         element={<DiabetesHealthPlanDetail />}
       />
-      {/* Scan Food Route */}
+      {/* Scan Food Routes */}
       <Route path="/scan-food" element={<ScanFood />} />
+      <Route path="/scan-food/result" element={<ScanResult />} />
+      <Route path="/scan-food/saved" element={<SavedMeals />} />{" "}
+      {/* <-- Naya Route */}
       {/* Records Route */}
       <Route path="/records" element={<Records />} />
       {/* Store Routes */}
@@ -65,8 +70,7 @@ export default function App() {
       <Route path="/contact" element={<Contact />} />
       {/* Profile Routes */}
       <Route path="/profile" element={<Profile />} />
-      <Route path="/profile/add-member" element={<AddFamilyMember />} />{" "}
-      {/* <-- Naya Route */}
+      <Route path="/profile/add-member" element={<AddFamilyMember />} />
       {/* Quiz Routes */}
       <Route path="/quiz" element={<QuizStart />} />
       <Route path="/quiz/start" element={<Quiz />} />

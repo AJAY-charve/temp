@@ -2,13 +2,16 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
-  Share2,
   AlertTriangle,
   CheckCircle2,
   Info,
   ChevronRight,
   ArrowRight,
 } from "lucide-react";
+
+// LOGO IMPORT
+import logo from "../assets/daibmetalogo.jpeg";
+
 import { PLAN_ART } from "./BmiCheck"; // <-- IMPORTED SVG ART FROM BMI PAGE
 
 const NAVY = "#14284b";
@@ -158,13 +161,6 @@ export default function DiabetesResult() {
   const R = RISK[level];
   const pos = Math.min(Math.max(score, 3), 97);
 
-  const handleShare = () => {
-    const text = `My diabetes risk score on DiabMeta is ${score}/100 (${R.label}).`;
-    if (navigator.share)
-      navigator.share({ title: "DiabMeta", text }).catch(() => {});
-    else navigator.clipboard?.writeText(text);
-  };
-
   return (
     <div
       className="min-h-screen bg-white flex justify-center"
@@ -186,13 +182,13 @@ export default function DiabetesResult() {
             <h1 className="font-extrabold text-[17px]" style={{ color: NAVY }}>
               Your Diabetes Risk Result
             </h1>
-            <button
-              onClick={handleShare}
-              className="w-9 h-9 flex items-center justify-center active:scale-95"
-              style={{ color: NAVY }}
-            >
-              <Share2 size={20} strokeWidth={2.2} />
-            </button>
+
+            {/* TOP RIGHT LOGO */}
+            <img
+              src={logo}
+              alt="DiabMeta"
+              className="h-9 w-auto object-contain"
+            />
           </div>
         </header>
 
@@ -400,7 +396,7 @@ export default function DiabetesResult() {
               <PlanCard
                 title="Diet Plan"
                 hi="आहार योजना"
-                Art={PLAN_ART.diet} // <-- USING SVG ART
+                Art={PLAN_ART.diet}
                 color="#2e9e48"
                 bg="#e4f4e8"
                 onClick={() => navigate(`/diabetes/health-plan/${level}/diet`)}
@@ -408,7 +404,7 @@ export default function DiabetesResult() {
               <PlanCard
                 title="Physical Activity"
                 hi="शारीरिक गतिविधि"
-                Art={PLAN_ART.activity} // <-- USING SVG ART
+                Art={PLAN_ART.activity}
                 color="#2f8cf0"
                 bg="#e0eefc"
                 onClick={() =>
@@ -418,7 +414,7 @@ export default function DiabetesResult() {
               <PlanCard
                 title="Other Advice"
                 hi="अन्य सुझाव"
-                Art={PLAN_ART.advice} // <-- USING SVG ART
+                Art={PLAN_ART.advice}
                 color="#ea8a10"
                 bg="#fdf1d3"
                 onClick={() =>
@@ -560,7 +556,6 @@ function PlanCard({ title, hi, Art, color, bg, onClick }) {
       className="flex items-center gap-3.5 px-3.5 py-3 rounded-2xl active:scale-[0.99] transition border border-white/50 shadow-sm"
       style={{ backgroundColor: bg }}
     >
-      {/* SVG Art Container */}
       <div className="w-[46px] h-[46px] rounded-xl bg-white flex items-center justify-center flex-none overflow-hidden p-1 shadow-sm">
         <Art />
       </div>

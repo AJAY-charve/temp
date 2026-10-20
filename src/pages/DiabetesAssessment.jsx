@@ -2,6 +2,9 @@ import { useState, Fragment } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Check, ArrowRight } from "lucide-react";
 
+// LOGO IMPORT
+import logo from "../assets/daibmetalogo.jpeg";
+
 // Step images
 import imgAge from "../assets/diabetes/step1_age.png";
 import imgWaist from "../assets/diabetes/step2_waist.png";
@@ -14,7 +17,6 @@ const BLUE = "#1458b8";
 /* ============ IDRS SCORING ============ */
 const agePoints = (age) => (age < 35 ? 0 : age <= 49 ? 20 : 30);
 
-// Removed sex parameter, using standard 90/100 cm cut-offs
 const waistPoints = (cm) => {
   if (cm < 90) return 0;
   if (cm < 100) return 10;
@@ -48,7 +50,7 @@ export default function DiabetesAssessment() {
 
     const pts = {
       age: agePoints(a),
-      waist: waistPoints(wCm), // No sex needed
+      waist: waistPoints(wCm),
       activity: activityPoints(activity),
       family: familyPoints(family),
     };
@@ -64,7 +66,7 @@ export default function DiabetesAssessment() {
 
   const canProceed = () => {
     if (step === 1) return Number(age) > 0;
-    if (step === 2) return Number(waist) > 0; // Removed sex requirement
+    if (step === 2) return Number(waist) > 0;
     if (step === 3) return activity !== "";
     if (step === 4) return family !== "";
     return false;
@@ -80,25 +82,34 @@ export default function DiabetesAssessment() {
       <div className="w-full max-w-md bg-white min-h-screen flex flex-col">
         {/* HEADER */}
         <header className="sticky top-0 z-40 bg-white">
-          <div className="h-16 px-3 flex items-center">
-            <button
-              onClick={() => (step > 1 ? setStep(step - 1) : navigate(-1))}
-              className="w-9 h-9 flex items-center justify-center rounded-full active:scale-95"
-              style={{ color: NAVY }}
-            >
-              <ChevronLeft size={26} strokeWidth={2.4} />
-            </button>
-            <div className="flex-1 text-center -ml-9">
-              <h1
-                className="font-extrabold text-[20px] leading-tight"
+          <div className="h-16 px-4 flex items-center justify-between">
+            <div className="flex items-center gap-2 min-w-0">
+              <button
+                onClick={() => (step > 1 ? setStep(step - 1) : navigate(-1))}
+                className="w-9 h-9 flex items-center justify-center rounded-full active:scale-95 flex-shrink-0"
                 style={{ color: NAVY }}
               >
-                DiabMeta
-              </h1>
-              <p className="text-[12px] text-gray-500 font-medium leading-tight">
-                Diabetes Risk Assessment
-              </p>
+                <ChevronLeft size={26} strokeWidth={2.4} />
+              </button>
+              <div className="min-w-0">
+                <h1
+                  className="font-extrabold text-[18px] leading-tight truncate"
+                  style={{ color: NAVY }}
+                >
+                  Diabetes Risk
+                </h1>
+                <p className="text-[11px] text-gray-500 font-medium leading-tight truncate">
+                  Assessment
+                </p>
+              </div>
             </div>
+
+            {/* TOP RIGHT LOGO */}
+            <img
+              src={logo}
+              alt="DiabMeta"
+              className="h-9 w-auto object-contain flex-shrink-0"
+            />
           </div>
         </header>
 
@@ -186,17 +197,15 @@ export default function DiabetesAssessment() {
                 h={230}
               />
 
-              {/* Removed Male/Female Toggle */}
               <div className="mt-4">
                 <span
                   className="text-[13px] font-extrabold mr-1"
                   style={{ color: NAVY }}
                 >
-                  Select unit / इकाई चुनें
+                  Enter Your Waist Circumference
                 </span>
               </div>
 
-              {/* unit toggle */}
               <div className="mt-2 grid grid-cols-2 gap-2">
                 {[
                   { v: "cm", t: "Centimetres (cm)" },
@@ -231,7 +240,6 @@ export default function DiabetesAssessment() {
                 </span>
               </div>
 
-              {/* how to measure */}
               <button
                 onClick={() => setShowHow(!showHow)}
                 className="mt-3 w-full flex items-center gap-3 rounded-xl border border-[#d9e3f1] bg-[#f6f9fe] p-2.5 text-left"
@@ -259,35 +267,35 @@ export default function DiabetesAssessment() {
                 />
               </button>
 
+              {/* UPDATED: Added the bottom text inside the collapsible */}
               {showHow && (
-                <ol
-                  className="mt-2 rounded-xl bg-[#eef5fd] p-3 text-[12px] leading-snug list-decimal list-inside space-y-1"
+                <div
+                  className="mt-2 rounded-xl bg-[#eef5fd] p-3 text-[12px] leading-snug"
                   style={{ color: NAVY }}
                 >
-                  <li>
-                    Stand straight and relax your stomach. / सीधे खड़े हों और
-                    पेट को ढीला रखें।
-                  </li>
-                  <li>
-                    Wrap the tape around your waist at the navel level. / नाभि
-                    के स्तर पर टेप लपेटें।
-                  </li>
-                  <li>
-                    Breathe out normally and read the number. / सामान्य रूप से
-                    सांस छोड़ें और माप पढ़ें।
-                  </li>
-                </ol>
+                  <ol className="list-decimal list-inside space-y-1 mb-2">
+                    <li>
+                      Stand straight and relax your stomach. / सीधे खड़े हों और
+                      पेट को ढीला रखें।
+                    </li>
+                    <li>
+                      Wrap the tape around your waist at the navel level. / नाभि
+                      के स्तर पर टेप लपेटें।
+                    </li>
+                    <li>
+                      Breathe out normally and read the number. / सामान्य रूप से
+                      सांस छोड़ें और माप पढ़ें।
+                    </li>
+                  </ol>
+                  <p className="pt-2 border-t border-[#d9e3f1] font-medium">
+                    Measure your waist at the level of navel, after breathing
+                    out normally.
+                    <br />
+                    नाभि के स्तर पर, सामान्य रूप से सांस छोड़ने के बाद कमर का
+                    माप लें।
+                  </p>
+                </div>
               )}
-
-              <p className="mt-3 text-[13px] leading-snug text-gray-600">
-                Measure your waist at the level of navel, after breathing out
-                normally.
-                <br />
-                <span style={{ color: NAVY }}>
-                  नाभि के स्तर पर, सामान्य रूप से सांस छोड़ने के बाद कमर का माप
-                  लें।
-                </span>
-              </p>
             </div>
           )}
 
