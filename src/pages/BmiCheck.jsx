@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   ArrowLeft,
-  HelpCircle,
   ArrowRight,
   Weight,
   Info,
@@ -14,17 +13,20 @@ import {
   MessageCircle,
 } from "lucide-react";
 
+// LOGO IMPORT
+import logo from "../assets/daibmetalogo.jpeg";
+
 // Banner (input view)
 import bmiImg from "../assets/cards/bmi.jpeg";
 
-// Top result card images (only 3 - heavy weight image is used for overweight & all obesity classes)
+// Top result card images
 import imgUnderweight from "../assets/bmi/underweight.png";
 import imgNormal from "../assets/bmi/normal.png";
 import imgOverweight from "../assets/bmi/overweight.png";
 
 const NAVY = "#14284b";
 
-/* ============ CATEGORY COLORS (HealthPlanDetail bhi yahin se leta hai) ============ */
+/* ============ CATEGORY COLORS ============ */
 export const BMI_THEME = {
   underweight: {
     label: "UNDERWEIGHT",
@@ -203,7 +205,7 @@ const formatFtIn = (cm) => {
   return `${ft} ft ${inch} in`;
 };
 
-/* Result ko history state se rebuild karte hain (sirf plain numbers store hote hain) */
+/* Result ko history state se rebuild karte hain */
 const buildResult = ({ bmiNum, weight, heightCm }) => {
   const catKey = getCategory(bmiNum);
   const ideal = calcIdealWeightRange(heightCm);
@@ -229,7 +231,7 @@ export default function BmiCheck() {
   const [heightFt, setHeightFt] = useState("");
   const [heightIn, setHeightIn] = useState("");
   const [heightUnit, setHeightUnit] = useState("cm");
-  // result URL/history state se aata hai, isliye back karne par wapas wahi result dikhta hai
+
   const saved = location.state?.bmi;
   const result = saved ? buildResult(saved) : null;
 
@@ -259,7 +261,6 @@ export default function BmiCheck() {
     });
   };
 
-  // result se input par wapas
   const backFromResult = () => {
     if (window.history.state?.idx > 0) navigate(-1);
     else
@@ -303,20 +304,28 @@ export default function BmiCheck() {
           }
         >
           {result ? (
-            <div className="h-14 px-4 flex items-center gap-3">
-              <button
-                onClick={backFromResult}
-                className="w-8 h-8 flex items-center justify-center rounded-full active:scale-95"
-                style={{ color: NAVY }}
-              >
-                <ArrowLeft size={22} strokeWidth={2.5} />
-              </button>
-              <h1
-                className="font-extrabold text-[17px]"
-                style={{ color: NAVY }}
-              >
-                Your BMI Result
-              </h1>
+            <div className="h-14 px-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={backFromResult}
+                  className="w-8 h-8 flex items-center justify-center rounded-full active:scale-95"
+                  style={{ color: NAVY }}
+                >
+                  <ArrowLeft size={22} strokeWidth={2.5} />
+                </button>
+                <h1
+                  className="font-extrabold text-[17px]"
+                  style={{ color: NAVY }}
+                >
+                  Your BMI Result
+                </h1>
+              </div>
+              {/* TOP RIGHT LOGO IN RESULT */}
+              <img
+                src={logo}
+                alt="DiabMeta"
+                className="h-8 w-auto object-contain"
+              />
             </div>
           ) : (
             <div className="h-14 px-4 flex items-center justify-between">
@@ -329,9 +338,12 @@ export default function BmiCheck() {
               <h1 className="font-bold text-gray-900 text-[15px]">
                 BMI Calculator
               </h1>
-              <button className="w-9 h-9 flex items-center justify-center text-gray-500">
-                <HelpCircle size={20} />
-              </button>
+              {/* TOP RIGHT LOGO IN INPUT */}
+              <img
+                src={logo}
+                alt="DiabMeta"
+                className="h-9 w-auto object-contain"
+              />
             </div>
           )}
         </header>
@@ -339,7 +351,7 @@ export default function BmiCheck() {
         {/* MAIN */}
         <main className="flex-1 pb-8 px-4 pt-4">
           {!result ? (
-            /* ========== INPUT VIEW (unchanged) ========== */
+            /* ========== INPUT VIEW ========== */
             <>
               <div className="w-full h-[140px] rounded-2xl overflow-hidden mb-4 border border-[#eaedff] shadow-sm">
                 <img
@@ -478,7 +490,7 @@ export default function BmiCheck() {
               </button>
             </>
           ) : (
-            /* ========== RESULT VIEW (matches reference) ========== */
+            /* ========== RESULT VIEW ========== */
             <div
               style={{ animation: "fadeIn 0.35s ease" }}
               className="flex flex-col gap-3.5"
@@ -512,14 +524,12 @@ export default function BmiCheck() {
                   </p>
                 </div>
 
-                {/* sparkle */}
                 <Sparkles
                   size={24}
                   strokeWidth={2.4}
                   className="absolute right-[8%] top-[18%] z-10 text-[#f58a2b]"
                 />
 
-                {/* person image */}
                 <img
                   src={result.img}
                   alt="BMI Result"
@@ -534,7 +544,6 @@ export default function BmiCheck() {
                 </h3>
 
                 <div className="relative pt-8">
-                  {/* marker */}
                   <div
                     className="absolute top-0 z-10 flex flex-col items-center"
                     style={{
@@ -554,7 +563,6 @@ export default function BmiCheck() {
                     />
                   </div>
 
-                  {/* bar */}
                   <div className="flex h-[22px] rounded-full overflow-hidden">
                     {SEGMENTS.map((s) => (
                       <div
@@ -568,7 +576,6 @@ export default function BmiCheck() {
                   </div>
                 </div>
 
-                {/* labels */}
                 <div className="grid grid-cols-6 mt-1.5 text-center">
                   {SEGMENTS.map((s) => (
                     <p
@@ -723,14 +730,6 @@ export default function BmiCheck() {
                   </p>
                 </div>
               </div>
-
-              {/* 7. BOOK DOCTOR */}
-              <button
-                onClick={() => navigate("/appointment")}
-                className="w-full bg-white border-2 border-[#0d6b63] text-[#0d6b63] font-bold py-3.5 rounded-xl active:scale-[0.98] transition flex items-center justify-center gap-2 mt-1"
-              >
-                Book Doctor Consultaion <ArrowRight size={18} />
-              </button>
             </div>
           )}
         </main>
@@ -790,7 +789,6 @@ const artProps = {
 export function DietArt() {
   return (
     <svg {...artProps}>
-      {/* plate */}
       <ellipse cx="50" cy="56" rx="45" ry="22" fill="#cfcfcf" />
       <ellipse
         cx="50"
@@ -802,13 +800,11 @@ export function DietArt() {
         strokeWidth="1"
       />
       <ellipse cx="50" cy="52" rx="35" ry="16" fill="#f3f3f3" />
-      {/* greens (back) */}
       <ellipse cx="26" cy="38" rx="13" ry="8" fill="#4caf50" />
       <ellipse cx="44" cy="31" rx="13" ry="7.5" fill="#2e8b3a" />
       <ellipse cx="66" cy="32" rx="14" ry="8" fill="#66bb6a" />
       <ellipse cx="80" cy="42" rx="10" ry="7" fill="#43a047" />
       <ellipse cx="34" cy="34" rx="8" ry="5" fill="#7cc576" />
-      {/* veggies */}
       <circle cx="19" cy="46" r="5" fill="#e53935" />
       <circle cx="73" cy="27" r="4.5" fill="#ef5350" />
       <circle cx="86" cy="48" r="4" fill="#e53935" />
@@ -831,7 +827,6 @@ export function DietArt() {
         transform="rotate(20 32 28)"
       />
       <circle cx="58" cy="30" r="2.5" fill="#c62828" />
-      {/* cucumber slices */}
       <g fill="#c5e1a5" stroke="#7cb342" strokeWidth="1.2">
         <circle cx="17" cy="57" r="5.5" />
         <circle cx="27" cy="64" r="5.5" />
@@ -842,7 +837,6 @@ export function DietArt() {
         <circle cx="27" cy="64" r="2.8" />
         <circle cx="38" cy="67" r="2.6" />
       </g>
-      {/* chicken */}
       <g transform="rotate(-18 56 52)">
         <ellipse cx="56" cy="52" rx="25" ry="13" fill="#e2a95b" />
         <ellipse cx="54" cy="49" rx="20" ry="8" fill="#f2c987" />
@@ -853,7 +847,6 @@ export function DietArt() {
           <path d="M66 46 L71 55" />
         </g>
       </g>
-      {/* herbs */}
       <ellipse cx="78" cy="60" rx="7" ry="4" fill="#66bb6a" />
       <ellipse cx="68" cy="66" rx="5" ry="3" fill="#43a047" />
     </svg>
@@ -863,24 +856,18 @@ export function DietArt() {
 export function ActivityArt() {
   return (
     <svg {...artProps}>
-      {/* ponytail */}
       <path d="M26 22 Q6 28 12 54 Q20 44 30 34 Z" fill="#6b3a22" />
-      {/* torso (blue top) */}
       <path d="M14 80 Q14 50 40 46 Q64 50 66 80 Z" fill="#26a6dc" />
-      {/* neck + chest skin */}
       <rect x="35" y="34" width="10" height="12" rx="4" fill="#f0b088" />
       <path
         d="M30 47 Q40 58 50 47 Q45 44 40 44 Q35 44 30 47 Z"
         fill="#f0b088"
       />
-      {/* head */}
       <ellipse cx="40" cy="22" rx="12.5" ry="14.5" fill="#f4b998" />
-      {/* hair */}
       <path
         d="M26 24 Q26 4 42 6 Q56 8 54 24 Q50 14 40 15 Q31 16 29 28 Z"
         fill="#5a2e1a"
       />
-      {/* face details */}
       <path
         d="M45 26 Q48 28 46 30"
         stroke="#d98f6b"
@@ -895,7 +882,6 @@ export function ActivityArt() {
         fill="none"
         strokeLinecap="round"
       />
-      {/* arm lifting dumbbell */}
       <path
         d="M60 54 L74 62"
         stroke="#f0b088"
@@ -908,7 +894,6 @@ export function ActivityArt() {
         strokeWidth="9"
         strokeLinecap="round"
       />
-      {/* dumbbell */}
       <g transform="rotate(25 86 30)">
         <rect x="84.5" y="20" width="3" height="20" rx="1.5" fill="#1d6fb8" />
         <rect x="80" y="16" width="12" height="7" rx="3" fill="#2f94e0" />
@@ -966,26 +951,20 @@ export function AdviceArt() {
 export function DoctorArt() {
   return (
     <svg {...artProps}>
-      {/* coat */}
       <path
         d="M12 80 Q14 50 40 46 L50 62 L60 46 Q86 50 88 80 Z"
         fill="#fff"
         stroke="#dce3ee"
         strokeWidth="1"
       />
-      {/* shirt + tie */}
       <path d="M40 46 L50 64 L60 46 L56 44 L50 50 L44 44 Z" fill="#6d9bd6" />
       <path d="M48.5 52 L51.5 52 L53 66 L50 71 L47 66 Z" fill="#2f5fa8" />
-      {/* neck */}
       <rect x="44" y="36" width="12" height="10" rx="4" fill="#e3a07a" />
-      {/* head */}
       <ellipse cx="50" cy="24" rx="13" ry="15" fill="#e8a982" />
-      {/* hair */}
       <path
         d="M36 24 Q34 4 50 5 Q66 4 64 24 Q61 13 50 13 Q39 13 36 24 Z"
         fill="#1f1a17"
       />
-      {/* glasses */}
       <g fill="none" stroke="#222" strokeWidth="1.5">
         <rect x="38.5" y="22" width="9" height="7" rx="2.5" />
         <rect x="52.5" y="22" width="9" height="7" rx="2.5" />
@@ -998,7 +977,6 @@ export function DoctorArt() {
         fill="none"
         strokeLinecap="round"
       />
-      {/* stethoscope */}
       <path
         d="M40 47 Q31 66 43 72"
         stroke="#333"
@@ -1025,8 +1003,6 @@ export function DoctorArt() {
   );
 }
 
-// page type (route param) -> illustration
-// /health-plan/:catKey/:type   type = diet | activity | advice
 export const PLAN_ART = {
   diet: DietArt,
   activity: ActivityArt,

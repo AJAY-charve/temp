@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Search, X } from "lucide-react";
+import { ArrowLeft, Search, X, ChevronRight } from "lucide-react";
 
 // LOGO
 import logo from "../assets/daibmetalogo.jpeg";
@@ -12,12 +12,38 @@ import bmiImg from "../assets/cards/bmi.jpeg";
 import diabetesImg from "../assets/cards/diabetes.jpeg";
 import heartImg from "../assets/cards/calories.jpeg";
 
+// Added 'desc' for the list UI
 const SYMPTOMS = [
-  { id: "fever", name: "Fever", image: diseaseImg },
-  { id: "headache", name: "Headache", image: bmiImg },
-  { id: "fatigue", name: "Fatigue", image: diabetesImg },
-  { id: "cough", name: "Cough & Cold", image: symptomsImg },
-  { id: "chest-pain", name: "Chest Pain", image: heartImg },
+  {
+    id: "fever",
+    name: "Fever",
+    desc: "High body temperature, often due to infection.",
+    image: diseaseImg,
+  },
+  {
+    id: "headache",
+    name: "Headache",
+    desc: "Pain in the head or neck area.",
+    image: bmiImg,
+  },
+  {
+    id: "fatigue",
+    name: "Fatigue",
+    desc: "Constant tiredness or lack of energy.",
+    image: diabetesImg,
+  },
+  {
+    id: "cough",
+    name: "Cough & Cold",
+    desc: "Viral infection affecting nose and throat.",
+    image: symptomsImg,
+  },
+  {
+    id: "chest-pain",
+    name: "Chest Pain",
+    desc: "Discomfort or pain in the chest area.",
+    image: heartImg,
+  },
 ];
 
 export default function SymptomsList() {
@@ -55,7 +81,7 @@ export default function SymptomsList() {
 
         {/* MAIN */}
         <main className="flex-1 pb-8 px-4 pt-4">
-          {/* SEARCH BAR (Now at the top) */}
+          {/* SEARCH BAR */}
           <div className="flex items-center gap-2 px-3 py-2.5 mb-3 rounded-xl border border-[#eaedff] bg-white shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
             <Search size={16} className="text-gray-400 flex-shrink-0" />
             <input
@@ -75,12 +101,12 @@ export default function SymptomsList() {
             )}
           </div>
 
-          {/* Description Text (Moved below search bar) */}
+          {/* Description Text */}
           <p className="text-[11.5px] text-gray-500 mb-5 px-1">
             Identify your symptoms and learn what they might indicate.
           </p>
 
-          {/* Card Grid — only Image & Name */}
+          {/* Symptom List (DiagnosticDetail Style) */}
           {filteredSymptoms.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <div className="w-16 h-16 rounded-full bg-[#f4f6fb] flex items-center justify-center mb-3">
@@ -94,15 +120,19 @@ export default function SymptomsList() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-3">
-              {filteredSymptoms.map((symptom) => (
+            <div className="bg-white rounded-2xl border border-[#eaedff] overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
+              {filteredSymptoms.map((symptom, i) => (
                 <button
                   key={symptom.id}
                   onClick={() => navigate(`/symptoms/${symptom.id}`)}
-                  className="bg-white rounded-2xl border border-[#eaedff] shadow-[0_2px_8px_rgba(0,0,0,0.04)] flex flex-col overflow-hidden active:scale-[0.96] transition"
+                  className={`w-full flex items-center gap-3 p-3 text-left transition active:bg-[#fafbff] ${
+                    i !== filteredSymptoms.length - 1
+                      ? "border-b border-[#f0f2f8]"
+                      : ""
+                  }`}
                 >
-                  {/* Image Area */}
-                  <div className="w-full aspect-square bg-[#f4f6fb]">
+                  {/* Image */}
+                  <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 bg-[#f4f6fb]">
                     <img
                       src={symptom.image}
                       alt={symptom.name}
@@ -110,12 +140,22 @@ export default function SymptomsList() {
                     />
                   </div>
 
-                  {/* Name Area */}
-                  <div className="p-2.5 flex items-center justify-center text-center bg-white">
-                    <h3 className="text-[12px] font-bold text-gray-900 leading-tight line-clamp-2">
+                  {/* Info */}
+                  <div className="flex-1 min-w-0 py-0.5">
+                    <h4 className="text-[14.5px] font-bold text-gray-900 leading-tight truncate">
                       {symptom.name}
-                    </h3>
+                    </h4>
+                    {/* UPDATED: Font size increased to 12px */}
+                    <p className="text-[12px] text-gray-500 leading-tight mt-1 line-clamp-1 truncate">
+                      {symptom.desc}
+                    </p>
                   </div>
+
+                  {/* Arrow */}
+                  <ChevronRight
+                    size={18}
+                    className="text-gray-300 flex-shrink-0"
+                  />
                 </button>
               ))}
             </div>

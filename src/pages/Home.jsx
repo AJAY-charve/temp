@@ -169,7 +169,6 @@ export default function Home() {
                 {activeMember.substring(0, 2).toUpperCase()}
               </button>
 
-              {/* UPDATED: Header Add Member Button */}
               <button
                 onClick={() => navigate("/profile/add-member")}
                 className="inline-flex items-center gap-1 bg-[#9cf2e8]/60 text-[#005c55] px-2.5 py-1.5 rounded-full text-[11px] font-semibold active:scale-95 flex-shrink-0 whitespace-nowrap ml-1"
@@ -254,7 +253,6 @@ export default function Home() {
                     ))}
                   </div>
 
-                  {/* UPDATED: Dropdown Add Member Button */}
                   <button
                     onClick={() => {
                       setFamilyOpen(false);
@@ -514,6 +512,7 @@ export default function Home() {
           </section>
         </main>
 
+        {/* BOTTOM NAV */}
         <nav className="fixed bottom-0 inset-x-0 z-50 bg-white/95 backdrop-blur-xl border-t border-gray-100 shadow-[0_-4px_20px_rgba(15,23,42,0.05)]">
           <div className="max-w-md mx-auto flex items-stretch justify-around h-16 px-1">
             <NavItem
@@ -532,9 +531,10 @@ export default function Home() {
               label="Quiz"
               onClick={() => navigate("/quiz")}
             />
+            {/* UPDATED: Contact to About Us */}
             <NavItem
               icon={<Headset size={20} />}
-              label="Contact"
+              label="About Us"
               onClick={() => navigate("/contact")}
             />
             <NavItem

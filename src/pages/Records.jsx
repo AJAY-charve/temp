@@ -142,7 +142,7 @@ export default function Records() {
   return (
     <div className="min-h-screen bg-[#faf8ff] flex justify-center">
       <div className="w-full max-w-md min-h-screen flex flex-col relative">
-        {/* ============ HEADER ============ */}
+        {/* HEADER */}
         <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-gray-100">
           <div className="h-14 px-4 flex items-center justify-between">
             <button
@@ -163,7 +163,7 @@ export default function Records() {
           </div>
         </header>
 
-        {/* ============ MAIN ============ */}
+        {/* MAIN */}
         <main className="flex-1 pb-24 px-4 pt-4">
           {/* Upload CTA */}
           <button
@@ -205,7 +205,7 @@ export default function Records() {
           )}
         </main>
 
-        {/* ============ UPLOAD SHEET ============ */}
+        {/* UPLOAD SHEET */}
         {showUpload && (
           <UploadSheet
             selectedType={selectedType}
@@ -223,10 +223,10 @@ export default function Records() {
           type="file"
           className="hidden"
           onChange={handleFilePick}
-          accept="image/*,.pdf,.doc,.docx"
+          accept="*/*"
         />
 
-        {/* ============ PREVIEW MODAL ============ */}
+        {/* PREVIEW MODAL */}
         {preview && (
           <PreviewModal doc={preview} onClose={() => setPreview(null)} />
         )}
@@ -265,7 +265,7 @@ function DocCard({ doc, onPreview, onDelete }) {
 
       {/* info */}
       <button onClick={onPreview} className="flex-1 min-w-0 text-left">
-        <p className="text-[12.5px] font-bold text-gray-900 truncate leading-tight">
+        <p className="text-[13px] font-bold text-gray-900 truncate leading-tight">
           {doc.name}
         </p>
         <div className="flex items-center gap-1.5 mt-1 flex-wrap">
@@ -275,11 +275,11 @@ function DocCard({ doc, onPreview, onDelete }) {
           >
             {typeLabel}
           </span>
-          <span className="text-[9.5px] text-gray-500 font-medium">
+          <span className="text-[10px] text-gray-500 font-medium">
             {doc.date}
           </span>
-          <span className="text-[9.5px] text-gray-400">·</span>
-          <span className="text-[9.5px] text-gray-500 font-medium">
+          <span className="text-[10px] text-gray-400">·</span>
+          <span className="text-[10px] text-gray-500 font-medium">
             {doc.size}
           </span>
         </div>
@@ -350,7 +350,7 @@ function UploadSheet({
           Select document type
         </p>
 
-        {/* Type options — no icons, simple text */}
+        {/* Type options */}
         <div className="flex flex-col gap-2 mb-3">
           {DOC_TYPES.map((t) => {
             const active = selectedType === t.key;
@@ -396,9 +396,6 @@ function UploadSheet({
         >
           <CloudUpload size={18} /> Choose File & Upload
         </button>
-        <p className="text-[9.5px] text-gray-500 text-center mt-2 leading-snug">
-          Static demo — no file is actually uploaded to a server.
-        </p>
       </div>
 
       <style>{`
@@ -409,7 +406,7 @@ function UploadSheet({
   );
 }
 
-/* ============ PREVIEW MODAL (only file preview) ============ */
+/* ============ PREVIEW MODAL (Supports Image, PDF & Fallback) ============ */
 function PreviewModal({ doc, onClose }) {
   const image = isImageType(doc.fileType);
   const pdf = doc.fileType === "PDF";
@@ -450,13 +447,16 @@ function PreviewModal({ doc, onClose }) {
           />
         ) : (
           <div className="flex flex-col items-center text-center px-6">
-            <p className="text-[13px] font-bold text-white">
+            <div className="w-20 h-20 rounded-2xl bg-white/10 flex items-center justify-center mb-4">
+              <FileText size={40} className="text-white/80" />
+            </div>
+            <p className="text-[14px] font-bold text-white">
               Preview not available
             </p>
-            <p className="text-[11px] text-white/60 mt-1 max-w-[240px] leading-snug">
+            <p className="text-[12px] text-white/60 mt-2 max-w-[260px] leading-snug">
               {image || pdf
                 ? "This is a sample document. Upload a file to preview it here."
-                : "This file type cannot be previewed."}
+                : "This file type (DOC/DOCX/Other) cannot be previewed directly in the browser."}
             </p>
           </div>
         )}

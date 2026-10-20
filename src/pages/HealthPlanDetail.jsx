@@ -1,5 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, HelpCircle, Check, ArrowRight, Info } from "lucide-react";
+import { ArrowLeft, Check, ArrowRight, Info } from "lucide-react";
+
+// LOGO IMPORT
+import logo from "../assets/daibmetalogo.jpeg";
 
 import { BMI_THEME, PLAN_ART } from "./BmiCheck";
 
@@ -303,6 +306,10 @@ export default function HealthPlanDetail() {
   const englishItems = cat[planType];
   const hindiItems = HINDI_PLANS[category][planType];
 
+  // BUTTON TEXT LOGIC: Diet me Dietitian, baaki me Doctor
+  const btnText =
+    planType === "diet" ? "Consult a Dietitian" : "Book Doctor Consultation";
+
   return (
     <div
       className="min-h-screen flex justify-center"
@@ -332,9 +339,13 @@ export default function HealthPlanDetail() {
             <h1 className="font-extrabold text-[17px]" style={{ color: NAVY }}>
               {plan.title}
             </h1>
-            <button className="w-9 h-9 flex items-center justify-center text-gray-500">
-              <HelpCircle size={20} />
-            </button>
+
+            {/* TOP RIGHT LOGO */}
+            <img
+              src={logo}
+              alt="DiabMeta"
+              className="h-9 w-auto object-contain"
+            />
           </div>
         </header>
 
@@ -399,12 +410,12 @@ export default function HealthPlanDetail() {
             </div>
           </div>
 
-          {/* Book Doctor */}
+          {/* Dynamic Button */}
           <button
             onClick={() => navigate("/appointment")}
             className="w-full bg-white border-2 border-[#0d6b63] text-[#0d6b63] font-bold py-3.5 rounded-xl active:scale-[0.98] transition flex items-center justify-center gap-2"
           >
-            Book Doctor Consultaion <ArrowRight size={16} />
+            {btnText} <ArrowRight size={16} />
           </button>
         </main>
       </div>

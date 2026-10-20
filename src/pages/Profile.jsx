@@ -9,19 +9,26 @@ import {
   UserPlus,
   Users,
   ChevronRight,
+  ChevronDown,
 } from "lucide-react";
 import logo from "../assets/daibmetalogo.jpeg";
+
+// 18 se 100 tak ki ages ki array
+const AGE_OPTIONS = Array.from({ length: 83 }, (_, i) => i + 18);
 
 export default function Profile() {
   const navigate = useNavigate();
   const [saved, setSaved] = useState(false);
 
-  // Main User Form State
+  // Custom Dropdown state
+  const [showAgeDropdown, setShowAgeDropdown] = useState(false);
+
+  // Main User Form State (Gender lowercase for toggle)
   const [form, setForm] = useState({
     name: "Rahul Sharma",
-    email: "", // Optional hai, isliye khali chhod diya
+    email: "", // Optional
     age: "34",
-    gender: "Male",
+    gender: "male",
     phone: "+91 98765 43210",
   });
 
@@ -33,6 +40,10 @@ export default function Profile() {
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const updateField = (key, value) => {
+    setForm({ ...form, [key]: value });
   };
 
   const handleSave = () => {
@@ -109,49 +120,87 @@ export default function Profile() {
               />
             </div>
 
-            {/* Age & Gender Row */}
+            {/* Age & Phone Row */}
             <div className="flex gap-3">
-              <div className="flex-1">
+              {/* AGE CUSTOM DROPDOWN */}
+              <div className="w-[100px] relative flex-shrink-0">
                 <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1.5 block">
                   Age
                 </label>
+                <button
+                  type="button"
+                  onClick={() => setShowAgeDropdown(!showAgeDropdown)}
+                  className="w-full flex items-center justify-between px-3 py-3 rounded-xl border border-[#eaedff] bg-[#faf8ff] focus:bg-white focus:border-[#005c55] outline-none text-[13px] font-semibold text-gray-900 transition"
+                >
+                  {form.age}
+                  <ChevronDown size={14} className="text-gray-400" />
+                </button>
+
+                {showAgeDropdown && (
+                  <>
+                    <div
+                      className="fixed inset-0 z-10"
+                      onClick={() => setShowAgeDropdown(false)}
+                    ></div>
+                    <div className="absolute top-[100%] left-0 w-full mt-1 bg-white border border-[#eaedff] rounded-xl shadow-lg z-20 max-h-48 overflow-y-auto animate-pop">
+                      {AGE_OPTIONS.map((age) => (
+                        <button
+                          key={age}
+                          type="button"
+                          onClick={() => {
+                            updateField("age", age);
+                            setShowAgeDropdown(false);
+                          }}
+                          className={`w-full text-left px-3 py-2.5 text-[13px] transition ${
+                            form.age == age
+                              ? "bg-[#9cf2e8]/30 text-[#005c55] font-bold"
+                              : "text-gray-700 hover:bg-gray-50"
+                          }`}
+                        >
+                          {age}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* PHONE */}
+              <div className="flex-1">
+                <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1.5 block">
+                  Phone Number
+                </label>
                 <input
-                  type="number"
-                  name="age"
-                  value={form.age}
+                  type="tel"
+                  name="phone"
+                  value={form.phone}
                   onChange={handleChange}
                   className="w-full px-3 py-3 rounded-xl border border-[#eaedff] bg-[#faf8ff] focus:bg-white focus:border-[#005c55] outline-none text-[13px] font-semibold text-gray-900 transition"
                 />
               </div>
-              <div className="flex-1">
-                <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1.5 block">
-                  Gender
-                </label>
-                <select
-                  name="gender"
-                  value={form.gender}
-                  onChange={handleChange}
-                  className="w-full px-3 py-3 rounded-xl border border-[#eaedff] bg-[#faf8ff] focus:bg-white focus:border-[#005c55] outline-none text-[13px] font-semibold text-gray-900 transition appearance-none"
-                >
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
             </div>
 
-            {/* Phone */}
+            {/* GENDER TOGGLE (Patient Modal Style) */}
             <div>
               <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1.5 block">
-                Phone Number
+                Gender
               </label>
-              <input
-                type="tel"
-                name="phone"
-                value={form.phone}
-                onChange={handleChange}
-                className="w-full px-3 py-3 rounded-xl border border-[#eaedff] bg-[#faf8ff] focus:bg-white focus:border-[#005c55] outline-none text-[13px] font-semibold text-gray-900 transition"
-              />
+              <div className="bg-[#eef1f8] rounded-xl p-1 flex gap-1 h-[46px]">
+                {["male", "female", "other"].map((g) => (
+                  <button
+                    key={g}
+                    type="button"
+                    onClick={() => updateField("gender", g)}
+                    className={`flex-1 py-2 rounded-lg text-[11px] font-semibold capitalize transition ${
+                      form.gender === g
+                        ? "bg-white text-[#005c55] shadow-sm"
+                        : "text-gray-500"
+                    }`}
+                  >
+                    {g}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -183,7 +232,6 @@ export default function Profile() {
                 </h3>
               </div>
 
-              {/* UPDATED: Add Member Button with navigate */}
               <button
                 onClick={() => navigate("/profile/add-member")}
                 className="flex items-center gap-1 text-[11px] font-bold text-[#005c55] bg-[#9cf2e8]/40 px-2.5 py-1.5 rounded-full active:scale-95 transition"
@@ -229,6 +277,11 @@ export default function Profile() {
             <LogOut size={16} /> Log Out
           </button>
         </main>
+
+        <style>{`
+          @keyframes popIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+          .animate-pop { animation: popIn 0.15s ease-out; }
+        `}</style>
       </div>
     </div>
   );

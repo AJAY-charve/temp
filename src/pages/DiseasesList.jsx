@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Search, X } from "lucide-react";
+import { ArrowLeft, Search, X, ChevronRight } from "lucide-react";
 
 // LOGO
 import logo from "../assets/daibmetalogo.jpeg";
@@ -12,12 +12,38 @@ import diseaseImg from "../assets/cards/disease.png";
 import heartImg from "../assets/cards/calories.jpeg";
 import kidneyImg from "../assets/cards/period.jpeg";
 
+// Added 'desc' for the list UI
 const DISEASES = [
-  { id: "diabetes", name: "Diabetes", image: diabetesImg },
-  { id: "obesity", name: "Obesity", image: bmiImg },
-  { id: "hypertension", name: "Hypertension", image: diseaseImg },
-  { id: "heart-disease", name: "Heart Disease", image: heartImg },
-  { id: "kidney-disease", name: "Kidney Disease", image: kidneyImg },
+  {
+    id: "diabetes",
+    name: "Diabetes",
+    desc: "High blood sugar levels over a prolonged period.",
+    image: diabetesImg,
+  },
+  {
+    id: "obesity",
+    name: "Obesity",
+    desc: "Excess body fat that may affect health.",
+    image: bmiImg,
+  },
+  {
+    id: "hypertension",
+    name: "Hypertension",
+    desc: "High blood pressure, often with no symptoms.",
+    image: diseaseImg,
+  },
+  {
+    id: "heart-disease",
+    name: "Heart Disease",
+    desc: "Range of conditions affecting the heart.",
+    image: heartImg,
+  },
+  {
+    id: "kidney-disease",
+    name: "Kidney Disease",
+    desc: "Gradual loss of kidney function over time.",
+    image: kidneyImg,
+  },
 ];
 
 export default function DiseasesList() {
@@ -81,7 +107,7 @@ export default function DiseasesList() {
             prevent them.
           </p>
 
-          {/* Card Grid */}
+          {/* Disease List (DiagnosticDetail Style) */}
           {filteredDiseases.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <div className="w-16 h-16 rounded-full bg-[#f4f6fb] flex items-center justify-center mb-3">
@@ -95,15 +121,19 @@ export default function DiseasesList() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-3">
-              {filteredDiseases.map((disease) => (
+            <div className="bg-white rounded-2xl border border-[#eaedff] overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
+              {filteredDiseases.map((disease, i) => (
                 <button
                   key={disease.id}
                   onClick={() => navigate(`/diseases/${disease.id}`)}
-                  className="bg-white rounded-2xl border border-[#eaedff] shadow-[0_2px_8px_rgba(0,0,0,0.04)] flex flex-col overflow-hidden active:scale-[0.96] transition"
+                  className={`w-full flex items-center gap-3 p-3 text-left transition active:bg-[#fafbff] ${
+                    i !== filteredDiseases.length - 1
+                      ? "border-b border-[#f0f2f8]"
+                      : ""
+                  }`}
                 >
-                  {/* Image Area */}
-                  <div className="w-full aspect-square bg-[#f4f6fb]">
+                  {/* Image */}
+                  <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 bg-[#f4f6fb]">
                     <img
                       src={disease.image}
                       alt={disease.name}
@@ -111,12 +141,22 @@ export default function DiseasesList() {
                     />
                   </div>
 
-                  {/* Name Area */}
-                  <div className="p-2.5 flex items-center justify-center text-center bg-white">
-                    <h3 className="text-[12px] font-bold text-gray-900 leading-tight line-clamp-2">
+                  {/* Info */}
+                  <div className="flex-1 min-w-0 py-0.5">
+                    <h4 className="text-[14.5px] font-bold text-gray-900 leading-tight truncate">
                       {disease.name}
-                    </h3>
+                    </h4>
+                    {/* UPDATED: Font size increased from 11px to 12px */}
+                    <p className="text-[12px] text-gray-500 leading-tight mt-1 line-clamp-1 truncate">
+                      {disease.desc}
+                    </p>
                   </div>
+
+                  {/* Arrow */}
+                  <ChevronRight
+                    size={18}
+                    className="text-gray-300 flex-shrink-0"
+                  />
                 </button>
               ))}
             </div>

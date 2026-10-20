@@ -1,28 +1,37 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, CheckCircle2, Save } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Save, ChevronDown } from "lucide-react";
 import logo from "../assets/daibmetalogo.jpeg";
+
+// 18 se 100 tak ki ages ki array
+const AGE_OPTIONS = Array.from({ length: 83 }, (_, i) => i + 18);
 
 export default function AddFamilyMember() {
   const navigate = useNavigate();
   const [saved, setSaved] = useState(false);
 
-  // Form State
+  // Custom Dropdown states
+  const [showAgeDropdown, setShowAgeDropdown] = useState(false);
+  const [showRelationDropdown, setShowRelationDropdown] = useState(false);
+
+  // Form State (Age default 18)
   const [form, setForm] = useState({
     name: "",
     relation: "Wife",
-    age: "",
-    gender: "Female",
-    bloodGroup: "",
+    age: "18",
+    gender: "female",
   });
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const updateField = (key, value) => {
+    setForm({ ...form, [key]: value });
+  };
+
   const handleSave = (e) => {
     e.preventDefault();
-    // Yaha validation lag sakta hai (agar name/age khali ho)
     setSaved(true);
     setTimeout(() => {
       setSaved(false);
@@ -81,78 +90,121 @@ export default function AddFamilyMember() {
 
             {/* Relation & Age Row */}
             <div className="flex gap-3">
-              <div className="flex-1">
+              {/* RELATION CUSTOM DROPDOWN */}
+              <div className="flex-1 relative">
                 <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1.5 block">
                   Relation
                 </label>
-                <select
-                  name="relation"
-                  value={form.relation}
-                  onChange={handleChange}
-                  className="w-full px-3 py-3 rounded-xl border border-[#eaedff] bg-[#faf8ff] focus:bg-white focus:border-[#005c55] outline-none text-[13px] font-semibold text-gray-900 transition appearance-none"
+                <button
+                  type="button"
+                  onClick={() => setShowRelationDropdown(!showRelationDropdown)}
+                  className="w-full flex items-center justify-between px-3 py-3 rounded-xl border border-[#eaedff] bg-[#faf8ff] focus:bg-white focus:border-[#005c55] outline-none text-[13px] font-semibold text-gray-900 transition"
                 >
-                  <option value="Wife">Wife</option>
-                  <option value="Husband">Husband</option>
-                  <option value="Son">Son</option>
-                  <option value="Daughter">Daughter</option>
-                  <option value="Father">Father</option>
-                  <option value="Mother">Mother</option>
-                  <option value="Other">Other</option>
-                </select>
+                  {form.relation}
+                  <ChevronDown size={14} className="text-gray-400" />
+                </button>
+
+                {showRelationDropdown && (
+                  <>
+                    <div
+                      className="fixed inset-0 z-10"
+                      onClick={() => setShowRelationDropdown(false)}
+                    ></div>
+                    <div className="absolute top-[100%] left-0 w-full mt-1 bg-white border border-[#eaedff] rounded-xl shadow-lg z-20 max-h-48 overflow-y-auto animate-pop">
+                      {[
+                        "Wife",
+                        "Husband",
+                        "Son",
+                        "Daughter",
+                        "Father",
+                        "Mother",
+                        "Other",
+                      ].map((rel) => (
+                        <button
+                          key={rel}
+                          type="button"
+                          onClick={() => {
+                            updateField("relation", rel);
+                            setShowRelationDropdown(false);
+                          }}
+                          className={`w-full text-left px-3 py-2.5 text-[13px] transition ${
+                            form.relation === rel
+                              ? "bg-[#9cf2e8]/30 text-[#005c55] font-bold"
+                              : "text-gray-700 hover:bg-gray-50"
+                          }`}
+                        >
+                          {rel}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
-              <div className="flex-1">
+
+              {/* AGE CUSTOM DROPDOWN */}
+              <div className="flex-1 relative">
                 <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1.5 block">
                   Age
                 </label>
-                <input
-                  type="number"
-                  name="age"
-                  value={form.age}
-                  onChange={handleChange}
-                  placeholder="e.g. 30"
-                  className="w-full px-3 py-3 rounded-xl border border-[#eaedff] bg-[#faf8ff] focus:bg-white focus:border-[#005c55] outline-none text-[13px] font-semibold text-gray-900 placeholder-gray-400 transition"
-                  required
-                />
+                <button
+                  type="button"
+                  onClick={() => setShowAgeDropdown(!showAgeDropdown)}
+                  className="w-full flex items-center justify-between px-3 py-3 rounded-xl border border-[#eaedff] bg-[#faf8ff] focus:bg-white focus:border-[#005c55] outline-none text-[13px] font-semibold text-gray-900 transition"
+                >
+                  {form.age}
+                  <ChevronDown size={14} className="text-gray-400" />
+                </button>
+
+                {showAgeDropdown && (
+                  <>
+                    <div
+                      className="fixed inset-0 z-10"
+                      onClick={() => setShowAgeDropdown(false)}
+                    ></div>
+                    <div className="absolute top-[100%] left-0 w-full mt-1 bg-white border border-[#eaedff] rounded-xl shadow-lg z-20 max-h-48 overflow-y-auto animate-pop">
+                      {AGE_OPTIONS.map((age) => (
+                        <button
+                          key={age}
+                          type="button"
+                          onClick={() => {
+                            updateField("age", age);
+                            setShowAgeDropdown(false);
+                          }}
+                          className={`w-full text-left px-3 py-2.5 text-[13px] transition ${
+                            form.age == age
+                              ? "bg-[#9cf2e8]/30 text-[#005c55] font-bold"
+                              : "text-gray-700 hover:bg-gray-50"
+                          }`}
+                        >
+                          {age}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
 
-            {/* Gender & Blood Group Row */}
-            <div className="flex gap-3">
-              <div className="flex-1">
-                <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1.5 block">
-                  Gender
-                </label>
-                <select
-                  name="gender"
-                  value={form.gender}
-                  onChange={handleChange}
-                  className="w-full px-3 py-3 rounded-xl border border-[#eaedff] bg-[#faf8ff] focus:bg-white focus:border-[#005c55] outline-none text-[13px] font-semibold text-gray-900 transition appearance-none"
-                >
-                  <option value="Female">Female</option>
-                  <option value="Male">Male</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-              <div className="flex-1">
-                <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1.5 block">
-                  Blood Group
-                </label>
-                <select
-                  name="bloodGroup"
-                  value={form.bloodGroup}
-                  onChange={handleChange}
-                  className="w-full px-3 py-3 rounded-xl border border-[#eaedff] bg-[#faf8ff] focus:bg-white focus:border-[#005c55] outline-none text-[13px] font-semibold text-gray-900 transition appearance-none"
-                >
-                  <option value="">Select</option>
-                  <option value="A+">A+</option>
-                  <option value="A-">A-</option>
-                  <option value="B+">B+</option>
-                  <option value="B-">B-</option>
-                  <option value="O+">O+</option>
-                  <option value="O-">O-</option>
-                  <option value="AB+">AB+</option>
-                  <option value="AB-">AB-</option>
-                </select>
+            {/* Gender Toggle (Patient Modal Style) */}
+            <div>
+              <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-1.5 block">
+                Gender
+              </label>
+              <div className="bg-[#eef1f8] rounded-xl p-1 flex gap-1 h-[46px]">
+                {["male", "female", "other"].map((g) => (
+                  <button
+                    key={g}
+                    type="button"
+                    onClick={() => updateField("gender", g)}
+                    className={`flex-1 py-2 rounded-lg text-[11px] font-semibold capitalize transition ${
+                      form.gender === g
+                        ? "bg-white text-[#005c55] shadow-sm"
+                        : "text-gray-500"
+                    }`}
+                  >
+                    {g}
+                  </button>
+                ))}
               </div>
             </div>
 
@@ -177,6 +229,11 @@ export default function AddFamilyMember() {
             </button>
           </form>
         </main>
+
+        <style>{`
+          @keyframes popIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+          .animate-pop { animation: popIn 0.15s ease-out; }
+        `}</style>
       </div>
     </div>
   );

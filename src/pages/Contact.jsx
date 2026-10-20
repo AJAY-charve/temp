@@ -2,17 +2,20 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
-  Phone,
-  Mail,
-  MapPin,
-  Clock,
   Send,
   CheckCircle2,
+  FileText,
+  Building2,
 } from "lucide-react";
 import logo from "../assets/daibmetalogo.jpeg";
 
 export default function Contact() {
   const navigate = useNavigate();
+
+  // Tab State
+  const [activeTab, setActiveTab] = useState("platform");
+
+  // Form State
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", message: "" });
 
@@ -26,6 +29,27 @@ export default function Contact() {
     }, 3000);
   };
 
+  // Short HTML Content
+  const platformHtml = `
+    <h3 class="text-[14px] font-bold text-[#14284b] mb-2">Welcome to DiabMeta Platform</h3>
+    <p>Your complete health-tech companion for tracking metabolic health effortlessly.</p>
+    <ul class="list-disc pl-5 mt-3 space-y-1">
+      <li>Personalized Health Tracking</li>
+      <li>Expert Diet & Activity Plans</li>
+      <li>Easy Lab Tests & Consultations</li>
+    </ul>
+  `;
+
+  const clinicHtml = `
+    <h3 class="text-[14px] font-bold text-[#14284b] mb-2">Advanced Metabolic Care</h3>
+    <p>State-of-the-art facilities with experienced healthcare professionals.</p>
+    <ul class="list-disc pl-5 mt-3 space-y-1">
+      <li>Comprehensive Health Checkups</li>
+      <li>Specialized Doctor Consultations</li>
+      <li>NABL Certified Lab Testing</li>
+    </ul>
+  `;
+
   return (
     <div className="min-h-screen bg-[#faf8ff] flex justify-center">
       <div className="w-full max-w-md min-h-screen flex flex-col relative">
@@ -38,7 +62,7 @@ export default function Contact() {
             >
               <ArrowLeft size={20} />
             </button>
-            <h1 className="font-bold text-gray-900 text-[15px]">Contact Us</h1>
+            <h1 className="font-bold text-gray-900 text-[15px]">About Us</h1>
             <img
               src={logo}
               alt="DiabMeta"
@@ -49,129 +73,45 @@ export default function Contact() {
 
         {/* MAIN */}
         <main className="flex-1 pb-10 px-4 pt-4">
-          <div className="mb-6">
-            <h2 className="text-[16px] font-bold text-gray-900">
-              Get in touch
-            </h2>
-            <p className="text-[11.5px] text-gray-500 mt-1 leading-relaxed">
-              Have a question or need help? Reach out to us and our team will
-              get back to you shortly.
-            </p>
-          </div>
-
-          {/* Quick Contact Cards */}
-          <div className="grid grid-cols-2 gap-3 mb-6">
-            <a
-              href="tel:+919876543210"
-              className="bg-white rounded-2xl border border-[#eaedff] p-3 flex flex-col items-center justify-center text-center gap-2 active:scale-95 transition shadow-[0_1px_4px_rgba(0,0,0,0.02)]"
+          {/* TABS */}
+          <div className="flex bg-[#f0f2f8] p-1 rounded-xl mb-5">
+            <button
+              onClick={() => setActiveTab("platform")}
+              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-[11px] font-bold transition ${
+                activeTab === "platform"
+                  ? "bg-white text-[#005c55] shadow-sm"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
             >
-              <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-700">
-                <Phone size={18} />
-              </div>
-              <div>
-                <p className="text-[11.5px] font-bold text-gray-900">Call Us</p>
-                <p className="text-[10px] text-gray-500 mt-0.5">
-                  +91 98765 43210
-                </p>
-              </div>
-            </a>
-
-            <a
-              href="mailto:support@diabmeta.com"
-              className="bg-white rounded-2xl border border-[#eaedff] p-3 flex flex-col items-center justify-center text-center gap-2 active:scale-95 transition shadow-[0_1px_4px_rgba(0,0,0,0.02)]"
+              <FileText size={14} className="flex-shrink-0" />
+              <span className="whitespace-nowrap">About DiabMeta Platform</span>
+            </button>
+            <button
+              onClick={() => setActiveTab("clinic")}
+              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-[11px] font-bold transition ${
+                activeTab === "clinic"
+                  ? "bg-white text-[#005c55] shadow-sm"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
             >
-              <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-700">
-                <Mail size={18} />
-              </div>
-              <div>
-                <p className="text-[11.5px] font-bold text-gray-900">
-                  Email Us
-                </p>
-                <p className="text-[10px] text-gray-500 mt-0.5">
-                  support@diabmeta.com
-                </p>
-              </div>
-            </a>
+              <Building2 size={14} className="flex-shrink-0" />
+              <span className="whitespace-nowrap">About DiabMeta Clinic</span>
+            </button>
           </div>
 
-          {/* Details List (Address & Working Hours) */}
-          <div className="bg-white rounded-2xl border border-[#eaedff] p-4 mb-6 shadow-[0_1px_4px_rgba(0,0,0,0.02)] flex flex-col gap-4">
-            {/* Address */}
-            <div className="flex items-start gap-3">
-              <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center flex-none text-gray-600 mt-0.5">
-                <MapPin size={16} />
-              </div>
-              <div>
-                <p className="text-[12px] font-bold text-gray-900">
-                  Clinic Address
-                </p>
-                <p className="text-[11px] text-gray-500 mt-1 leading-relaxed">
-                  123 Health Avenue, Sector 18,
-                  <br />
-                  Noida, UP 201301
-                </p>
-              </div>
-            </div>
-
-            {/* Divider */}
-            <div className="w-full h-px bg-[#f0f2f8]"></div>
-
-            {/* Working Hours (ALL DAYS) */}
-            <div className="flex items-start gap-3">
-              <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center flex-none text-gray-600 mt-0.5">
-                <Clock size={16} />
-              </div>
-              <div className="w-full">
-                <p className="text-[12px] font-bold text-gray-900 mb-2">
-                  Working Hours
-                </p>
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex justify-between items-center text-[11px]">
-                    <span className="text-gray-500 font-medium">Monday</span>
-                    <span className="font-bold text-gray-800">
-                      10:00 AM - 1:00 PM, 6:00 PM - 11:00 PM
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-[11px]">
-                    <span className="text-gray-500 font-medium">Tuesday</span>
-                    <span className="font-bold text-gray-800">
-                      10:00 AM - 1:00 PM, 6:00 PM - 11:00 PM
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-[11px]">
-                    <span className="text-gray-500 font-medium">Wednesday</span>
-                    <span className="font-bold text-gray-800">
-                      10:00 AM - 1:00 PM, 6:00 PM - 11:00 PM
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-[11px]">
-                    <span className="text-gray-500 font-medium">Thursday</span>
-                    <span className="font-bold text-gray-800">
-                      10:00 AM - 1:00 PM, 6:00 PM - 11:00 PM
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-[11px]">
-                    <span className="text-gray-500 font-medium">Friday</span>
-                    <span className="font-bold text-gray-800">
-                      10:00 AM - 1:00 PM, 6:00 PM - 11:00 PM
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-[11px]">
-                    <span className="text-gray-500 font-medium">Saturday</span>
-                    <span className="font-bold text-gray-800">
-                      9:00 AM - 1:00 PM
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-[11px]">
-                    <span className="text-gray-500 font-medium">Sunday</span>
-                    <span className="font-bold text-red-500">Closed</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+          {/* TAB CONTENT (HTML RENDER) */}
+          <div className="bg-white rounded-2xl border border-[#eaedff] p-5 mb-6 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
+            <div
+              className="text-[12px] text-[#3b4a66] leading-relaxed
+                         [&>p]:mb-2 
+                         [&_strong]:font-bold [&_strong]:text-gray-900"
+              dangerouslySetInnerHTML={{
+                __html: activeTab === "platform" ? platformHtml : clinicHtml,
+              }}
+            />
           </div>
 
-          {/* Contact Form */}
+          {/* CONTACT FORM */}
           <div className="bg-white rounded-2xl border border-[#eaedff] p-4 shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
             <h3 className="text-[13px] font-bold text-gray-900 mb-3">
               Send a message

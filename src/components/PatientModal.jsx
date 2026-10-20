@@ -1,5 +1,8 @@
 import { useState } from "react";
-import { X, Check, User, Phone } from "lucide-react";
+import { X, Check, User, Phone, ChevronDown } from "lucide-react";
+
+// 18 se 100 tak ki ages ki array
+const AGE_OPTIONS = Array.from({ length: 83 }, (_, i) => i + 18);
 
 export default function PatientModal({
   title = "Patient Details",
@@ -10,11 +13,14 @@ export default function PatientModal({
 }) {
   const [form, setForm] = useState({
     name: "",
-    age: "",
+    age: "18", // Default 18
     phone: "",
     sex: "male",
   });
   const [booked, setBooked] = useState(false);
+
+  // Custom Dropdown state
+  const [showAgeDropdown, setShowAgeDropdown] = useState(false);
 
   const update = (k, v) => setForm({ ...form, [k]: v });
 
@@ -25,9 +31,9 @@ export default function PatientModal({
     setBooked(true);
     setTimeout(() => {
       if (onConfirm) {
-        onConfirm(form); // Parent navigate karega
+        onConfirm(form);
       }
-    }, 1500); // 1.5 sec success check
+    }, 1500);
   };
 
   return (
@@ -85,23 +91,58 @@ export default function PatientModal({
               </div>
 
               <div className="grid grid-cols-[1fr_1.6fr] gap-3">
-                <div>
+                {/* CUSTOM AGE DROPDOWN */}
+                <div className="relative">
                   <label className="text-[11px] font-semibold text-gray-700">
                     Age
                   </label>
-                  <input
-                    type="number"
-                    value={form.age}
-                    onChange={(e) => update("age", e.target.value)}
-                    placeholder="e.g. 32"
-                    className="mt-1 w-full px-3 py-3 rounded-xl border border-[#eaedff] bg-[#f4f5fb] focus:bg-white focus:border-[#005c55] outline-none text-[13px] text-gray-800 placeholder-gray-400 transition"
-                  />
+
+                  <button
+                    type="button"
+                    onClick={() => setShowAgeDropdown(!showAgeDropdown)}
+                    className="mt-1 w-full flex items-center justify-between px-3 py-3 rounded-xl border border-[#eaedff] bg-[#f4f5fb] focus:bg-white focus:border-[#005c55] outline-none text-[13px] text-gray-800 transition"
+                  >
+                    {form.age}
+                    <ChevronDown size={14} className="text-gray-400" />
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {showAgeDropdown && (
+                    <>
+                      {/* Invisible backdrop to close dropdown */}
+                      <div
+                        className="fixed inset-0 z-10"
+                        onClick={() => setShowAgeDropdown(false)}
+                      ></div>
+
+                      <div className="absolute top-[100%] left-0 w-full mt-1 bg-white border border-[#eaedff] rounded-xl shadow-lg z-20 max-h-48 overflow-y-auto animate-pop">
+                        {AGE_OPTIONS.map((age) => (
+                          <button
+                            key={age}
+                            type="button"
+                            onClick={() => {
+                              update("age", age);
+                              setShowAgeDropdown(false);
+                            }}
+                            className={`w-full text-left px-3 py-2.5 text-[13px] transition ${
+                              form.age == age
+                                ? "bg-[#9cf2e8]/30 text-[#005c55] font-bold"
+                                : "text-gray-700 hover:bg-gray-50"
+                            }`}
+                          >
+                            {age}
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </div>
+
                 <div>
                   <label className="text-[11px] font-semibold text-gray-700">
                     Sex
                   </label>
-                  <div className="mt-1 bg-[#eef1f8] rounded-xl p-1 flex gap-1">
+                  <div className="mt-1 bg-[#eef1f8] rounded-xl p-1 flex gap-1 h-[46px]">
                     {["male", "female", "other"].map((g) => (
                       <button
                         key={g}
@@ -156,6 +197,12 @@ export default function PatientModal({
           </>
         )}
       </div>
+
+      <style>{`
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .animate-pop { animation: popIn 0.15s ease-out; }
+      `}</style>
     </div>
   );
 }
