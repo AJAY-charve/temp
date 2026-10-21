@@ -113,7 +113,7 @@ export default function Home() {
     },
     { image: scanFoodImg, title: "Scan Food", path: "/scan-food" },
     { image: recordsImg, title: "Records", path: "/records" },
-    { image: reminderImg, title: "Pill Reminder" },
+    { image: reminderImg, title: "Pill Reminder", path: "/pill-reminder" },
     { image: caloriesImg, title: "Calories" },
     { image: periodImg, title: "Period" },
   ];

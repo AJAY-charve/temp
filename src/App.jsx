@@ -12,7 +12,7 @@ import DiabetesResult from "./pages/DiabetesResult";
 import DiabetesHealthPlanDetail from "./pages/DiabetesHealthPlanDetail";
 import ScanFood from "./pages/ScanFood";
 import ScanResult from "./pages/ScanResult";
-import SavedMeals from "./pages/SavedMeals"; // <-- Naya Import
+import SavedMeals from "./pages/SavedMeals";
 import Records from "./pages/Records";
 import Store from "./pages/Store";
 import BookingHistory from "./pages/BookingHistory";
@@ -28,6 +28,10 @@ import Quiz from "./pages/Quiz";
 import QuizResult from "./pages/QuizResult";
 import AddFamilyMember from "./pages/AddFamilyMember";
 
+// Pill Reminder Imports
+import PillReminder from "./pages/PillReminder";
+import AddMedicine from "./pages/AddMedicine";
+
 export default function App() {
   return (
     <Routes>
@@ -42,6 +46,7 @@ export default function App() {
         path="/health-plan/:category/:planType"
         element={<HealthPlanDetail />}
       />
+
       {/* Diabetes Routes */}
       <Route path="/diabetes" element={<DiabetesAssessment />} />
       <Route path="/diabetes/result" element={<DiabetesResult />} />
@@ -49,32 +54,44 @@ export default function App() {
         path="/diabetes/health-plan/:level/:planType"
         element={<DiabetesHealthPlanDetail />}
       />
+
       {/* Scan Food Routes */}
       <Route path="/scan-food" element={<ScanFood />} />
       <Route path="/scan-food/result" element={<ScanResult />} />
-      <Route path="/scan-food/saved" element={<SavedMeals />} />{" "}
-      {/* <-- Naya Route */}
+      <Route path="/scan-food/saved" element={<SavedMeals />} />
+
+      {/* Pill Reminder Routes */}
+      <Route path="/pill-reminder" element={<PillReminder />} />
+      <Route path="/pill-reminder/add" element={<AddMedicine />} />
+
       {/* Records Route */}
       <Route path="/records" element={<Records />} />
+
       {/* Store Routes */}
       <Route path="/store" element={<Store />} />
       <Route path="/store/history" element={<BookingHistory />} />
       <Route path="/store/product/:id" element={<ProductDetail />} />
+
       {/* Know Your Diseases Routes */}
       <Route path="/diseases" element={<DiseasesList />} />
       <Route path="/diseases/:id" element={<DiseaseDetail />} />
+
       {/* Know Your Symptoms Routes */}
       <Route path="/symptoms" element={<SymptomsList />} />
       <Route path="/symptoms/:id" element={<SymptomDetail />} />
+
       {/* New Routes */}
       <Route path="/contact" element={<Contact />} />
+
       {/* Profile Routes */}
       <Route path="/profile" element={<Profile />} />
       <Route path="/profile/add-member" element={<AddFamilyMember />} />
+
       {/* Quiz Routes */}
       <Route path="/quiz" element={<QuizStart />} />
       <Route path="/quiz/start" element={<Quiz />} />
       <Route path="/quiz/result" element={<QuizResult />} />
+
       <Route path="*" element={<Login />} />
     </Routes>
   );
