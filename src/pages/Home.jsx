@@ -221,17 +221,16 @@ export default function Home() {
                 {activeMember.substring(0, 2).toUpperCase()}
               </button>
 
+              {/* CHANGED: Add Member to Add Family Member */}
               <button
                 onClick={() => navigate("/profile/add-member")}
                 className="inline-flex items-center gap-1 bg-[#9cf2e8]/60 text-[#005c55] px-2.5 py-1.5 rounded-full text-[11px] font-semibold active:scale-95 flex-shrink-0 whitespace-nowrap ml-1"
               >
                 <UserPlus size={13} />
-                <span>Add Member</span>
+                <span>Add Family Member</span>
               </button>
 
-              <button className="inline-flex items-center gap-1 bg-[#9cf2e8]/60 text-[#005c55] px-2.5 py-1.5 rounded-full text-[11px] font-semibold active:scale-95 flex-shrink-0 whitespace-nowrap">
-                <span>Health Guide</span>
-              </button>
+              {/* REMOVED: Health Guide button */}
             </div>
 
             {/* NOTIFICATION & LOGO SECTION */}
@@ -327,7 +326,9 @@ export default function Home() {
                     className="w-full flex items-center gap-2 px-3 py-2.5 border-t border-[#eaedff] text-[#005c55] hover:bg-[#f4f6fb] transition"
                   >
                     <UserPlus size={14} />
-                    <span className="text-[12px] font-bold">Add Member</span>
+                    <span className="text-[12px] font-bold">
+                      Add Family Member
+                    </span>
                   </button>
                 </div>
               </>
@@ -429,10 +430,9 @@ export default function Home() {
           </section>
 
           {/* ========================================== */}
-          {/* CLINIC PRIVILEGES (Exact Style Match)      */}
+          {/* CLINIC PRIVILEGES                          */}
           {/* ========================================== */}
           <section className="mb-6">
-            {/* Heading Layout Same as Diagnostic */}
             <div className="px-4 flex items-center gap-2.5 mb-3">
               <div className="w-9 h-9 rounded-lg border border-[#005c55]/30 flex items-center justify-center text-[#005c55] flex-shrink-0">
                 <Star size={20} fill="#005c55" />
@@ -462,7 +462,6 @@ export default function Home() {
                     {item.title}
                   </h4>
 
-                  {/* CTA Color is Teal */}
                   <div className="flex items-center justify-between mt-auto pt-2 border-t border-gray-100">
                     <span className="text-[9px] font-extrabold text-[#0d6b63] truncate pr-1">
                       {item.cta}
@@ -538,7 +537,6 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Dynamic Tips Box */}
               <div className="bg-white p-2.5 rounded-2xl border border-[#eaedff] flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between mb-2">
@@ -555,7 +553,6 @@ export default function Home() {
                     </span>
                   </div>
 
-                  {/* Showing 4 tips from top */}
                   <div className="flex flex-col gap-1.5">
                     {healthTipsData.slice(0, 4).map((tip) => (
                       <button
@@ -596,9 +593,6 @@ export default function Home() {
           </section>
         </main>
 
-        {/* ========================================== */}
-        {/* BOTTOM NAV (QUIZ BLUE PULSING)             */}
-        {/* ========================================== */}
         <nav className="fixed bottom-0 inset-x-0 z-50 bg-white border-t border-gray-100 shadow-[0_-4px_20px_rgba(15,23,42,0.05)] pb-safe">
           <div className="max-w-md mx-auto flex items-stretch justify-around h-16 px-1">
             <button
@@ -617,7 +611,6 @@ export default function Home() {
               onClick={() => navigate("/appointment")}
             />
 
-            {/* Quiz Tab - Blue Pulsing Animation */}
             <button
               onClick={() => navigate("/quiz")}
               className="flex flex-col items-center justify-center flex-1 min-w-0 py-2 cursor-pointer group"
@@ -645,7 +638,6 @@ export default function Home() {
         </nav>
       </div>
 
-      {/* Animation Styles */}
       <style>{`
         @keyframes quiz-pulse {
           0%, 100% { opacity: 1; transform: scale(1); }
