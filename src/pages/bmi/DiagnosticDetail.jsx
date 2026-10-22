@@ -10,15 +10,15 @@ import {
 } from "lucide-react";
 
 // LOGO IMPORT
-import logo from "../assets/daibmetalogo.jpeg";
+import logo from "../../assets/daibmetalogo.jpeg";
 
 // Real images
-import bmiImg from "../assets/cards/bmi.jpeg";
-import bloodTestImg from "../assets/cards/blood-test.png";
-import ecgImg from "../assets/cards/ecg.png";
-import xrayImg from "../assets/cards/xray.png";
-import supplementsImg from "../assets/cards/supplements.png";
-import devicesImg from "../assets/cards/devices.png";
+import bmiImg from "../../assets/cards/bmi.jpeg";
+import bloodTestImg from "../../assets/cards/blood-test.png";
+import ecgImg from "../../assets/cards/ecg.png";
+import xrayImg from "../../assets/cards/xray.png";
+import supplementsImg from "../../assets/cards/supplements.png";
+import devicesImg from "../../assets/cards/devices.png";
 
 /* ============ SERVICE DATA ============ */
 const servicesData = {
@@ -379,12 +379,10 @@ export default function DiagnosticDetail() {
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    {/* UPDATED: Font size increased from 12px to 14.5px */}
                     <h4 className="text-[14.5px] font-bold text-gray-900 leading-tight truncate">
                       {item.name}
                     </h4>
                     {item.detail && (
-                      // UPDATED: Font size increased from 9px to 12px
                       <p className="text-[12px] text-gray-500 leading-tight mt-1 truncate">
                         {item.detail}
                       </p>

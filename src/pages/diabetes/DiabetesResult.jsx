@@ -10,11 +10,16 @@ import {
 } from "lucide-react";
 
 // LOGO IMPORT
-import logo from "../assets/daibmetalogo.jpeg";
+import logo from "../../assets/daibmetalogo.jpeg";
 
-import { PLAN_ART } from "./BmiCheck"; // <-- IMPORTED SVG ART FROM BMI PAGE
+import { PLAN_ART } from "../bmi/BmiCheck"; // <-- IMPORTED SVG ART FROM BMI PAGE
 
-const NAVY = "#14284b";
+/* ============ DIABMETA THEME ============ */
+const PRIMARY = "#005c55";
+const BUTTON = "#0d6b63";
+const LIGHT = "#E0F2F1";
+const BG = "#faf8ff";
+const BORDER = "#eaedff";
 
 /* ============ RISK LEVELS ============ */
 const RISK = {
@@ -163,23 +168,30 @@ export default function DiabetesResult() {
 
   return (
     <div
-      className="min-h-screen bg-white flex justify-center"
+      className="min-h-screen flex justify-center"
       style={{
+        backgroundColor: BG,
         fontFamily: "'Nunito','Noto Sans Devanagari',system-ui,sans-serif",
       }}
     >
-      <div className="w-full max-w-md bg-white min-h-screen flex flex-col">
+      <div
+        className="w-full max-w-md min-h-screen flex flex-col"
+        style={{ backgroundColor: BG }}
+      >
         {/* TOP BAR */}
-        <header className="sticky top-0 z-40 bg-white">
+        <header className="sticky top-0 z-40" style={{ backgroundColor: BG }}>
           <div className="h-14 px-3 flex items-center justify-between">
             <button
               onClick={() => navigate("/home")}
               className="w-9 h-9 flex items-center justify-center active:scale-95"
-              style={{ color: NAVY }}
+              style={{ color: PRIMARY }}
             >
               <ArrowLeft size={22} strokeWidth={2.4} />
             </button>
-            <h1 className="font-extrabold text-[17px]" style={{ color: NAVY }}>
+            <h1
+              className="font-extrabold text-[17px]"
+              style={{ color: PRIMARY }}
+            >
               Your Diabetes Risk Result
             </h1>
 
@@ -203,7 +215,7 @@ export default function DiabetesResult() {
               <div>
                 <h2
                   className="text-[20px] font-extrabold leading-[1.1]"
-                  style={{ color: NAVY }}
+                  style={{ color: PRIMARY }}
                 >
                   Your Diabetes
                   <br />
@@ -249,7 +261,7 @@ export default function DiabetesResult() {
               >
                 <span
                   className="w-0 h-0 border-x-[7px] border-x-transparent border-t-[9px]"
-                  style={{ borderTopColor: NAVY }}
+                  style={{ borderTopColor: PRIMARY }}
                 />
                 <span
                   className="w-[22px] h-[22px] rounded-full bg-white border-[5px] -mt-0.5 shadow"
@@ -289,7 +301,7 @@ export default function DiabetesResult() {
                 <div className="px-1">
                   <p
                     className="text-[12.5px] font-extrabold"
-                    style={{ color: NAVY }}
+                    style={{ color: PRIMARY }}
                   >
                     Low Risk
                   </p>
@@ -300,7 +312,7 @@ export default function DiabetesResult() {
                 <div className="px-1 border-l border-black/10">
                   <p
                     className="text-[12.5px] font-extrabold"
-                    style={{ color: NAVY }}
+                    style={{ color: PRIMARY }}
                   >
                     Moderate Risk
                   </p>
@@ -311,7 +323,7 @@ export default function DiabetesResult() {
                 <div className="px-1 border-l border-black/10">
                   <p
                     className="text-[12.5px] font-extrabold"
-                    style={{ color: NAVY }}
+                    style={{ color: PRIMARY }}
                   >
                     High Risk
                   </p>
@@ -357,15 +369,18 @@ export default function DiabetesResult() {
           <button
             onClick={() => setShowAnswers(!showAnswers)}
             className="w-full rounded-[20px] px-4 py-4 flex items-center justify-between mb-3 active:scale-[0.99] transition"
-            style={{ backgroundColor: "#eaf3fd" }}
+            style={{ backgroundColor: LIGHT }}
           >
             <div className="flex items-center gap-4">
-              <div className="w-[62px] h-[62px] rounded-full bg-[#d6e7fb] flex items-center justify-center">
+              <div
+                className="w-[62px] h-[62px] rounded-full flex items-center justify-center"
+                style={{ backgroundColor: "#c9ece7" }}
+              >
                 <AnswersIcon />
               </div>
               <span
                 className="text-[21px] font-extrabold"
-                style={{ color: NAVY }}
+                style={{ color: PRIMARY }}
               >
                 Your Answers
               </span>
@@ -373,7 +388,8 @@ export default function DiabetesResult() {
             <ChevronRight
               size={28}
               strokeWidth={2.6}
-              className={`text-[#1976f2] transition-transform ${showAnswers ? "rotate-90" : ""}`}
+              className={`transition-transform ${showAnswers ? "rotate-90" : ""}`}
+              style={{ color: BUTTON }}
             />
           </button>
 
@@ -388,7 +404,7 @@ export default function DiabetesResult() {
           <div className="mb-5">
             <h3
               className="text-[17px] font-extrabold mb-3 px-1"
-              style={{ color: NAVY }}
+              style={{ color: PRIMARY }}
             >
               What You Can Do
             </h3>
@@ -405,8 +421,8 @@ export default function DiabetesResult() {
                 title="Physical Activity"
                 hi="शारीरिक गतिविधि"
                 Art={PLAN_ART.activity}
-                color="#2f8cf0"
-                bg="#e0eefc"
+                color={BUTTON}
+                bg={LIGHT}
                 onClick={() =>
                   navigate(`/diabetes/health-plan/${level}/activity`)
                 }
@@ -426,13 +442,16 @@ export default function DiabetesResult() {
 
           {/* ABOUT THIS SCORE */}
           <div className="border-t border-gray-200 pt-4 flex items-start gap-3">
-            <div className="w-9 h-9 rounded-full bg-[#e3f0fd] flex items-center justify-center flex-shrink-0">
-              <Info size={18} strokeWidth={2.4} className="text-[#1976f2]" />
+            <div
+              className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
+              style={{ backgroundColor: LIGHT }}
+            >
+              <Info size={18} strokeWidth={2.4} style={{ color: BUTTON }} />
             </div>
             <div>
               <h4
                 className="text-[15px] font-extrabold"
-                style={{ color: NAVY }}
+                style={{ color: PRIMARY }}
               >
                 About This Score
               </h4>
@@ -502,7 +521,8 @@ function AnswersSheet({ answers, score, R }) {
       {rows.map((r) => (
         <div
           key={r.q}
-          className="flex items-center justify-between gap-3 rounded-2xl border border-[#e3ecf7] bg-[#f7faff] px-3.5 py-3"
+          className="flex items-center justify-between gap-3 rounded-2xl border bg-white px-3.5 py-3"
+          style={{ borderColor: BORDER }}
         >
           <div className="min-w-0">
             <p className="text-[11px] font-bold text-gray-500">
@@ -510,7 +530,7 @@ function AnswersSheet({ answers, score, R }) {
             </p>
             <p
               className="text-[14px] font-extrabold leading-snug mt-0.5"
-              style={{ color: NAVY }}
+              style={{ color: PRIMARY }}
             >
               {r.a}
             </p>
@@ -533,7 +553,7 @@ function AnswersSheet({ answers, score, R }) {
         className="flex items-center justify-between rounded-2xl px-4 py-3 mt-1"
         style={{ backgroundColor: R.boxBg }}
       >
-        <span className="text-[14px] font-extrabold" style={{ color: NAVY }}>
+        <span className="text-[14px] font-extrabold" style={{ color: PRIMARY }}>
           Total score · कुल स्कोर
         </span>
         <span className="text-[20px] font-black" style={{ color: R.color }}>
@@ -562,7 +582,7 @@ function PlanCard({ title, hi, Art, color, bg, onClick }) {
       <div className="flex-1 text-left">
         <p
           className="text-[15px] font-extrabold leading-tight"
-          style={{ color: NAVY }}
+          style={{ color: PRIMARY }}
         >
           {title}
         </p>
@@ -586,12 +606,12 @@ function AnswersIcon() {
         height="34"
         rx="5"
         fill="#fff"
-        stroke="#1976f2"
+        stroke={BUTTON}
         strokeWidth="3"
       />
-      <rect x="12" y="1.5" width="14" height="8" rx="3" fill="#1976f2" />
-      <circle cx="11" cy="17" r="3.2" fill="#1976f2" />
-      <circle cx="11" cy="26" r="3.2" fill="#1976f2" />
+      <rect x="12" y="1.5" width="14" height="8" rx="3" fill={BUTTON} />
+      <circle cx="11" cy="17" r="3.2" fill={BUTTON} />
+      <circle cx="11" cy="26" r="3.2" fill={BUTTON} />
       <path
         d="M9.6 17 L10.7 18.2 L12.6 15.9"
         stroke="#fff"
@@ -608,11 +628,11 @@ function AnswersIcon() {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <rect x="18" y="15.5" width="12" height="2.6" rx="1.3" fill="#bcd6f6" />
-      <rect x="18" y="24.5" width="12" height="2.6" rx="1.3" fill="#bcd6f6" />
-      <rect x="20" y="31" width="3" height="5" rx="1" fill="#1976f2" />
-      <rect x="25" y="28" width="3" height="8" rx="1" fill="#1976f2" />
-      <rect x="30" y="25.5" width="3" height="10.5" rx="1" fill="#1976f2" />
+      <rect x="18" y="15.5" width="12" height="2.6" rx="1.3" fill="#b6e0da" />
+      <rect x="18" y="24.5" width="12" height="2.6" rx="1.3" fill="#b6e0da" />
+      <rect x="20" y="31" width="3" height="5" rx="1" fill={BUTTON} />
+      <rect x="25" y="28" width="3" height="8" rx="1" fill={BUTTON} />
+      <rect x="30" y="25.5" width="3" height="10.5" rx="1" fill={BUTTON} />
     </svg>
   );
 }

@@ -27,6 +27,10 @@ import {
   Check,
   Users,
   Smartphone,
+  Salad,
+  Smile,
+  TestTube,
+  Percent,
 } from "lucide-react";
 
 // ============ LOGO ============
@@ -51,6 +55,13 @@ import devicesImg from "../assets/cards/devices.png";
 import knowYourDiseasesImg from "../assets/cards/knowyourdiseases.png";
 import knowYourSymptomsImg from "../assets/cards/knowyoursymptoms.png";
 
+// ============ HEALTH TIPS DATA ============
+import { healthTipsData } from "./health-tips/HealthTipsData";
+
+// ============ NOTIFICATIONS COMPONENTS & DATA ============
+import NotificationDropdown from "./notifications/NotificationDropdown";
+import { notificationsData } from "./notifications/NotificationsData";
+
 import Sidebar from "../components/Sidebar";
 
 const BANNERS = [banner1, banner2];
@@ -61,9 +72,16 @@ export default function Home() {
   const [activeMember, setActiveMember] = useState("Rahul");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  // Notification State
+  const [showNotifications, setShowNotifications] = useState(false);
+
   // Banner State
   const [bannerIndex, setBannerIndex] = useState(0);
   const scrollRef = useRef(null);
+
+  // Privileges Scroll State
+  const privilegeScrollRef = useRef(null);
+  const [privilegeIndex, setPrivilegeIndex] = useState(0);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -87,6 +105,13 @@ export default function Home() {
     if (newIndex !== bannerIndex) setBannerIndex(newIndex);
   };
 
+  const handlePrivilegeScroll = (e) => {
+    const scrollLeft = e.target.scrollLeft;
+    const cardWidth = 140 + 12; // Card width (w-[140px]) + Gap (gap-3 = 12px)
+    const newIndex = Math.round(scrollLeft / cardWidth);
+    if (newIndex !== privilegeIndex) setPrivilegeIndex(newIndex);
+  };
+
   const familyMembers = [
     { name: "Rahul", relation: "Self" },
     { name: "Priya", relation: "Wife" },
@@ -97,25 +122,25 @@ export default function Home() {
   const row1 = [
     { image: bmiImg, title: "BMI", path: "/bmi" },
     { image: diabetesImg, title: "Diabetes", path: "/diabetes" },
-    { image: sugarImg, title: "Sugar & BP Logbook" },
+    { image: sugarImg, title: "Sugar & BP Logbook", path: "/sugar-bp" },
     {
       image: knowYourDiseasesImg,
       title: "Know Your Diseases",
       path: "/diseases",
     },
-  ];
-
-  const row2 = [
     {
       image: knowYourSymptomsImg,
       title: "Know Your Symptoms",
       path: "/symptoms",
     },
+  ];
+
+  const row2 = [
+    { image: periodImg, title: "Period", path: "/period-tracker/lock" },
+    { image: caloriesImg, title: "Calories", path: "/calorie-tracker" },
     { image: scanFoodImg, title: "Scan Food", path: "/scan-food" },
-    { image: recordsImg, title: "Records", path: "/records" },
     { image: reminderImg, title: "Pill Reminder", path: "/pill-reminder" },
-    { image: caloriesImg, title: "Calories" },
-    { image: periodImg, title: "Period" },
+    { image: recordsImg, title: "Records", path: "/records" },
   ];
 
   const diagnostics = [
@@ -154,6 +179,33 @@ export default function Home() {
     },
   ];
 
+  // Privileges Data
+  const staticPrivilege = {
+    title: "Free Monthly Health Checkup",
+    icon: <Stethoscope size={24} className="text-[#005c55]" />,
+    cta: "Book Checkup",
+  };
+
+  const dynamicPrivileges = [
+    { title: "Free Monthly Dietitian Consultation", cta: "Book Consultation" },
+    { title: "Free Monthly Dental Checkup", cta: "Book Checkup" },
+    {
+      title: "Free Monthly Physiotherapy Consultation",
+      cta: "Book Consultation",
+    },
+    { title: "Free Quarterly Lab Test", cta: "Book Test" },
+    { title: "10% Off on Medicines", cta: "View Store" },
+  ];
+
+  const allPrivileges = [
+    { ...staticPrivilege, isStatic: true },
+    ...dynamicPrivileges.map((p) => ({
+      ...p,
+      icon: <BadgeCheck size={24} className="text-[#005c55]" />,
+      isStatic: false,
+    })),
+  ];
+
   return (
     <div className="min-h-screen bg-[#faf8ff] flex justify-center">
       <div className="w-full max-w-md bg-[#faf8ff] min-h-screen flex flex-col relative">
@@ -182,15 +234,29 @@ export default function Home() {
               </button>
             </div>
 
-            <div className="flex items-center gap-1.5 flex-shrink-0">
-              <button className="relative w-9 h-9 flex items-center justify-center text-gray-500 active:scale-95">
+            {/* NOTIFICATION & LOGO SECTION */}
+            <div className="flex items-center gap-1.5 flex-shrink-0 relative">
+              <button
+                onClick={() => setShowNotifications(!showNotifications)}
+                className="relative w-9 h-9 flex items-center justify-center text-gray-500 active:scale-95"
+              >
                 <Bell size={19} />
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-pink-500 rounded-full ring-2 ring-white"></span>
+                {/* Notification Counter Badge */}
+                <span className="absolute top-0.5 right-0.5 min-w-[15px] h-[15px] bg-pink-500 rounded-full ring-2 ring-white flex items-center justify-center text-[9px] text-white font-bold px-0.5">
+                  {notificationsData.filter((n) => !n.isRead).length}
+                </span>
               </button>
+
               <img
                 src={logo}
                 alt="DiabMeta"
                 className="h-9 w-auto object-contain"
+              />
+
+              {/* Notification Dropdown Popup */}
+              <NotificationDropdown
+                isOpen={showNotifications}
+                onClose={() => setShowNotifications(false)}
               />
             </div>
           </div>
@@ -362,52 +428,67 @@ export default function Home() {
             </div>
           </section>
 
-          <section className="px-4 mb-6">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-1.5">
-                <BadgeCheck size={18} className="text-[#005c55]" />
-                <h3 className="text-[13px] font-bold text-gray-900">
-                  Clinic Patient Privileges
-                </h3>
+          {/* ========================================== */}
+          {/* CLINIC PRIVILEGES (Exact Style Match)      */}
+          {/* ========================================== */}
+          <section className="mb-6">
+            {/* Heading Layout Same as Diagnostic */}
+            <div className="px-4 flex items-center gap-2.5 mb-3">
+              <div className="w-9 h-9 rounded-lg border border-[#005c55]/30 flex items-center justify-center text-[#005c55] flex-shrink-0">
+                <Star size={20} fill="#005c55" />
               </div>
-              <span className="text-[10px] font-bold text-[#005c55] bg-[#9cf2e8]/50 px-2 py-0.5 rounded-full">
-                DiabMeta Exclusive
-              </span>
+              <div>
+                <h2 className="text-[15px] font-bold text-gray-900 leading-tight">
+                  DiabMeta Clinic Patient Privileges
+                </h2>
+              </div>
             </div>
-            <div className="flex gap-2.5 overflow-x-auto scrollbar-hide -mx-4 px-4">
-              <PrivilegeCard
-                icon={<Star size={16} />}
-                iconBg="bg-[#005c55]"
-                iconColor="text-white"
-                tag="Special"
-                tagColor="text-[#005c55] bg-[#9cf2e8]/50"
-                title="Only for DiabMeta Clinic Pt."
-                desc="Exclusive privileges & premium clinic care."
-                cta="View Benefits"
-              />
-              <PrivilegeCard
-                icon={<Stethoscope size={16} />}
-                iconBg="bg-[#E0F2F1]"
-                iconColor="text-[#005c55]"
-                tag="100% Free"
-                tagColor="text-[#00695C] bg-[#E0F2F1]"
-                title="Free Monthly Health Checkup"
-                desc="Routine clinical vitals & sugar screening."
-                cta="Book Checkup"
-              />
-              <PrivilegeCard
-                icon={<Droplet size={16} />}
-                iconBg="bg-[#EDE7F6]"
-                iconColor="text-[#7E57C2]"
-                tag="Free Advice"
-                tagColor="text-[#932265] bg-[#ffd8e7]"
-                title="Free Dietician Opinion"
-                desc="Personalized meal chart from nutritionist."
-                cta="Consult Now"
-              />
+
+            <div
+              ref={privilegeScrollRef}
+              onScroll={handlePrivilegeScroll}
+              className="flex overflow-x-auto gap-3 snap-x snap-mandatory scrollbar-hide px-4 pb-2"
+              style={{ scrollPaddingLeft: "16px" }}
+            >
+              {allPrivileges.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="w-[140px] flex-shrink-0 bg-white rounded-2xl border border-[#eaedff] p-3 flex flex-col shadow-[0_2px_8px_rgba(0,0,0,0.04)] snap-start"
+                >
+                  <div className="w-10 h-10 rounded-full bg-[#f4f6fb] flex items-center justify-center mb-2.5 flex-shrink-0">
+                    {item.icon}
+                  </div>
+                  <h4 className="text-[12px] font-bold text-gray-900 leading-[1.25] mb-2.5 flex-1 line-clamp-2">
+                    {item.title}
+                  </h4>
+
+                  {/* CTA Color is Teal */}
+                  <div className="flex items-center justify-between mt-auto pt-2 border-t border-gray-100">
+                    <span className="text-[9px] font-extrabold text-[#0d6b63] truncate pr-1">
+                      {item.cta}
+                    </span>
+                    <ArrowRight
+                      size={12}
+                      className="text-[#0d6b63] flex-shrink-0"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex justify-center gap-1.5 mt-2">
+              {allPrivileges.map((_, i) => (
+                <div
+                  key={i}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${privilegeIndex === i ? "w-4 bg-[#005c55]" : "w-1.5 bg-gray-300"}`}
+                ></div>
+              ))}
             </div>
           </section>
 
+          {/* ========================================== */}
+          {/* DIAGNOSTIC & CLINIC SERVICES & TIPS        */}
+          {/* ========================================== */}
           <section className="px-4 mb-6">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2.5">
@@ -457,6 +538,7 @@ export default function Home() {
                 </div>
               </div>
 
+              {/* Dynamic Tips Box */}
               <div className="bg-white p-2.5 rounded-2xl border border-[#eaedff] flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between mb-2">
@@ -472,66 +554,83 @@ export default function Home() {
                       Daily
                     </span>
                   </div>
+
+                  {/* Showing 4 tips from top */}
                   <div className="flex flex-col gap-1.5">
-                    <TipItem
-                      tag="POST-MEAL"
-                      tagColor="text-[#00695C]"
-                      time="2 min"
-                      title="10–Min Stroll"
-                      desc="Blunts glucose spikes by 22%."
-                      bg="bg-[#F4F6FB]"
-                    />
-                    <TipItem
-                      tag="HYDRATION"
-                      tagColor="text-[#3949AB]"
-                      time="1 min"
-                      title="Water"
-                      desc="Dilutes sugar levels."
-                      bg="bg-[#F4F6FB]"
-                    />
-                    <TipItem
-                      tag="DIET SWAP"
-                      tagColor="text-[#C2185B]"
-                      time="2 min"
-                      title="Protein First"
-                      desc="Eat fiber before carbs."
-                      bg="bg-[#FDF2F4]"
-                    />
+                    {healthTipsData.slice(0, 4).map((tip) => (
+                      <button
+                        key={tip.id}
+                        onClick={() => navigate(`/health-tips/${tip.id}`)}
+                        className="bg-[#F4F6FB] p-1.5 rounded-lg flex flex-col text-left active:scale-[0.98] transition"
+                      >
+                        <div className="flex items-center justify-between leading-none">
+                          <span
+                            className={`text-[8px] font-bold ${tip.tagColor} tracking-wide uppercase`}
+                          >
+                            {tip.tag}
+                          </span>
+                          <span className="text-[8px] text-gray-500">
+                            {tip.time}
+                          </span>
+                        </div>
+                        <h5 className="text-[10px] font-bold text-gray-900 mt-0.5 leading-tight">
+                          {tip.title}
+                        </h5>
+                        <p className="text-[8.5px] text-gray-500 leading-tight mt-0.5 line-clamp-1">
+                          {tip.desc}
+                        </p>
+                      </button>
+                    ))}
                   </div>
                 </div>
                 <div className="mt-2 pt-1 border-t border-[#eaedff] text-center">
-                  <a
-                    href="#"
+                  <button
+                    onClick={() => navigate("/health-tips")}
                     className="text-[10px] font-bold text-[#005c55] hover:underline inline-flex items-center gap-0.5"
                   >
                     All Tips <ArrowRight size={11} />
-                  </a>
+                  </button>
                 </div>
               </div>
             </div>
           </section>
         </main>
 
-        {/* BOTTOM NAV */}
-        <nav className="fixed bottom-0 inset-x-0 z-50 bg-white/95 backdrop-blur-xl border-t border-gray-100 shadow-[0_-4px_20px_rgba(15,23,42,0.05)]">
+        {/* ========================================== */}
+        {/* BOTTOM NAV (QUIZ BLUE PULSING)             */}
+        {/* ========================================== */}
+        <nav className="fixed bottom-0 inset-x-0 z-50 bg-white border-t border-gray-100 shadow-[0_-4px_20px_rgba(15,23,42,0.05)] pb-safe">
           <div className="max-w-md mx-auto flex items-stretch justify-around h-16 px-1">
-            <NavItem
-              icon={<HomeIcon size={20} />}
-              label="Home"
-              active
+            <button
               onClick={() => navigate("/home")}
-            />
+              className="flex flex-col items-center justify-center flex-1 min-w-0 py-2 cursor-pointer text-[#005c55]"
+            >
+              <HomeIcon size={20} className="mb-1" />
+              <span className="text-[9px] font-extrabold leading-tight truncate w-full text-center px-0.5">
+                Home
+              </span>
+            </button>
+
             <NavItem
               icon={<CalendarDays size={20} />}
               label="Appointment"
               onClick={() => navigate("/appointment")}
             />
-            <NavItem
-              icon={<ClipboardList size={20} />}
-              label="Quiz"
+
+            {/* Quiz Tab - Blue Pulsing Animation */}
+            <button
               onClick={() => navigate("/quiz")}
-            />
-            {/* UPDATED: Contact to About Us */}
+              className="flex flex-col items-center justify-center flex-1 min-w-0 py-2 cursor-pointer group"
+            >
+              <ClipboardList
+                size={20}
+                className="text-[#2563EB] animate-quiz-pulse mb-1"
+              />
+              <span className="text-[9px] font-extrabold text-[#2563EB] animate-quiz-pulse leading-tight truncate w-full text-center px-0.5">
+                Quiz
+              </span>
+            </button>
+
             <NavItem
               icon={<Headset size={20} />}
               label="About Us"
@@ -545,6 +644,17 @@ export default function Home() {
           </div>
         </nav>
       </div>
+
+      {/* Animation Styles */}
+      <style>{`
+        @keyframes quiz-pulse {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.6; transform: scale(0.95); }
+        }
+        .animate-quiz-pulse {
+          animation: quiz-pulse 1.5s ease-in-out infinite;
+        }
+      `}</style>
     </div>
   );
 }
@@ -591,70 +701,11 @@ function DiagnosticRow({ image, title, desc, onClick }) {
   );
 }
 
-function PrivilegeCard({
-  icon,
-  iconBg,
-  iconColor,
-  tag,
-  tagColor,
-  title,
-  desc,
-  cta,
-}) {
-  return (
-    <div className="flex-shrink-0 w-[170px] p-3 rounded-2xl border border-[#005c55]/20 shadow-[0_1px_8px_rgba(0,0,0,0.04)] bg-white flex flex-col justify-between">
-      <div>
-        <div className="flex items-center justify-between mb-1.5">
-          <div
-            className={`w-7 h-7 rounded-lg ${iconBg} ${iconColor} flex items-center justify-center`}
-          >
-            {icon}
-          </div>
-          <span
-            className={`text-[8.5px] font-bold ${tagColor} px-1.5 py-0.5 rounded`}
-          >
-            {tag}
-          </span>
-        </div>
-        <h4 className="text-[11px] font-bold text-gray-900 leading-tight">
-          {title}
-        </h4>
-        <p className="text-[9px] text-gray-500 mt-1 leading-snug line-clamp-2">
-          {desc}
-        </p>
-      </div>
-      <div className="mt-2 pt-1 flex items-center justify-between text-[#005c55] font-bold text-[10px]">
-        <span>{cta}</span>
-        <ArrowRight size={13} />
-      </div>
-    </div>
-  );
-}
-
-function TipItem({ tag, tagColor, time, title, desc, bg }) {
-  return (
-    <div className={`${bg} p-1.5 rounded-lg flex flex-col`}>
-      <div className="flex items-center justify-between leading-none">
-        <span
-          className={`text-[8px] font-bold ${tagColor} tracking-wide uppercase`}
-        >
-          {tag}
-        </span>
-        <span className="text-[8px] text-gray-500">{time}</span>
-      </div>
-      <h5 className="text-[10px] font-bold text-gray-900 mt-0.5 leading-tight">
-        {title}
-      </h5>
-      <p className="text-[8.5px] text-gray-500 leading-tight mt-0.5">{desc}</p>
-    </div>
-  );
-}
-
 function NavItem({ icon, label, active, onClick }) {
   return (
     <button
       onClick={onClick}
-      className={`flex flex-col items-center justify-center flex-1 min-w-0 py-2 cursor-pointer ${active ? "text-[#005c55] font-bold" : "text-gray-500 hover:text-[#005c55]"}`}
+      className={`flex flex-col items-center justify-center flex-1 min-w-0 py-2 cursor-pointer transition-colors ${active ? "text-[#005c55] font-bold" : "text-gray-500 hover:text-[#005c55]"}`}
     >
       {icon}
       <span className="text-[9px] leading-tight mt-1 truncate w-full text-center px-0.5">

@@ -243,7 +243,7 @@ function PatientForm({ agree, setAgree, onVerify }) {
 
       {/* Continue without Login */}
       <button
-        onClick={() => navigate("/splash")}
+        onClick={() => navigate("/home")}
         className={`w-full border border-[#0d6b63] text-[#0d6b63] hover:bg-[#e8f3f1] text-[13px] font-semibold py-3.5 rounded-xl transition flex items-center justify-center gap-2 ${
           codeSent ? "mt-6" : "mt-3"
         }`}

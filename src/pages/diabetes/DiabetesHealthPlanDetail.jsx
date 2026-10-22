@@ -2,12 +2,17 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Check, ArrowRight, Info } from "lucide-react";
 
 // LOGO IMPORT
-import logo from "../assets/daibmetalogo.jpeg";
+import logo from "../../assets/daibmetalogo.jpeg";
 
 import { PLAN as DIABETES_PLAN } from "./DiabetesResult";
-import { PLAN_ART } from "./BmiCheck"; // <-- reuse same SVG art
+import { PLAN_ART } from "../bmi/BmiCheck"; // <-- reuse same SVG art
 
-const NAVY = "#14284b";
+/* ============ DIABMETA THEME ============ */
+const PRIMARY = "#005c55";
+const BUTTON = "#0d6b63";
+const LIGHT = "#E0F2F1";
+const BG = "#faf8ff";
+const BORDER = "#eaedff";
 
 /* ============ RISK LEVEL THEMES ============ */
 const RISK_THEME = {
@@ -37,7 +42,7 @@ const RISK_THEME = {
 /* ============ PLAN TYPE CONFIG ============ */
 const PLAN_TYPES = {
   diet: { title: "Diet Plan", colorDark: "#2e8f3a" },
-  activity: { title: "Physical Activity", colorDark: "#2f8cf0" },
+  activity: { title: "Physical Activity", colorDark: "#0d6b63" },
   advice: { title: "Other Advice", colorDark: "#ea8a10" },
 };
 
@@ -52,12 +57,16 @@ export default function DiabetesHealthPlanDetail() {
 
   if (!theme || !plan || !data || !Art) {
     return (
-      <div className="min-h-screen bg-[#faf8ff] flex items-center justify-center p-6">
+      <div
+        className="min-h-screen flex items-center justify-center p-6"
+        style={{ backgroundColor: BG }}
+      >
         <div className="text-center">
           <p className="text-[14px] font-bold text-gray-800">Plan not found</p>
           <button
             onClick={() => navigate(-1)}
-            className="mt-3 text-[13px] font-semibold text-blue-600 underline"
+            className="mt-3 text-[13px] font-semibold underline"
+            style={{ color: BUTTON }}
           >
             Go Back
           </button>
@@ -75,7 +84,7 @@ export default function DiabetesHealthPlanDetail() {
       className="min-h-screen flex justify-center"
       style={{
         background:
-          "linear-gradient(180deg,#e7f1fc 0%,#f2f7fd 45%,#fafcff 100%)",
+          "linear-gradient(180deg,#e6f4f2 0%,#f0faf8 45%,#faf8ff 100%)",
         fontFamily: "'Nunito','Noto Sans Devanagari',system-ui,sans-serif",
       }}
     >
@@ -84,7 +93,7 @@ export default function DiabetesHealthPlanDetail() {
         <header
           className="sticky top-0 z-40"
           style={{
-            background: "rgba(231,241,252,0.9)",
+            background: "rgba(230,244,242,0.9)",
             backdropFilter: "blur(12px)",
           }}
         >
@@ -92,11 +101,14 @@ export default function DiabetesHealthPlanDetail() {
             <button
               onClick={() => navigate(-1)}
               className="w-9 h-9 flex items-center justify-center rounded-full active:scale-95"
-              style={{ color: NAVY }}
+              style={{ color: PRIMARY }}
             >
               <ArrowLeft size={22} strokeWidth={2.5} />
             </button>
-            <h1 className="font-extrabold text-[17px]" style={{ color: NAVY }}>
+            <h1
+              className="font-extrabold text-[17px]"
+              style={{ color: PRIMARY }}
+            >
               {plan.title}
             </h1>
 
@@ -122,7 +134,7 @@ export default function DiabetesHealthPlanDetail() {
             <div className="flex-1 min-w-0">
               <h2
                 className="text-[19px] font-black leading-tight"
-                style={{ color: NAVY }}
+                style={{ color: PRIMARY }}
               >
                 {plan.title}
               </h2>
@@ -157,8 +169,14 @@ export default function DiabetesHealthPlanDetail() {
           />
 
           {/* Disclaimer */}
-          <div className="bg-[#e6f0fb] border border-[#d3e4f7] rounded-2xl p-3.5 mb-4 flex items-start gap-2.5">
-            <div className="w-6 h-6 rounded-full bg-[#2f80ed] flex items-center justify-center flex-shrink-0 mt-0.5">
+          <div
+            className="rounded-2xl p-3.5 mb-4 flex items-start gap-2.5 border"
+            style={{ backgroundColor: LIGHT, borderColor: "#c9ece7" }}
+          >
+            <div
+              className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
+              style={{ backgroundColor: BUTTON }}
+            >
               <Info size={14} strokeWidth={2.6} className="text-white" />
             </div>
             <div className="text-[10px] text-[#3b4a66] leading-relaxed font-medium">
@@ -178,7 +196,8 @@ export default function DiabetesHealthPlanDetail() {
           {level !== "low" && (
             <button
               onClick={() => navigate("/appointment")}
-              className="w-full bg-white border-2 border-[#0d6b63] text-[#0d6b63] font-bold py-3.5 rounded-xl active:scale-[0.98] transition flex items-center justify-center gap-2"
+              className="w-full bg-white border-2 font-bold py-3.5 rounded-xl active:scale-[0.98] transition flex items-center justify-center gap-2"
+              style={{ borderColor: BUTTON, color: BUTTON }}
             >
               {btnText} <ArrowRight size={16} />
             </button>
@@ -192,7 +211,10 @@ export default function DiabetesHealthPlanDetail() {
 /* ============ LIST CARD ============ */
 function PlanList({ badge, title, item, color }) {
   return (
-    <div className="bg-white rounded-[20px] border border-[#e3ecf7] shadow-[0_2px_10px_rgba(30,64,120,0.06)] p-4 mb-3.5">
+    <div
+      className="bg-white rounded-[20px] border shadow-[0_2px_10px_rgba(0,92,85,0.06)] p-4 mb-3.5"
+      style={{ borderColor: BORDER }}
+    >
       <div className="flex items-center gap-2 mb-3">
         <div
           className="w-6 h-6 rounded-md flex items-center justify-center text-[11px] font-bold text-white"
@@ -200,7 +222,7 @@ function PlanList({ badge, title, item, color }) {
         >
           {badge}
         </div>
-        <h3 className="text-[13px] font-extrabold" style={{ color: NAVY }}>
+        <h3 className="text-[13px] font-extrabold" style={{ color: PRIMARY }}>
           {title}
         </h3>
       </div>

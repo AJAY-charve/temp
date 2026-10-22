@@ -1,17 +1,10 @@
 import { useState, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  ArrowLeft,
-  HelpCircle,
-  Calendar,
-  Utensils,
-  ChevronDown,
-} from "lucide-react";
+import { ArrowLeft, HelpCircle, Calendar, Utensils } from "lucide-react";
 
 const NAVY = "#14284b";
 
 /* ============ STATIC DATA ============ */
-// Aaj ki date (Dynamic for demo purposes)
 const getTodayStr = () => new Date().toISOString().split("T")[0];
 const getYesterdayStr = () => {
   const d = new Date();
@@ -66,7 +59,6 @@ export default function SavedMeals() {
   const navigate = useNavigate();
   const [filterType, setFilterType] = useState("today"); // 'today' | 'yesterday' | 'custom'
 
-  // Custom Date State (Default is today)
   const [customDate, setCustomDate] = useState(getTodayStr());
   const dateInputRef = useRef(null);
 
@@ -81,7 +73,6 @@ export default function SavedMeals() {
       meals = meals.filter((m) => m.date === customDate);
     }
 
-    // Sort by time descending (latest first)
     return meals.sort(
       (a, b) =>
         new Date(`${b.date} ${b.time}`) - new Date(`${a.date} ${a.time}`),
@@ -96,7 +87,6 @@ export default function SavedMeals() {
   return (
     <div className="min-h-[100dvh] flex justify-center bg-[#faf8ff]">
       <div className="w-full max-w-md min-h-[100dvh] flex flex-col">
-        {/* HEADER */}
         <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-xl border-b border-gray-100">
           <div className="h-14 px-4 flex items-center justify-between">
             <button
@@ -139,12 +129,10 @@ export default function SavedMeals() {
               Yesterday
             </button>
 
-            {/* Custom Date Picker Trigger */}
             <div className="relative flex-1">
               <button
                 onClick={() => {
                   setFilterType("custom");
-                  // Delay to ensure state update before opening native picker
                   setTimeout(() => {
                     try {
                       dateInputRef.current?.showPicker();
@@ -175,7 +163,6 @@ export default function SavedMeals() {
                 />
               </button>
 
-              {/* Hidden Input for Native Date Picker */}
               <input
                 type="date"
                 ref={dateInputRef}

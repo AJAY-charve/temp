@@ -7,7 +7,7 @@ import {
   Award,
   Check,
 } from "lucide-react";
-import logo from "../assets/daibmetalogo.jpeg";
+import logo from "../../assets/daibmetalogo.jpeg"; // <-- Path updated
 
 export default function QuizResult() {
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ export default function QuizResult() {
 
         {/* MAIN */}
         <main className="flex-1 pb-10 px-4 pt-6">
-          {/* Success Message Drop */}
+          {/* Success Drop */}
           <div className="bg-[#e4f4e8] border border-[#bde5c4] rounded-2xl p-4 flex items-start gap-3 mb-5">
             <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center flex-none">
               <Check size={18} className="text-[#2e9e48]" />
@@ -107,7 +107,7 @@ export default function QuizResult() {
             </div>
           </div>
 
-          {/* Details / Review List */}
+          {/* Review Answers */}
           <div className="bg-white rounded-3xl border border-[#eaedff] p-5 shadow-[0_2px_8px_rgba(0,0,0,0.02)] mb-6">
             <h3 className="text-[13px] font-bold text-gray-900 mb-4">
               Review Answers

@@ -9,10 +9,10 @@ import {
   ChevronDown,
   Receipt,
 } from "lucide-react";
-import { getBookings } from "./Store";
+import { getBookings } from "./Store"; // Path is correct (same folder)
 
-// LOGO IMPORT
-import logo from "../assets/daibmetalogo.jpeg";
+// LOGO IMPORT (Path Updated)
+import logo from "../../assets/daibmetalogo.jpeg";
 
 const NAVY = "#14284b";
 

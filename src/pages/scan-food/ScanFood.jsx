@@ -145,7 +145,6 @@ export default function ScanFood() {
             <div className="w-9" />
           </div>
           <div className="px-4 pb-3">
-            {/* TAB BAR */}
             <div className="flex p-1 rounded-xl gap-1 bg-white border border-[#d9e6f7]">
               {TABS.map(({ id, label, Icon, onClick }) => {
                 const active = tab === id;

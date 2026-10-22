@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Clock, AlertCircle, Check } from "lucide-react";
-import logo from "../assets/daibmetalogo.jpeg";
+import logo from "../../assets/daibmetalogo.jpeg"; // <-- Path updated
 
 const QUESTIONS = [
   {
     id: 1,
     question: "How often do you exercise?",
     options: ["Daily", "3-4 times a week", "Rarely", "Never"],
-    correctAnswer: "Daily", // <-- Yaha correct answer set kiya
+    correctAnswer: "Daily",
   },
   {
     id: 2,
@@ -40,7 +40,7 @@ export default function Quiz() {
   const navigate = useNavigate();
   const [answers, setAnswers] = useState({});
   const [showConfirm, setShowConfirm] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(300);
+  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
 
   useEffect(() => {
     if (timeLeft <= 0) {
@@ -75,6 +75,7 @@ export default function Quiz() {
   return (
     <div className="min-h-screen bg-[#faf8ff] flex justify-center">
       <div className="w-full max-w-md min-h-screen flex flex-col relative">
+        {/* HEADER */}
         <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-gray-100">
           <div className="h-14 px-4 flex items-center justify-between">
             <button
@@ -92,7 +93,9 @@ export default function Quiz() {
           </div>
         </header>
 
+        {/* MAIN */}
         <main className="flex-1 pb-24 px-4 pt-4">
+          {/* Timer & Header */}
           <div className="mb-5 flex items-start justify-between">
             <div>
               <h2 className="text-[16px] font-bold text-gray-900">
@@ -114,6 +117,7 @@ export default function Quiz() {
             </div>
           </div>
 
+          {/* Questions */}
           <div className="flex flex-col gap-5">
             {QUESTIONS.map((q, qIndex) => (
               <div
@@ -138,7 +142,9 @@ export default function Quiz() {
                         }`}
                       >
                         <span
-                          className={`text-[12.5px] font-semibold ${selected ? "text-[#005c55]" : "text-gray-700"}`}
+                          className={`text-[12.5px] font-semibold ${
+                            selected ? "text-[#005c55]" : "text-gray-700"
+                          }`}
                         >
                           {option}
                         </span>
@@ -151,6 +157,7 @@ export default function Quiz() {
           </div>
         </main>
 
+        {/* SUBMIT BUTTON */}
         <div className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-xl border-t border-gray-100 shadow-[0_-4px_20px_rgba(15,23,42,0.06)]">
           <div className="max-w-md mx-auto px-4 py-3">
             <button
@@ -162,6 +169,7 @@ export default function Quiz() {
           </div>
         </div>
 
+        {/* CONFIRMATION MODAL */}
         {showConfirm && (
           <div className="fixed inset-0 z-50 flex items-center justify-center px-5">
             <div

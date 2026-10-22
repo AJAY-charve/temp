@@ -27,9 +27,11 @@ E:\NetswapTechnology\DMT\dmt-template-app
 |  |  |  ├── diabetes.jpeg
 |  |  |  ├── disease.png
 |  |  |  ├── ecg.png
+|  |  |  ├── knowyourdiseases.png
+|  |  |  ├── knowyoursymptoms.png
 |  |  |  ├── medical-device.png
 |  |  |  ├── period.jpeg
-|  |  |  ├── records.png
+|  |  |  ├── records.jpeg
 |  |  |  ├── reminder.jpeg
 |  |  |  ├── scan-food.jpeg
 |  |  |  ├── sugar.jpeg
@@ -53,21 +55,56 @@ E:\NetswapTechnology\DMT\dmt-template-app
 |  ├── main.jsx
 |  └── pages
 |     ├── 1.jsx
+|     ├── AddFamilyMember.jsx
 |     ├── Appointment.jsx
-|     ├── BmiCheck.jsx
-|     ├── DiabetesAssessment.jsx
-|     ├── DiabetesHealthPlanDetail.jsx
-|     ├── DiabetesResult.jsx
-|     ├── DiagnosticDetail.jsx
-|     ├── HealthPlanDetail.jsx
+|     ├── bmi
+|     |  ├── BmiCheck.jsx
+|     |  ├── DiagnosticDetail.jsx
+|     |  └── HealthPlanDetail.jsx
+|     ├── calorie-tracker
+|     |  ├── CalorieBalance.jsx
+|     |  ├── CalorieBurn.jsx
+|     |  ├── CalorieHome.jsx
+|     |  └── NutritionIntake.jsx
+|     ├── Contact.jsx
+|     ├── diabetes
+|     |  ├── DiabetesAssessment.jsx
+|     |  ├── DiabetesHealthPlanDetail.jsx
+|     |  └── DiabetesResult.jsx
+|     ├── DiseaseDetail.jsx
+|     ├── DiseasesList.jsx
 |     ├── Home.jsx
 |     ├── Login.jsx
+|     ├── pill-reminder
+|     |  ├── AddMedicine.jsx
+|     |  └── PillReminder.jsx
+|     ├── Profile.jsx
+|     ├── quiz
+|     |  ├── Quiz.jsx
+|     |  ├── QuizResult.jsx
+|     |  └── QuizStart.jsx
+|     ├── Records.jsx
 |     ├── Register.jsx
-|     ├── ScanFood.jsx
-|     └── Splash.jsx
+|     ├── scan-food
+|     |  ├── SavedMeals.jsx
+|     |  ├── ScanFood.jsx
+|     |  └── ScanResult.jsx
+|     ├── Splash.jsx
+|     ├── store
+|     |  ├── BookingHistory.jsx
+|     |  ├── ProductDetail.jsx
+|     |  └── Store.jsx
+|     ├── sugar-bp
+|     |  ├── AddBP.jsx
+|     |  ├── AddSugar.jsx
+|     |  ├── History.jsx
+|     |  ├── LogbookHome.jsx
+|     |  └── Trends.jsx
+|     ├── SymptomDetail.jsx
+|     └── SymptomsList.jsx
 ├── structure.txt
 └── vite.config.js
 
-directory: 366 file: 1465
+directory: 374 file: 1494
 
 ignored: directory (61)

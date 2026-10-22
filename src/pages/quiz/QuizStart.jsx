@@ -5,16 +5,15 @@ import {
   Play,
   CheckCircle2,
   AlertCircle,
-  X,
   History,
 } from "lucide-react";
-import logo from "../assets/daibmetalogo.jpeg";
+import logo from "../../assets/daibmetalogo.jpeg"; // <-- Path updated
 
 export default function QuizStart() {
   const navigate = useNavigate();
   const [showConfirm, setShowConfirm] = useState(false);
 
-  // Static Attempt Data (5 me se 2 attempt already done)
+  // Static Attempt Data (5 me se 3 attempt bache hain)
   const attemptsLeft = 3;
   const attemptsTotal = 5;
 
@@ -25,7 +24,7 @@ export default function QuizStart() {
 
   const handleStartQuiz = () => {
     setShowConfirm(false);
-    navigate("/quiz/start"); // Quiz questions page pe le jayega
+    navigate("/quiz/start");
   };
 
   return (
@@ -52,7 +51,7 @@ export default function QuizStart() {
         {/* MAIN */}
         <main className="flex-1 pb-10 px-4 pt-6">
           {/* Info Card */}
-          <div className="bg-[#E0F2F1] rounded-3xl border border-[#B2DFDB] p-5 mb-6 text-center">
+          <div className="bg-[#E0F2F1] rounded-3xl border border-[#B2DFDB] p-5 mb-6 text-center shadow-sm">
             <h2 className="text-[18px] font-extrabold text-[#005c55] mb-2">
               Start Your Health Quiz
             </h2>
