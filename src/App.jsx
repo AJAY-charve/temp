@@ -58,6 +58,7 @@ import CalorieHome from "./pages/calorie-tracker/CalorieHome";
 import NutritionIntake from "./pages/calorie-tracker/NutritionIntake";
 import CalorieBurn from "./pages/calorie-tracker/CalorieBurn";
 import CalorieBalance from "./pages/calorie-tracker/CalorieBalance";
+import CalorieHistory from "./pages/calorie-tracker/CalorieHistory"; // <-- Naya Import
 
 // Store Imports
 import Store from "./pages/store/Store";
@@ -82,7 +83,6 @@ export default function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/home" element={<Home />} />
       <Route path="/appointment" element={<Appointment />} />
-
       {/* BMI Routes */}
       <Route path="/bmi" element={<BmiCheck />} />
       <Route path="/diagnostic/:slug" element={<DiagnosticDetail />} />
@@ -90,7 +90,6 @@ export default function App() {
         path="/health-plan/:category/:planType"
         element={<HealthPlanDetail />}
       />
-
       {/* Diabetes Routes */}
       <Route path="/diabetes" element={<DiabetesAssessment />} />
       <Route path="/diabetes/result" element={<DiabetesResult />} />
@@ -98,7 +97,6 @@ export default function App() {
         path="/diabetes/health-plan/:level/:planType"
         element={<DiabetesHealthPlanDetail />}
       />
-
       {/* Period Tracker Routes */}
       <Route path="/period-tracker/lock" element={<PeriodLock />} />
       <Route path="/period-tracker/setup" element={<PeriodSetup />} />
@@ -114,65 +112,56 @@ export default function App() {
         path="/period-tracker/health-guide/:id"
         element={<PeriodGuideDetail />}
       />
-
       {/* Health Tips Routes */}
       <Route path="/health-tips" element={<HealthTipsList />} />
       <Route path="/health-tips/:id" element={<HealthTipDetail />} />
-
       {/* Notifications Routes */}
       <Route path="/notifications" element={<NotificationsList />} />
       <Route path="/notifications/:id" element={<NotificationDetail />} />
-
       {/* Scan Food Routes */}
       <Route path="/scan-food" element={<ScanFood />} />
       <Route path="/scan-food/result" element={<ScanResult />} />
       <Route path="/scan-food/saved" element={<SavedMeals />} />
-
       {/* Pill Reminder Routes */}
       <Route path="/pill-reminder" element={<PillReminder />} />
       <Route path="/pill-reminder/add" element={<AddMedicine />} />
-
       {/* Sugar & BP Logbook Routes */}
       <Route path="/sugar-bp" element={<LogbookHome />} />
       <Route path="/sugar-bp/add-sugar" element={<AddSugar />} />
       <Route path="/sugar-bp/add-bp" element={<AddBP />} />
       <Route path="/sugar-bp/history" element={<History />} />
       <Route path="/sugar-bp/trends" element={<Trends />} />
-
       {/* Calorie Tracker Routes */}
       <Route path="/calorie-tracker" element={<CalorieHome />} />
       <Route path="/calorie-tracker/intake" element={<NutritionIntake />} />
       <Route path="/calorie-tracker/burn" element={<CalorieBurn />} />
       <Route path="/calorie-tracker/balance" element={<CalorieBalance />} />
-
+      <Route
+        path="/calorie-tracker/history"
+        element={<CalorieHistory />}
+      />{" "}
+      {/* <-- Naya Route */}
       {/* Records Route */}
       <Route path="/records" element={<Records />} />
-
       {/* Store Routes */}
       <Route path="/store" element={<Store />} />
       <Route path="/store/history" element={<BookingHistory />} />
       <Route path="/store/product/:id" element={<ProductDetail />} />
-
       {/* Know Your Diseases Routes */}
       <Route path="/diseases" element={<DiseasesList />} />
       <Route path="/diseases/:id" element={<DiseaseDetail />} />
-
       {/* Know Your Symptoms Routes */}
       <Route path="/symptoms" element={<SymptomsList />} />
       <Route path="/symptoms/:id" element={<SymptomDetail />} />
-
       {/* New Routes */}
       <Route path="/contact" element={<Contact />} />
-
       {/* Profile Routes */}
       <Route path="/profile" element={<Profile />} />
       <Route path="/profile/add-member" element={<AddFamilyMember />} />
-
       {/* Quiz Routes */}
       <Route path="/quiz" element={<QuizStart />} />
       <Route path="/quiz/start" element={<Quiz />} />
       <Route path="/quiz/result" element={<QuizResult />} />
-
       <Route path="*" element={<Login />} />
     </Routes>
   );

@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
   ChevronRight,
-  Info,
   HelpCircle,
   Flame,
   Activity,
@@ -14,18 +13,14 @@ import logo from "../../assets/daibmetalogo.jpeg";
 export default function CalorieBurn() {
   const navigate = useNavigate();
 
-  // Inputs
   const [age, setAge] = useState("35");
   const [sex, setSex] = useState("male");
   const [weight, setWeight] = useState("70");
   const [height, setHeight] = useState("170");
-
-  const [activity, setActivity] = useState("1.20"); // default mostly sitting
-
+  const [activity, setActivity] = useState("1.20");
   const [duration, setDuration] = useState("30");
-  const [intensity, setIntensity] = useState("4.0"); // default moderate (MET)
+  const [intensity, setIntensity] = useState("4.0");
 
-  // Calculations
   const w = parseFloat(weight) || 0;
   const h = parseFloat(height) || 0;
   const a = parseFloat(age) || 0;
@@ -33,19 +28,12 @@ export default function CalorieBurn() {
   const dur = parseFloat(duration) || 0;
   const met = parseFloat(intensity) || 4.0;
 
-  // 1. BMR (Mifflin - St Jeor)
   const bmr =
     sex === "male"
       ? 10 * w + 6.25 * h - 5 * a + 5
       : 10 * w + 6.25 * h - 5 * a - 161;
-
-  // 2. Activity Calories
   const activityCal = bmr * (act - 1);
-
-  // 3. Exercise Calories
   const exerciseCal = (met - 1) * w * (dur / 60);
-
-  // Total
   const totalBurn = bmr + activityCal + exerciseCal;
 
   return (
@@ -70,10 +58,10 @@ export default function CalorieBurn() {
           </div>
         </header>
 
-        <main className="flex-1 px-4 pt-5 pb-10 flex flex-col gap-5">
-          {/* Section 1: Basic Info */}
+        <main className="flex-1 px-4 pt-5 pb-10 flex flex-col gap-4 overflow-y-auto">
+          {/* 1. Basic Info */}
           <div className="bg-white rounded-2xl p-4 border border-[#eaedff] shadow-sm">
-            <h2 className="text-[14px] font-extrabold text-[#14284b] mb-3">
+            <h2 className="text-[13.5px] font-extrabold text-[#14284b] mb-3">
               1. Basic Information
             </h2>
             <div className="grid grid-cols-2 gap-3">
@@ -95,15 +83,15 @@ export default function CalorieBurn() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => setSex("male")}
-                    className={`flex-1 py-2.5 rounded-lg text-[12px] font-bold border ${sex === "male" ? "bg-[#e0eefc] border-[#2f8cf0] text-[#2f8cf0]" : "bg-gray-50 border-gray-200 text-gray-500"}`}
+                    className={`flex-1 py-2.5 rounded-lg text-[12px] font-bold border transition ${sex === "male" ? "bg-[#e0eefc] border-[#2f8cf0] text-[#2f8cf0]" : "bg-gray-50 border-gray-200 text-gray-500"}`}
                   >
-                    M
+                    Male
                   </button>
                   <button
                     onClick={() => setSex("female")}
-                    className={`flex-1 py-2.5 rounded-lg text-[12px] font-bold border ${sex === "female" ? "bg-[#fde3e3] border-[#ef5350] text-[#ef5350]" : "bg-gray-50 border-gray-200 text-gray-500"}`}
+                    className={`flex-1 py-2.5 rounded-lg text-[12px] font-bold border transition ${sex === "female" ? "bg-[#fde3e3] border-[#ef5350] text-[#ef5350]" : "bg-gray-50 border-gray-200 text-gray-500"}`}
                   >
-                    F
+                    Female
                   </button>
                 </div>
               </div>
@@ -132,9 +120,9 @@ export default function CalorieBurn() {
             </div>
           </div>
 
-          {/* Section 2: Daily Activity */}
+          {/* 2. Activity */}
           <div className="bg-white rounded-2xl p-4 border border-[#eaedff] shadow-sm">
-            <h2 className="text-[14px] font-extrabold text-[#14284b] mb-3">
+            <h2 className="text-[13.5px] font-extrabold text-[#14284b] mb-3">
               2. Today's Daily Activity
             </h2>
             <div className="flex flex-col gap-2">
@@ -176,19 +164,20 @@ export default function CalorieBurn() {
                     <p className="text-[12px] font-bold text-[#14284b]">
                       {opt.label}
                     </p>
-                    <p className="text-[9px] text-gray-500">{opt.desc}</p>
+                    <p className="text-[9px] text-gray-500 font-medium">
+                      {opt.desc}
+                    </p>
                   </div>
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Section 3: Exercise */}
+          {/* 3. Exercise */}
           <div className="bg-white rounded-2xl p-4 border border-[#eaedff] shadow-sm">
-            <h2 className="text-[14px] font-extrabold text-[#14284b] mb-3">
+            <h2 className="text-[13.5px] font-extrabold text-[#14284b] mb-3">
               3. Today's Exercise
             </h2>
-
             <label className="text-[11px] font-bold text-gray-700 mb-1.5 block">
               Duration (minutes)
             </label>
@@ -198,7 +187,6 @@ export default function CalorieBurn() {
               onChange={(e) => setDuration(e.target.value)}
               className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-[13px] font-bold outline-none focus:border-[#0d6b63] mb-3"
             />
-
             <label className="text-[11px] font-bold text-gray-700 mb-1.5 block">
               Intensity (MET)
             </label>
@@ -223,11 +211,10 @@ export default function CalorieBurn() {
           <div className="bg-[#f4f5fb] rounded-2xl p-4 border border-[#eaedff] shadow-inner">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-[13px] font-extrabold text-[#14284b]">
-                Your Estimated Total Burn
+                Estimated Total Burn
               </h3>
               <HelpCircle size={14} className="text-gray-400" />
             </div>
-
             <div className="flex items-center gap-2 text-center">
               <div className="flex-1 bg-white p-2 rounded-xl border border-gray-100">
                 <Flame size={16} className="text-[#ef5350] mx-auto mb-1" />
@@ -253,7 +240,6 @@ export default function CalorieBurn() {
                 </p>
               </div>
             </div>
-
             <div className="mt-3 bg-[#fde3e3] rounded-xl p-3 flex items-center justify-between border border-[#fbd4d4]">
               <p className="text-[12px] font-extrabold text-[#14284b]">
                 Total Burn
