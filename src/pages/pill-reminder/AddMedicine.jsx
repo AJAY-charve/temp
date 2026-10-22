@@ -13,8 +13,8 @@ import {
   X,
 } from "lucide-react";
 
-// LOGO IMPORT
-import logo from "../assets/daibmetalogo.jpeg";
+// LOGO IMPORT (Path Updated)
+import logo from "../../assets/daibmetalogo.jpeg";
 
 const NAVY = "#14284b";
 const DAYS_OF_WEEK = ["S", "M", "T", "W", "T", "F", "S"];
@@ -24,6 +24,7 @@ export default function AddMedicine() {
   const navigate = useNavigate();
 
   const galleryInputRef = useRef(null);
+  const timeInputRefs = useRef([]); // Array of refs for time inputs
 
   const [name, setName] = useState("");
   const [photo, setPhoto] = useState(null);
@@ -159,6 +160,16 @@ export default function AddMedicine() {
     navigate("/pill-reminder");
   };
 
+  // Format Time for display (e.g. "08:00 AM")
+  const formatTime = (timeStr) => {
+    if (!timeStr) return "";
+    const [h, m] = timeStr.split(":");
+    const hr = parseInt(h);
+    const ampm = hr >= 12 ? "PM" : "AM";
+    const formattedHr = hr % 12 || 12;
+    return `${formattedHr.toString().padStart(2, "0")}:${m} ${ampm}`;
+  };
+
   return (
     <div className="min-h-screen bg-[#faf8ff] flex justify-center">
       <div className="w-full max-w-md min-h-screen flex flex-col relative">
@@ -203,7 +214,7 @@ export default function AddMedicine() {
             />
           </div>
 
-          {/* Medicine Photo (Inline Buttons) */}
+          {/* Medicine Photo */}
           <div className="bg-white rounded-2xl p-4 border border-[#eaedff] shadow-sm">
             <div className="flex items-center gap-2 mb-3">
               <div className="w-8 h-8 rounded-full bg-[#E0F2F1] flex items-center justify-center flex-none">
@@ -217,7 +228,6 @@ export default function AddMedicine() {
               </label>
             </div>
 
-            {/* Photo Preview or Buttons */}
             {photo ? (
               <div className="relative w-24 h-24">
                 <img
@@ -234,7 +244,6 @@ export default function AddMedicine() {
               </div>
             ) : (
               <div className="flex gap-3">
-                {/* Camera Button */}
                 <button
                   onClick={() => setShowCamera(true)}
                   className="flex-1 h-20 rounded-xl border border-[#eaedff] bg-[#faf8ff] flex flex-col items-center justify-center active:scale-95 transition hover:bg-[#E0F2F1]/40"
@@ -245,7 +254,6 @@ export default function AddMedicine() {
                   </span>
                 </button>
 
-                {/* Gallery Button */}
                 <button
                   onClick={() => galleryInputRef.current?.click()}
                   className="flex-1 h-20 rounded-xl border border-[#eaedff] bg-[#faf8ff] flex flex-col items-center justify-center active:scale-95 transition hover:bg-[#E0F2F1]/40"
@@ -258,7 +266,6 @@ export default function AddMedicine() {
               </div>
             )}
 
-            {/* Hidden Input for Gallery */}
             <input
               type="file"
               accept="image/*"
@@ -282,18 +289,32 @@ export default function AddMedicine() {
             <div className="flex flex-col gap-3">
               {times.map((t, index) => (
                 <div key={index} className="flex items-center gap-2">
+                  {/* Custom Time Picker UI */}
                   <div className="relative flex-1">
+                    <div
+                      onClick={() => {
+                        try {
+                          timeInputRefs.current[index]?.showPicker();
+                        } catch {
+                          timeInputRefs.current[index]?.click();
+                        }
+                      }}
+                      className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-[#eaedff] bg-[#faf8ff] shadow-sm cursor-pointer hover:border-[#005c55] transition"
+                    >
+                      <span className="text-[14px] font-bold text-[#14284b]">
+                        {formatTime(t)}
+                      </span>
+                      <ChevronRight size={16} className="text-gray-400" />
+                    </div>
                     <input
                       type="time"
+                      ref={(el) => (timeInputRefs.current[index] = el)}
                       value={t}
                       onChange={(e) => handleTimeChange(index, e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl border border-[#eaedff] bg-[#faf8ff] focus:bg-white focus:border-[#005c55] outline-none text-[15px] font-bold text-[#14284b] transition appearance-none"
-                    />
-                    <ChevronRight
-                      size={18}
-                      className="text-[#005c55] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                      className="absolute opacity-0 pointer-events-none w-0 h-0"
                     />
                   </div>
+
                   {times.length > 1 && (
                     <button
                       onClick={() => removeTime(index)}
@@ -429,7 +450,6 @@ export default function AddMedicine() {
         {showCamera && (
           <div className="fixed inset-0 z-[60] bg-black flex justify-center">
             <div className="w-full max-w-md h-full flex flex-col relative">
-              {/* Camera Header */}
               <div className="h-14 px-4 flex items-center justify-between bg-black pt-2">
                 <button
                   onClick={closeCamera}
@@ -443,7 +463,6 @@ export default function AddMedicine() {
                 <div className="w-9" />
               </div>
 
-              {/* Video Stream */}
               <div className="flex-1 relative overflow-hidden bg-[#111] flex items-center justify-center">
                 {cameraError ? (
                   <p className="text-white text-center px-6">{cameraError}</p>
@@ -458,7 +477,6 @@ export default function AddMedicine() {
                 )}
               </div>
 
-              {/* Capture Button */}
               <div className="h-28 bg-black flex items-center justify-center pb-4">
                 <button
                   onClick={capturePhoto}

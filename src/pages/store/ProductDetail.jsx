@@ -13,8 +13,8 @@ import {
   Heart,
 } from "lucide-react";
 
-// LOGO IMPORT
-import logo from "../assets/daibmetalogo.jpeg";
+// LOGO IMPORT (Path Updated)
+import logo from "../../assets/daibmetalogo.jpeg";
 
 const NAVY = "#14284b";
 

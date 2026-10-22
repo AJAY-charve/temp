@@ -13,16 +13,16 @@ import {
   MessageCircle,
 } from "lucide-react";
 
-// LOGO IMPORT
-import logo from "../assets/daibmetalogo.jpeg";
+// LOGO IMPORT (Path Updated)
+import logo from "../../assets/daibmetalogo.jpeg";
 
 // Banner (input view)
-import bmiImg from "../assets/cards/bmi.jpeg";
+import bmiImg from "../../assets/cards/bmi.jpeg";
 
 // Top result card images
-import imgUnderweight from "../assets/bmi/underweight.png";
-import imgNormal from "../assets/bmi/normal.png";
-import imgOverweight from "../assets/bmi/overweight.png";
+import imgUnderweight from "../../assets/bmi/underweight.png";
+import imgNormal from "../../assets/bmi/normal.png";
+import imgOverweight from "../../assets/bmi/overweight.png";
 
 const NAVY = "#14284b";
 
@@ -385,7 +385,11 @@ export default function BmiCheck() {
                       key={g}
                       type="button"
                       onClick={() => update("sex", g)}
-                      className={`flex items-center justify-center gap-2 py-3 rounded-xl text-[13px] font-semibold capitalize transition border ${form.sex === g ? "bg-[#9cf2e8]/40 text-[#005c55] border-[#005c55]" : "bg-[#f4f5fb] text-gray-600 border-[#eaedff]"}`}
+                      className={`flex items-center justify-center gap-2 py-3 rounded-xl text-[13px] font-semibold capitalize transition border ${
+                        form.sex === g
+                          ? "bg-[#9cf2e8]/40 text-[#005c55] border-[#005c55]"
+                          : "bg-[#f4f5fb] text-gray-600 border-[#eaedff]"
+                      }`}
                     >
                       <span className="text-[16px]">
                         {g === "male" ? "♂" : "♀"}
@@ -420,14 +424,22 @@ export default function BmiCheck() {
                     <button
                       type="button"
                       onClick={() => setHeightUnit("cm")}
-                      className={`px-2.5 py-1 rounded-md text-[10px] font-bold transition ${heightUnit === "cm" ? "bg-white text-[#005c55] shadow-sm" : "text-gray-500"}`}
+                      className={`px-2.5 py-1 rounded-md text-[10px] font-bold transition ${
+                        heightUnit === "cm"
+                          ? "bg-white text-[#005c55] shadow-sm"
+                          : "text-gray-500"
+                      }`}
                     >
                       cm
                     </button>
                     <button
                       type="button"
                       onClick={() => setHeightUnit("ftin")}
-                      className={`px-2.5 py-1 rounded-md text-[10px] font-bold transition ${heightUnit === "ftin" ? "bg-white text-[#005c55] shadow-sm" : "text-gray-500"}`}
+                      className={`px-2.5 py-1 rounded-md text-[10px] font-bold transition ${
+                        heightUnit === "ftin"
+                          ? "bg-white text-[#005c55] shadow-sm"
+                          : "text-gray-500"
+                      }`}
                     >
                       ft + in
                     </button>

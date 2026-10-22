@@ -1,18 +1,28 @@
 import { useState, Fragment } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronLeft, ChevronRight, Check, ArrowRight } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Check,
+  ArrowRight,
+  Lightbulb,
+} from "lucide-react";
 
-// LOGO IMPORT
-import logo from "../assets/daibmetalogo.jpeg";
+// LOGO IMPORT (Path Updated)
+import logo from "../../assets/daibmetalogo.jpeg";
 
-// Step images
-import imgAge from "../assets/diabetes/step1_age.png";
-import imgWaist from "../assets/diabetes/step2_waist.png";
-import imgActivity from "../assets/diabetes/step3_activity.png";
-import imgFamily from "../assets/diabetes/step4_family.png";
+// Step images (Path Updated)
+import imgAge from "../../assets/diabetes/step1_age.png";
+import imgWaist from "../../assets/diabetes/step2_waist.png";
+import imgActivity from "../../assets/diabetes/step3_activity.png";
+import imgFamily from "../../assets/diabetes/step4_family.png";
 
-const NAVY = "#14284b";
-const BLUE = "#1458b8";
+/* ============ DIABMETA THEME ============ */
+const PRIMARY = "#005c55";
+const BUTTON = "#0d6b63";
+const LIGHT = "#E0F2F1";
+const BG = "#faf8ff";
+const BORDER = "#eaedff";
 
 /* ============ IDRS SCORING ============ */
 const agePoints = (age) => (age < 35 ? 0 : age <= 49 ? 20 : 30);
@@ -74,27 +84,31 @@ export default function DiabetesAssessment() {
 
   return (
     <div
-      className="min-h-screen bg-white flex justify-center"
+      className="min-h-screen flex justify-center"
       style={{
+        backgroundColor: BG,
         fontFamily: "'Nunito','Noto Sans Devanagari',system-ui,sans-serif",
       }}
     >
-      <div className="w-full max-w-md bg-white min-h-screen flex flex-col">
+      <div
+        className="w-full max-w-md min-h-screen flex flex-col"
+        style={{ backgroundColor: BG }}
+      >
         {/* HEADER */}
-        <header className="sticky top-0 z-40 bg-white">
+        <header className="sticky top-0 z-40" style={{ backgroundColor: BG }}>
           <div className="h-16 px-4 flex items-center justify-between">
             <div className="flex items-center gap-2 min-w-0">
               <button
                 onClick={() => (step > 1 ? setStep(step - 1) : navigate(-1))}
                 className="w-9 h-9 flex items-center justify-center rounded-full active:scale-95 flex-shrink-0"
-                style={{ color: NAVY }}
+                style={{ color: PRIMARY }}
               >
                 <ChevronLeft size={26} strokeWidth={2.4} />
               </button>
               <div className="min-w-0">
                 <h1
                   className="font-extrabold text-[18px] leading-tight truncate"
-                  style={{ color: NAVY }}
+                  style={{ color: PRIMARY }}
                 >
                   Diabetes Risk
                 </h1>
@@ -120,15 +134,15 @@ export default function DiabetesAssessment() {
               {i > 0 && (
                 <div
                   className="h-[3px] flex-1 rounded-full"
-                  style={{ backgroundColor: step >= s ? BLUE : "#d9e3f1" }}
+                  style={{ backgroundColor: step >= s ? BUTTON : "#d9e3f1" }}
                 />
               )}
               <div
                 className="w-[30px] h-[30px] rounded-full flex items-center justify-center text-[13px] font-extrabold flex-none"
                 style={
                   step >= s
-                    ? { backgroundColor: BLUE, color: "#fff" }
-                    : { backgroundColor: "#e3eaf5", color: "#6b7a90" }
+                    ? { backgroundColor: BUTTON, color: "#fff" }
+                    : { backgroundColor: LIGHT, color: "#6b7a90" }
                 }
               >
                 {step > s ? <Check size={15} strokeWidth={3.4} /> : s}
@@ -152,14 +166,17 @@ export default function DiabetesAssessment() {
               />
               <p
                 className="mt-5 text-[17px] font-extrabold"
-                style={{ color: NAVY }}
+                style={{ color: PRIMARY }}
               >
                 Enter your age
               </p>
-              <p className="text-[14px] mb-2.5" style={{ color: NAVY }}>
+              <p className="text-[14px] mb-2.5" style={{ color: PRIMARY }}>
                 अपनी उम्र दर्ज करें
               </p>
-              <div className="flex items-stretch rounded-xl border border-[#d9e3f1] bg-white overflow-hidden">
+              <div
+                className="flex items-stretch rounded-xl bg-white overflow-hidden border"
+                style={{ borderColor: BORDER }}
+              >
                 <input
                   type="number"
                   inputMode="numeric"
@@ -168,15 +185,31 @@ export default function DiabetesAssessment() {
                   placeholder="Years (e.g. 25)"
                   className="flex-1 min-w-0 px-4 py-3.5 bg-transparent outline-none text-[15px] font-semibold text-gray-800 placeholder-gray-400 placeholder:font-medium"
                 />
-                <span className="px-4 flex items-center text-[14px] text-gray-600 border-l border-[#d9e3f1]">
+                <span
+                  className="px-4 flex items-center text-[14px] text-gray-600 border-l"
+                  style={{ borderColor: BORDER }}
+                >
                   years
                 </span>
               </div>
-              <div className="mt-4 bg-[#eef5fd] rounded-xl p-3 flex items-start gap-3">
-                <div className="w-[34px] h-[34px] rounded-full bg-[#dcebfb] flex items-center justify-center flex-none">
-                  <BulbIcon />
+              <div
+                className="mt-4 rounded-xl p-3 flex items-start gap-3"
+                style={{ backgroundColor: LIGHT }}
+              >
+                <div
+                  className="w-[34px] h-[34px] rounded-full flex items-center justify-center flex-none"
+                  style={{ backgroundColor: "#c9ece7" }}
+                >
+                  <Lightbulb
+                    size={18}
+                    strokeWidth={2.2}
+                    style={{ color: BUTTON }}
+                  />
                 </div>
-                <p className="text-[13px] leading-snug" style={{ color: NAVY }}>
+                <p
+                  className="text-[13px] leading-snug"
+                  style={{ color: PRIMARY }}
+                >
                   Age is an important factor in diabetes risk.
                   <br />
                   उम्र, Diabetes के जोखिम का एक महत्वपूर्ण कारक है।
@@ -200,7 +233,7 @@ export default function DiabetesAssessment() {
               <div className="mt-4">
                 <span
                   className="text-[13px] font-extrabold mr-1"
-                  style={{ color: NAVY }}
+                  style={{ color: PRIMARY }}
                 >
                   Enter Your Waist Circumference
                 </span>
@@ -217,8 +250,8 @@ export default function DiabetesAssessment() {
                     className="py-3 rounded-full text-[14px] font-bold transition"
                     style={
                       waistUnit === o.v
-                        ? { backgroundColor: "#1976f2", color: "#fff" }
-                        : { backgroundColor: "#eef3fa", color: NAVY }
+                        ? { backgroundColor: BUTTON, color: "#fff" }
+                        : { backgroundColor: LIGHT, color: PRIMARY }
                     }
                   >
                     {o.t}
@@ -226,7 +259,10 @@ export default function DiabetesAssessment() {
                 ))}
               </div>
 
-              <div className="mt-3 flex items-stretch rounded-xl border border-[#d9e3f1] bg-white overflow-hidden">
+              <div
+                className="mt-3 flex items-stretch rounded-xl bg-white overflow-hidden border"
+                style={{ borderColor: BORDER }}
+              >
                 <input
                   type="number"
                   inputMode="decimal"
@@ -235,14 +271,18 @@ export default function DiabetesAssessment() {
                   placeholder="Enter waist circumference"
                   className="flex-1 min-w-0 px-4 py-3.5 bg-transparent outline-none text-[14px] font-semibold text-gray-800 placeholder-gray-400 placeholder:font-medium"
                 />
-                <span className="px-4 flex items-center text-[14px] text-gray-600 border-l border-[#d9e3f1]">
+                <span
+                  className="px-4 flex items-center text-[14px] text-gray-600 border-l"
+                  style={{ borderColor: BORDER }}
+                >
                   {waistUnit}
                 </span>
               </div>
 
               <button
                 onClick={() => setShowHow(!showHow)}
-                className="mt-3 w-full flex items-center gap-3 rounded-xl border border-[#d9e3f1] bg-[#f6f9fe] p-2.5 text-left"
+                className="mt-3 w-full flex items-center gap-3 rounded-xl p-2.5 text-left border"
+                style={{ backgroundColor: "#f6fbfa", borderColor: BORDER }}
               >
                 <div className="w-[62px] h-[46px] rounded-lg bg-white overflow-hidden flex-none">
                   <TapeThumb />
@@ -250,13 +290,13 @@ export default function DiabetesAssessment() {
                 <div className="flex-1">
                   <p
                     className="text-[15px] font-extrabold leading-tight"
-                    style={{ color: NAVY }}
+                    style={{ color: PRIMARY }}
                   >
                     How to measure?
                   </p>
                   <p
                     className="text-[14px] leading-tight"
-                    style={{ color: NAVY }}
+                    style={{ color: PRIMARY }}
                   >
                     कैसे मापें?
                   </p>
@@ -267,11 +307,10 @@ export default function DiabetesAssessment() {
                 />
               </button>
 
-              {/* UPDATED: Added the bottom text inside the collapsible */}
               {showHow && (
                 <div
-                  className="mt-2 rounded-xl bg-[#eef5fd] p-3 text-[12px] leading-snug"
-                  style={{ color: NAVY }}
+                  className="mt-2 rounded-xl p-3 text-[12px] leading-snug"
+                  style={{ backgroundColor: LIGHT, color: PRIMARY }}
                 >
                   <ol className="list-decimal list-inside space-y-1 mb-2">
                     <li>
@@ -287,7 +326,7 @@ export default function DiabetesAssessment() {
                       सांस छोड़ें और माप पढ़ें।
                     </li>
                   </ol>
-                  <p className="pt-2 border-t border-[#d9e3f1] font-medium">
+                  <p className="pt-2 border-t border-[#c9ece7] font-medium">
                     Measure your waist at the level of navel, after breathing
                     out normally.
                     <br />
@@ -381,7 +420,10 @@ export default function DiabetesAssessment() {
         </main>
 
         {/* BOTTOM BUTTON */}
-        <div className="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur px-4 pt-3 pb-4">
+        <div
+          className="fixed bottom-0 inset-x-0 backdrop-blur px-4 pt-3 pb-4"
+          style={{ backgroundColor: "rgba(250,248,255,0.95)" }}
+        >
           <div className="max-w-md mx-auto">
             <button
               onClick={handleNext}
@@ -390,12 +432,12 @@ export default function DiabetesAssessment() {
               style={{
                 background:
                   step === 4
-                    ? "linear-gradient(180deg,#1fb85a,#12a04a)"
-                    : "linear-gradient(180deg,#1a63c6,#0f4fb0)",
+                    ? "linear-gradient(180deg,#129186,#0d6b63)"
+                    : `linear-gradient(180deg,#0d6b63,#005c55)`,
                 boxShadow:
                   step === 4
-                    ? "0 6px 16px rgba(18,160,74,0.3)"
-                    : "0 6px 16px rgba(15,79,176,0.28)",
+                    ? "0 6px 16px rgba(13,107,99,0.32)"
+                    : "0 6px 16px rgba(0,92,85,0.28)",
               }}
             >
               {step === 4 ? "Calculate Your Risk" : "Next"}
@@ -421,16 +463,16 @@ function StepPanel({ n, title, hi, img, alt, h }) {
   return (
     <div
       className="rounded-[22px] p-4"
-      style={{ background: "linear-gradient(180deg,#e8f1fc,#f0f6fd)" }}
+      style={{ background: "linear-gradient(180deg,#e6f4f2,#f0faf8)" }}
     >
       <h2
         className="text-[26px] font-extrabold leading-[1.08]"
-        style={{ color: NAVY }}
+        style={{ color: PRIMARY }}
       >
         <span className="font-semibold mr-2">{n}</span>
         {title}
       </h2>
-      <p className="text-[17px] mt-1 mb-3" style={{ color: NAVY }}>
+      <p className="text-[17px] mt-1 mb-3" style={{ color: PRIMARY }}>
         {hi}
       </p>
       <div className="w-full rounded-xl overflow-hidden" style={{ height: h }}>
@@ -452,16 +494,19 @@ function ChoiceCard({ Icon, title, sub, val, selected, onSelect }) {
       className="flex items-center gap-3 px-3 py-3 rounded-xl border-2 transition text-left active:scale-[0.99]"
       style={
         isSel
-          ? { borderColor: "#1976f2", backgroundColor: "#e8f2fe" }
-          : { borderColor: "#e0e8f3", backgroundColor: "#fff" }
+          ? { borderColor: BUTTON, backgroundColor: LIGHT }
+          : { borderColor: BORDER, backgroundColor: "#fff" }
       }
     >
       <span
         className="w-[22px] h-[22px] rounded-full border-2 flex items-center justify-center flex-none"
-        style={{ borderColor: isSel ? "#1976f2" : "#c3cddb" }}
+        style={{ borderColor: isSel ? BUTTON : "#c3cddb" }}
       >
         {isSel && (
-          <span className="w-[11px] h-[11px] rounded-full bg-[#1976f2]" />
+          <span
+            className="w-[11px] h-[11px] rounded-full"
+            style={{ backgroundColor: BUTTON }}
+          />
         )}
       </span>
       <span className="w-[46px] h-[46px] flex items-center justify-center flex-none">
@@ -470,7 +515,7 @@ function ChoiceCard({ Icon, title, sub, val, selected, onSelect }) {
       <span className="min-w-0">
         <span
           className="block text-[14px] font-extrabold leading-tight"
-          style={{ color: NAVY }}
+          style={{ color: PRIMARY }}
         >
           {title}
         </span>
@@ -486,41 +531,20 @@ function ChoiceCard({ Icon, title, sub, val, selected, onSelect }) {
 }
 
 /* ============ SVG ICONS ============ */
-const IC = "#1a5fbf";
-
-function BulbIcon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-      <path
-        d="M12 3a6 6 0 0 0-3.4 10.9c.6.5.9 1.1.9 1.8V17h5v-1.3c0-.7.3-1.3.9-1.8A6 6 0 0 0 12 3Z"
-        fill="#bfdcfa"
-        stroke={IC}
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M9.8 20h4.4M10.5 22h3"
-        stroke={IC}
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-      <path d="M12 7v4" stroke={IC} strokeWidth="1.6" strokeLinecap="round" />
-    </svg>
-  );
-}
+const IC = "#0d6b63";
 
 function TapeThumb() {
   return (
     <svg viewBox="0 0 62 46" className="w-full h-full">
-      <rect width="62" height="46" fill="#f4f8fe" />
+      <rect width="62" height="46" fill="#f0faf8" />
       <path
         d="M14 0 H48 Q52 14 50 30 L50 46 H12 L12 30 Q10 14 14 0Z"
         fill="#f1c8a2"
       />
       <circle cx="31" cy="25" r="1.6" fill="#d9a67c" />
       <path d="M12 36 H50 V46 H12Z" fill="#cfd6e0" />
-      <path d="M10 22 Q31 28 52 22 L52 28 Q31 34 10 28Z" fill="#f5c82e" />
-      <g stroke="#a67c00" strokeWidth="0.7">
+      <path d="M10 22 Q31 28 52 22 L52 28 Q31 34 10 28Z" fill="#9cf2e8" />
+      <g stroke="#0d6b63" strokeWidth="0.7">
         <path d="M16 24.4 V26.6" />
         <path d="M22 25.4 V27.6" />
         <path d="M28 26 V28.2" />
@@ -599,8 +623,8 @@ function UsersIcon() {
     <svg width="46" height="42" viewBox="0 0 52 48">
       <circle cx="19" cy="15" r="7.5" fill={IC} />
       <path d="M4 42 Q4 26 19 26 Q33 26 34 42Z" fill={IC} />
-      <circle cx="36" cy="16" r="6.5" fill="#4a85d8" />
-      <path d="M26 42 Q26 27 37 27 Q49 28 49 42Z" fill="#4a85d8" />
+      <circle cx="36" cy="16" r="6.5" fill="#3fafa4" />
+      <path d="M26 42 Q26 27 37 27 Q49 28 49 42Z" fill="#3fafa4" />
     </svg>
   );
 }
@@ -612,8 +636,8 @@ function FamilyIcon() {
       <path d="M2 36 Q2 22 14 22 Q25 22 26 36Z" fill={IC} />
       <circle cx="40" cy="13" r="6.5" fill={IC} />
       <path d="M28 36 Q28 22 40 22 Q52 22 52 36Z" fill={IC} />
-      <circle cx="27" cy="26" r="5.5" fill="#4a85d8" />
-      <path d="M17 44 Q17 32 27 32 Q37 32 37 44Z" fill="#4a85d8" />
+      <circle cx="27" cy="26" r="5.5" fill="#3fafa4" />
+      <path d="M17 44 Q17 32 27 32 Q37 32 37 44Z" fill="#3fafa4" />
     </svg>
   );
 }

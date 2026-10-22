@@ -11,8 +11,8 @@ import {
   Pill,
 } from "lucide-react";
 
-// LOGO IMPORT
-import logo from "../assets/daibmetalogo.jpeg";
+// LOGO IMPORT (Path Updated)
+import logo from "../../assets/daibmetalogo.jpeg";
 
 const NAVY = "#14284b";
 
@@ -60,7 +60,7 @@ export default function PillReminder() {
   return (
     <div className="min-h-screen bg-[#faf8ff] flex justify-center">
       <div className="w-full max-w-md min-h-screen flex flex-col relative">
-        {/* HEADER (Like Home) */}
+        {/* HEADER */}
         <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-gray-100">
           <div className="h-14 px-4 flex items-center justify-between">
             <button

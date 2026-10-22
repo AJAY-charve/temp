@@ -41,7 +41,6 @@ export default function ScanResult() {
     if (saved) return;
     setSaved(true);
     setTimeout(() => {
-      // Save hone ke baad direct Saved Meals page pe navigate
       navigate("/scan-food/saved");
     }, 1000);
   };
@@ -49,7 +48,6 @@ export default function ScanResult() {
   return (
     <div className="min-h-[100dvh] flex justify-center bg-[#faf8ff]">
       <div className="w-full max-w-md min-h-[100dvh] flex flex-col">
-        {/* HEADER */}
         <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-xl border-b border-gray-100">
           <div className="h-14 px-4 flex items-center justify-between">
             <button
