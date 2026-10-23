@@ -8,6 +8,9 @@ import {
   ChevronDown,
   Check,
   Activity,
+  SlidersHorizontal,
+  AlertCircle,
+  X,
 } from "lucide-react";
 import {
   LineChart,
@@ -30,6 +33,24 @@ const SUGAR_TYPES = [
   { id: "beforeDinner", label: "Before Dinner", color: "#14b8a6" },
   { id: "postDinner", label: "Post Dinner", color: "#3b82f6" },
   { id: "random", label: "Random", color: "#8b5cf6" },
+];
+
+const TYPE_FILTERS = [
+  { id: "all", label: "All Types" },
+  { id: "fasting", label: "Fasting (Before Breakfast)" },
+  { id: "postBreakfast", label: "Post Breakfast (2 hr)" },
+  { id: "beforeLunch", label: "Before Lunch" },
+  { id: "postLunch", label: "Post Lunch (2 hr)" },
+  { id: "beforeDinner", label: "Before Dinner" },
+  { id: "postDinner", label: "Post Dinner (2 hr)" },
+  { id: "random", label: "Random" },
+];
+
+const LEVEL_FILTERS = [
+  { id: "all", label: "All Levels" },
+  { id: "normal", label: "Normal" },
+  { id: "outOfRange", label: "Out of Range" },
+  { id: "hypo", label: "Hypoglycemia (<70)" },
 ];
 
 const SUGAR_DATA = [
@@ -151,26 +172,23 @@ export default function Trends() {
   const [activeTab, setActiveTab] = useState("sugar");
   const [dateFilter, setDateFilter] = useState("1 Month");
   const [showDropdown, setShowDropdown] = useState(false);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
 
+  // Sugar Filters
   const [activeSugarType, setActiveSugarType] = useState("all");
+  const [levelFilter, setLevelFilter] = useState("all");
+  const [showTypeDropdown, setShowTypeDropdown] = useState(false);
+  const [showLevelDropdown, setShowLevelDropdown] = useState(false);
 
   useEffect(() => {
     setDateFilter("1 Month");
-    setStartDate("");
-    setEndDate("");
     setShowDropdown(false);
+    setActiveSugarType("all");
+    setLevelFilter("all");
+    setShowTypeDropdown(false);
+    setShowLevelDropdown(false);
   }, [activeTab]);
 
   const getFilteredData = (data) => {
-    if (startDate || endDate) {
-      return data.filter((item) => {
-        if (startDate && item.dateStr < startDate) return false;
-        if (endDate && item.dateStr > endDate) return false;
-        return true;
-      });
-    }
     const today = new Date("2026-10-20");
     let filterDays = 30;
     if (dateFilter === "1 Day") filterDays = 1;
@@ -186,10 +204,48 @@ export default function Trends() {
   const currentSugarData = getFilteredData(SUGAR_DATA);
   const currentBpData = getFilteredData(BP_DATA);
 
-  const linesToRender =
-    activeSugarType === "all"
-      ? SUGAR_TYPES
-      : SUGAR_TYPES.filter((t) => t.id === activeSugarType);
+  // Check if any type/level filter is active
+  const hasActiveFilter = activeSugarType !== "all" || levelFilter !== "all";
+
+  const clearFilters = () => {
+    setActiveSugarType("all");
+    setLevelFilter("all");
+  };
+
+  // Helper to check if a value matches a specific level
+  const matchesLevel = (type, val, level) => {
+    if (level === "all") return true;
+    const isBeforeMeal = ["fasting", "beforeLunch", "beforeDinner"].includes(
+      type,
+    );
+
+    if (level === "hypo") return val < 70;
+    if (level === "normal") {
+      return isBeforeMeal ? val >= 80 && val <= 130 : val >= 80 && val <= 160;
+    }
+    if (level === "outOfRange") {
+      if (val < 80 || val < 70) return true;
+      return isBeforeMeal ? val > 130 : val > 160;
+    }
+    return true;
+  };
+
+  // Filter which sugar types (lines) to render based on Type & Level
+  const linesToRender = SUGAR_TYPES.filter((type) => {
+    // 1. Filter by Type
+    if (activeSugarType !== "all" && activeSugarType !== type.id) return false;
+
+    // 2. Filter by Level (checks if ANY value in the chart matches the level)
+    if (levelFilter !== "all") {
+      const hasMatchingValue = currentSugarData.some((row) => {
+        const val = row[type.id];
+        return val !== undefined && matchesLevel(type.id, val, levelFilter);
+      });
+      if (!hasMatchingValue) return false;
+    }
+
+    return true;
+  });
 
   return (
     <div className="min-h-screen bg-[#faf8ff] flex justify-center">
@@ -231,14 +287,19 @@ export default function Trends() {
         <main className="flex-1 px-4 pt-4 pb-10 flex flex-col gap-4 overflow-y-auto">
           {/* FILTERS */}
           <div className="bg-white rounded-2xl border border-[#eaedff] p-3 shadow-sm flex flex-col gap-3 relative z-30">
+            {/* Date Filter */}
             <div className="relative">
               <button
-                onClick={() => setShowDropdown(!showDropdown)}
+                onClick={() => {
+                  setShowDropdown(!showDropdown);
+                  setShowTypeDropdown(false);
+                  setShowLevelDropdown(false);
+                }}
                 className="w-full flex items-center justify-between px-3 py-2.5 bg-[#f4f5fb] rounded-lg text-[12px] font-bold text-[#14284b]"
               >
                 <div className="flex items-center gap-2">
                   <Calendar size={14} className="text-[#0d6b63]" />
-                  {startDate || endDate ? "Custom Range" : dateFilter}
+                  {dateFilter}
                 </div>
                 <ChevronDown
                   size={14}
@@ -252,176 +313,217 @@ export default function Trends() {
                       key={f}
                       onClick={() => {
                         setDateFilter(f);
-                        setStartDate("");
-                        setEndDate("");
                         setShowDropdown(false);
                       }}
-                      className={`w-full text-left px-3 py-2 text-[12px] font-semibold flex items-center justify-between ${dateFilter === f && !startDate && !endDate ? "bg-[#E0F2F1] text-[#005c55]" : "text-gray-700 hover:bg-gray-50"}`}
+                      className={`w-full text-left px-3 py-2 text-[12px] font-semibold flex items-center justify-between ${dateFilter === f ? "bg-[#E0F2F1] text-[#005c55]" : "text-gray-700 hover:bg-gray-50"}`}
                     >
                       {f}
-                      {dateFilter === f && !startDate && !endDate && (
-                        <Check size={14} />
-                      )}
+                      {dateFilter === f && <Check size={14} />}
                     </button>
                   ))}
                 </div>
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className="text-[10px] font-bold text-gray-500 mb-1 block">
-                  Start Date
-                </label>
-                <input
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  className="w-full px-2.5 py-2 bg-[#f4f5fb] rounded-lg text-[11px] font-semibold text-gray-800 outline-none"
-                />
-              </div>
-              <div>
-                <label className="text-[10px] font-bold text-gray-500 mb-1 block">
-                  End Date
-                </label>
-                <input
-                  type="date"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                  className="w-full px-2.5 py-2 bg-[#f4f5fb] rounded-lg text-[11px] font-semibold text-gray-800 outline-none"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* SUGAR CHART SECTION */}
-          {activeTab === "sugar" && (
-            <div className="flex flex-col gap-4">
-              {/* Chart Card */}
-              <div className="bg-white rounded-2xl p-3 border border-[#eaedff] shadow-sm flex flex-col w-full">
-                <div className="flex items-center gap-2 mb-2 border-b border-gray-100 pb-2">
-                  <TrendingUp
-                    size={18}
-                    style={{
-                      color:
-                        activeSugarType === "all"
-                          ? "#14284b"
-                          : SUGAR_TYPES.find((t) => t.id === activeSugarType)
-                              ?.color,
+            {/* Type & Level Filters (Only for Sugar Tab) */}
+            {activeTab === "sugar" && (
+              <div className="grid grid-cols-2 gap-2">
+                {/* Type Filter */}
+                <div className="relative">
+                  <button
+                    onClick={() => {
+                      setShowTypeDropdown(!showTypeDropdown);
+                      setShowDropdown(false);
+                      setShowLevelDropdown(false);
                     }}
-                  />
-                  <h2 className="text-[14px] font-extrabold text-[#14284b]">
-                    {activeSugarType === "all"
-                      ? "All Sugar Types Trend"
-                      : `${SUGAR_TYPES.find((t) => t.id === activeSugarType)?.label} Trend`}
-                  </h2>
+                    className="w-full flex items-center justify-between px-2.5 py-2.5 bg-[#f4f5fb] rounded-lg text-[10px] font-bold text-[#14284b]"
+                  >
+                    <div className="flex items-center gap-1.5 overflow-hidden">
+                      <SlidersHorizontal
+                        size={12}
+                        className="text-[#0d6b63] flex-none"
+                      />
+                      <span className="truncate">
+                        {TYPE_FILTERS.find((t) => t.id === activeSugarType)
+                          ?.label || "All Types"}
+                      </span>
+                    </div>
+                    <ChevronDown
+                      size={12}
+                      className={`flex-none transition-transform ${showTypeDropdown ? "rotate-180" : ""}`}
+                    />
+                  </button>
+                  {showTypeDropdown && (
+                    <div className="absolute top-full mt-1 w-full min-w-[170px] bg-white border border-[#eaedff] rounded-lg shadow-lg z-50 overflow-hidden">
+                      {TYPE_FILTERS.map((t) => (
+                        <button
+                          key={t.id}
+                          onClick={() => {
+                            setActiveSugarType(t.id);
+                            setShowTypeDropdown(false);
+                          }}
+                          className={`w-full text-left px-3 py-2 text-[10.5px] font-semibold flex items-center justify-between gap-2 ${activeSugarType === t.id ? "bg-[#E0F2F1] text-[#005c55]" : "text-gray-700 hover:bg-gray-50"}`}
+                        >
+                          <span className="leading-tight">{t.label}</span>
+                          {activeSugarType === t.id && (
+                            <Check size={12} className="flex-none" />
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
-                {/* CHART WRAPPER (No Left Labels now) */}
-                <div className="w-full h-[300px]">
-                  {currentSugarData.length > 0 ? (
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart
-                        data={currentSugarData}
-                        margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-                      >
-                        <CartesianGrid
-                          strokeDasharray="3 3"
-                          vertical={false}
-                          stroke="#f0f0f0"
-                        />
-                        <XAxis
-                          dataKey="displayDate"
-                          axisLine={false}
-                          tickLine={false}
-                          tick={{
-                            fontSize: 10,
-                            fill: "#9ca3af",
-                            fontWeight: 600,
-                          }}
-                          dy={10}
-                        />
-                        <YAxis
-                          axisLine={false}
-                          tickLine={false}
-                          tick={{
-                            fontSize: 10,
-                            fill: "#9ca3af",
-                            fontWeight: 600,
-                          }}
-                          domain={["dataMin - 10", "dataMax + 20"]}
-                        />
-                        <RechartsTooltip content={<CustomTooltip />} />
+                {/* Level Filter */}
+                <div className="relative flex items-center gap-1.5">
+                  <button
+                    onClick={() => {
+                      setShowLevelDropdown(!showLevelDropdown);
+                      setShowDropdown(false);
+                      setShowTypeDropdown(false);
+                    }}
+                    className="w-full flex items-center justify-between px-2.5 py-2.5 bg-[#f4f5fb] rounded-lg text-[10px] font-bold text-[#14284b]"
+                  >
+                    <div className="flex items-center gap-1.5 overflow-hidden">
+                      <AlertCircle
+                        size={12}
+                        className="text-[#ef5350] flex-none"
+                      />
+                      <span className="truncate">
+                        {LEVEL_FILTERS.find((l) => l.id === levelFilter)
+                          ?.label || "All Levels"}
+                      </span>
+                    </div>
+                    <ChevronDown
+                      size={12}
+                      className={`flex-none transition-transform ${showLevelDropdown ? "rotate-180" : ""}`}
+                    />
+                  </button>
 
-                        {linesToRender.map((type) => (
-                          <Line
-                            key={type.id}
-                            type="monotone"
-                            dataKey={type.id}
-                            name={type.label}
-                            stroke={type.color}
-                            strokeWidth={activeSugarType === "all" ? 2.5 : 3.5}
-                            dot={{
-                              r: activeSugarType === "all" ? 3 : 4,
-                              strokeWidth: activeSugarType === "all" ? 1.5 : 2,
-                              fill: "#fff",
-                            }}
-                            activeDot={{ r: 6 }}
-                            animationDuration={800}
-                          />
-                        ))}
-                      </LineChart>
-                    </ResponsiveContainer>
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-500 text-[12px] font-medium">
-                      No data available for this range.
+                  {/* CLEAR FILTER X ICON (Clears both Type & Level) */}
+                  {hasActiveFilter && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        clearFilters();
+                      }}
+                      className="flex-none w-5 h-5 rounded-full bg-[#fde3e3] flex items-center justify-center active:scale-90 transition"
+                    >
+                      <X size={11} className="text-[#ef5350]" />
+                    </button>
+                  )}
+
+                  {showLevelDropdown && (
+                    <div className="absolute top-full right-0 mt-1 w-full min-w-[150px] bg-white border border-[#eaedff] rounded-lg shadow-lg z-50 overflow-hidden">
+                      {LEVEL_FILTERS.map((l) => (
+                        <button
+                          key={l.id}
+                          onClick={() => {
+                            setLevelFilter(l.id);
+                            setShowLevelDropdown(false);
+                          }}
+                          className={`w-full text-left px-3 py-2 text-[10.5px] font-semibold flex items-center justify-between gap-2 ${levelFilter === l.id ? "bg-[#E0F2F1] text-[#005c55]" : "text-gray-700 hover:bg-gray-50"}`}
+                        >
+                          <span className="leading-tight">{l.label}</span>
+                          {levelFilter === l.id && (
+                            <Check size={12} className="flex-none" />
+                          )}
+                        </button>
+                      ))}
                     </div>
                   )}
                 </div>
               </div>
+            )}
+          </div>
 
-              {/* Selector moved directly above chart */}
-              <div className="bg-white rounded-2xl p-3 border border-[#eaedff] shadow-sm">
-                <p className="text-[11px] font-bold text-gray-500 mb-2 uppercase tracking-wide">
-                  Select Sugar Type
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    onClick={() => setActiveSugarType("all")}
-                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition border ${
+          {/* SUGAR CHART SECTION */}
+          {activeTab === "sugar" && (
+            <div className="bg-white rounded-2xl p-3 border border-[#eaedff] shadow-sm flex flex-col w-full">
+              <div className="flex items-center gap-2 mb-2 border-b border-gray-100 pb-2">
+                <TrendingUp
+                  size={18}
+                  style={{
+                    color:
                       activeSugarType === "all"
-                        ? "bg-[#14284b] border-[#14284b] text-white shadow-sm"
-                        : "bg-white border-gray-200 text-gray-500 hover:bg-gray-50"
-                    }`}
-                  >
-                    All Types
-                  </button>
+                        ? "#14284b"
+                        : SUGAR_TYPES.find((t) => t.id === activeSugarType)
+                            ?.color,
+                  }}
+                />
+                <h2 className="text-[14px] font-extrabold text-[#14284b]">
+                  {activeSugarType === "all"
+                    ? "Sugar Types Trend"
+                    : `${SUGAR_TYPES.find((t) => t.id === activeSugarType)?.label} Trend`}
+                  {levelFilter !== "all" && (
+                    <span className="text-[11px] font-bold text-gray-500 ml-1">
+                      ({LEVEL_FILTERS.find((l) => l.id === levelFilter)?.label})
+                    </span>
+                  )}
+                </h2>
+              </div>
 
-                  {SUGAR_TYPES.map((type) => (
-                    <button
-                      key={type.id}
-                      onClick={() => setActiveSugarType(type.id)}
-                      className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold transition border ${
-                        activeSugarType === type.id
-                          ? "bg-gray-50 border-gray-200 shadow-sm"
-                          : "bg-white border-transparent text-gray-500 hover:bg-gray-50"
-                      }`}
-                      style={{
-                        color:
-                          activeSugarType === type.id ? type.color : undefined,
-                      }}
+              {/* CHART WRAPPER */}
+              <div className="w-full h-[300px]">
+                {currentSugarData.length > 0 && linesToRender.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart
+                      data={currentSugarData}
+                      margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
                     >
-                      <div
-                        className="w-2.5 h-2.5 rounded-full"
-                        style={{
-                          backgroundColor: type.color,
-                          opacity: activeSugarType === type.id ? 1 : 0.4,
-                        }}
+                      <CartesianGrid
+                        strokeDasharray="3 3"
+                        vertical={false}
+                        stroke="#f0f0f0"
                       />
-                      {type.label}
-                    </button>
-                  ))}
-                </div>
+                      <XAxis
+                        dataKey="displayDate"
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{
+                          fontSize: 10,
+                          fill: "#9ca3af",
+                          fontWeight: 600,
+                        }}
+                        dy={10}
+                      />
+                      <YAxis
+                        axisLine={false}
+                        tickLine={false}
+                        tick={{
+                          fontSize: 10,
+                          fill: "#9ca3af",
+                          fontWeight: 600,
+                        }}
+                        domain={["dataMin - 10", "dataMax + 20"]}
+                      />
+                      <RechartsTooltip content={<CustomTooltip />} />
+
+                      {linesToRender.map((type) => (
+                        <Line
+                          key={type.id}
+                          type="monotone"
+                          dataKey={type.id}
+                          name={type.label}
+                          stroke={type.color}
+                          strokeWidth={activeSugarType === "all" ? 2.5 : 3.5}
+                          dot={{
+                            r: activeSugarType === "all" ? 3 : 4,
+                            strokeWidth: activeSugarType === "all" ? 1.5 : 2,
+                            fill: "#fff",
+                          }}
+                          activeDot={{ r: 6 }}
+                          animationDuration={800}
+                        />
+                      ))}
+                    </LineChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="w-full h-full flex flex-col items-center justify-center text-gray-500 text-[12px] font-medium text-center px-4">
+                    <AlertCircle size={24} className="text-gray-300 mb-2" />
+                    No data available for this combination.
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -527,8 +629,8 @@ export default function Trends() {
               className={`text-[11px] font-medium leading-snug ${activeTab === "sugar" ? "text-[#ef5350]" : "text-[#2f8cf0]"}`}
             >
               {activeTab === "sugar"
-                ? `Showing ${activeSugarType === "all" ? "all types" : SUGAR_TYPES.find((t) => t.id === activeSugarType)?.label} trend for ${startDate || endDate ? "Selected Range" : dateFilter}. Tap on buttons above to switch type.`
-                : `Showing BP trend for ${startDate || endDate ? "Selected Range" : dateFilter}. Aim to keep BP under 120/80 mmHg.`}
+                ? `Showing ${activeSugarType === "all" ? "all types" : SUGAR_TYPES.find((t) => t.id === activeSugarType)?.label}${levelFilter !== "all" ? ` (${LEVEL_FILTERS.find((l) => l.id === levelFilter)?.label})` : ""} trend for ${dateFilter}. Use the filters above to switch.`
+                : `Showing BP trend for ${dateFilter}. Aim to keep BP under 120/80 mmHg.`}
             </p>
           </div>
         </main>

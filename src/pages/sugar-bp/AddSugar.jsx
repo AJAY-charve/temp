@@ -1,7 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Droplet, Calendar, Clock, ChevronDown } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, ChevronDown } from "lucide-react";
 import logo from "../../assets/daibmetalogo.jpeg";
+
+// Importing your custom Sugar image
+import sugarImg from "../../assets/bp-sugar/sugar.png";
 
 const SUGAR_TYPES = [
   { id: "fasting", label: "Fasting (Before Breakfast)" },
@@ -80,7 +83,7 @@ export default function AddSugar() {
           <div className="h-14 px-4 flex items-center justify-between">
             <button
               onClick={() => navigate(-1)}
-              className="w-9 h-9 flex items-center justify-center rounded-full text-gray-700 active:scale-95"
+              className="w-9 h-9 flex items-center justify-center rounded-full text-gray-700 active:scale-95 hover:bg-gray-50 transition"
             >
               <ArrowLeft size={20} />
             </button>
@@ -96,10 +99,14 @@ export default function AddSugar() {
         </header>
 
         <main className="flex-1 px-4 pt-5 pb-10 flex flex-col gap-5">
-          {/* Banner */}
+          {/* Banner with custom image */}
           <div className="bg-white rounded-2xl p-4 flex items-center gap-4 border border-[#eaedff] shadow-sm">
-            <div className="w-12 h-12 rounded-full bg-[#fde3e3] flex items-center justify-center flex-none">
-              <Droplet size={24} className="text-[#ef5350]" />
+            <div className="w-12 h-12 flex items-center justify-center flex-none">
+              <img
+                src={sugarImg}
+                alt="Blood Sugar"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
               <h2 className="text-[15px] font-extrabold text-[#14284b]">
@@ -144,7 +151,7 @@ export default function AddSugar() {
               <select
                 value={type}
                 onChange={(e) => setType(e.target.value)}
-                className="w-full px-4 py-3.5 rounded-xl border border-[#eaedff] bg-white outline-none text-[13px] font-semibold text-gray-800 appearance-none shadow-sm"
+                className="w-full px-4 py-3.5 rounded-xl border border-[#eaedff] bg-white outline-none text-[13px] font-semibold text-gray-800 appearance-none shadow-sm cursor-pointer hover:border-[#0d6b63] transition"
               >
                 {SUGAR_TYPES.map((t) => (
                   <option key={t.id} value={t.id}>
@@ -229,13 +236,13 @@ export default function AddSugar() {
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="E.g. Feeling well, after exercise, etc."
-              className="w-full px-4 py-3 rounded-xl border border-[#eaedff] bg-white outline-none text-[13px] text-gray-800 resize-none h-24 shadow-sm"
+              className="w-full px-4 py-3 rounded-xl border border-[#eaedff] bg-white outline-none text-[13px] text-gray-800 resize-none h-24 shadow-sm focus:border-[#0d6b63] transition"
             />
           </div>
 
           <button
             onClick={handleSave}
-            className="w-full bg-[#0d6b63] text-white font-bold text-[14px] py-4 rounded-xl active:scale-[0.98] transition shadow-lg mt-2"
+            className="w-full bg-[#0d6b63] text-white font-bold text-[14px] py-4 rounded-xl active:scale-[0.98] transition shadow-lg mt-2 hover:bg-[#0a5750]"
           >
             Save Reading
           </button>

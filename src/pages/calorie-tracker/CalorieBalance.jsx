@@ -2,6 +2,36 @@ import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Info, Utensils, Activity, Scale } from "lucide-react";
 import logo from "../../assets/daibmetalogo.jpeg";
 
+// ---- Gauge geometry (module level, so it is not recreated on every render) ----
+const CX = 120;
+const CY = 130;
+const R = 80;
+const THICK = 28;
+const MAX_SCALE = 1000;
+
+// angle in degrees: 0 = straight up, -90 = left end, +90 = right end
+const polar = (deg, rad) => {
+  const t = (deg * Math.PI) / 180;
+  return { x: CX + rad * Math.sin(t), y: CY - rad * Math.cos(t) };
+};
+
+// arc from angle a1 to a2 (always left -> right, so sweep flag = 1)
+const arcPath = (a1, a2, rad) => {
+  const s = polar(a1, rad);
+  const e = polar(a2, rad);
+  return `M ${s.x} ${s.y} A ${rad} ${rad} 0 0 1 ${e.x} ${e.y}`;
+};
+
+// Gauge bands. Light bands are drawn first and slightly overlapped by the
+// dark bands, so the seam at 45deg is a clean radial cut (follows the arc),
+// with no gap. The only gap is the small one at the center.
+const SEGMENTS = [
+  { a1: -47, a2: -1.5, g1: -45, g2: -1.5, c1: "#9dd5b6", c2: "#e2f2e9" },
+  { a1: 1.5, a2: 47, g1: 1.5, g2: 45, c1: "#fde1db", c2: "#f9b2a4" },
+  { a1: -90, a2: -45, g1: -90, g2: -45, c1: "#14925a", c2: "#34a872" },
+  { a1: 45, a2: 90, g1: 45, g2: 90, c1: "#f58b7a", c2: "#ee5340" },
+];
+
 export default function CalorieBalance() {
   const navigate = useNavigate();
 
@@ -9,7 +39,14 @@ export default function CalorieBalance() {
   const burn = 2260;
   const balance = intake - burn;
   const isDeficit = balance < 0;
+  const isBalanced = balance === 0;
   const absBalance = Math.abs(balance);
+
+  // -1000 (left) = -90deg, 0 = 0deg, +1000 (right) = +90deg
+  const clampedBalance = Math.max(Math.min(balance, MAX_SCALE), -MAX_SCALE);
+  const angle = (clampedBalance / MAX_SCALE) * 90;
+
+  const accentText = isDeficit ? "text-[#2e9e48]" : "text-[#ef5350]";
 
   return (
     <div className="min-h-screen bg-[#faf8ff] flex justify-center">
@@ -19,6 +56,7 @@ export default function CalorieBalance() {
             <button
               onClick={() => navigate("/calorie-tracker")}
               className="w-9 h-9 flex items-center justify-center rounded-full text-gray-700 active:scale-95"
+              aria-label="Back"
             >
               <ArrowLeft size={20} />
             </button>
@@ -65,82 +103,175 @@ export default function CalorieBalance() {
           </div>
 
           {/* Gauge Chart Area */}
-          <div className="bg-[#e4f4e8] rounded-3xl p-5 border border-[#c8ebd4] flex flex-col items-center relative overflow-hidden">
+          <div className="bg-[#f0fbf9] rounded-3xl p-5 border border-[#d1ede9] flex flex-col items-center relative overflow-hidden shadow-sm">
             <h2 className="text-[15px] font-extrabold text-[#14284b] mb-1">
               Today's Balance
             </h2>
-            <p className="text-[11px] text-gray-600 mb-6 font-medium">
+            <p className="text-[11px] text-gray-500 mb-4 font-medium">
               Calories consumed - Calories burned
             </p>
 
-            <div className="relative w-64 h-32 mb-4">
-              <svg viewBox="0 0 200 100" className="w-full h-full">
-                <path
-                  d="M 20 100 A 80 80 0 0 1 180 100"
-                  fill="none"
-                  stroke="#e2e8f0"
-                  strokeWidth="20"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M 20 100 A 80 80 0 0 1 60 26"
-                  fill="none"
-                  stroke="#2e9e48"
-                  strokeWidth="20"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M 140 26 A 80 80 0 0 1 180 100"
-                  fill="none"
-                  stroke="#ef5350"
-                  strokeWidth="20"
-                  strokeLinecap="round"
-                />
-                <line
-                  x1="100"
-                  y1="100"
-                  x2="50"
-                  y2="50"
-                  stroke="#14284b"
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                />
-                <circle cx="100" cy="100" r="8" fill="#14284b" />
-              </svg>
+            {/* Gauge Graphic */}
+            <div className="w-full max-w-[300px] mb-5">
+              <svg
+                viewBox="0 0 240 170"
+                className="w-full h-auto"
+                role="img"
+                aria-label={`Calorie balance gauge showing ${
+                  isBalanced ? "" : isDeficit ? "-" : "+"
+                }${absBalance} kcal`}
+              >
+                <defs>
+                  {SEGMENTS.map((seg, i) => (
+                    <linearGradient
+                      key={i}
+                      id={`gaugeSeg${i}`}
+                      gradientUnits="userSpaceOnUse"
+                      x1={polar(seg.g1, R).x}
+                      y1="0"
+                      x2={polar(seg.g2, R).x}
+                      y2="0"
+                    >
+                      <stop offset="0%" stopColor={seg.c1} />
+                      <stop offset="100%" stopColor={seg.c2} />
+                    </linearGradient>
+                  ))}
+                </defs>
 
-              <span className="absolute bottom-0 left-0 text-[9px] font-bold text-gray-500 -ml-2">
-                -1000
-                <br />
-                <span className="text-[7px]">Deficit</span>
-              </span>
-              <span className="absolute bottom-0 right-0 text-[9px] font-bold text-gray-500 -mr-2 text-right">
-                +1000
-                <br />
-                <span className="text-[7px]">Surplus</span>
-              </span>
-              <span className="absolute top-0 left-1/2 -translate-x-1/2 text-[9px] font-bold text-gray-500">
-                0<br />
-                <span className="text-[7px]">Balanced</span>
-              </span>
+                {/* Arc bands */}
+                {SEGMENTS.map((seg, i) => (
+                  <path
+                    key={i}
+                    d={arcPath(seg.a1, seg.a2, R)}
+                    fill="none"
+                    stroke={`url(#gaugeSeg${i})`}
+                    strokeWidth={THICK}
+                  />
+                ))}
+
+                {/* Top label */}
+                <text
+                  x={CX}
+                  y="13"
+                  textAnchor="middle"
+                  fontSize="12"
+                  fontWeight="700"
+                  fill="#14284b"
+                >
+                  0
+                </text>
+                <text
+                  x={CX}
+                  y="27"
+                  textAnchor="middle"
+                  fontSize="10"
+                  fontWeight="500"
+                  fill="#64809c"
+                >
+                  Balanced
+                </text>
+
+                {/* Left label */}
+                <text
+                  x={CX - R}
+                  y={CY + 25}
+                  textAnchor="middle"
+                  fontSize="12"
+                  fontWeight="700"
+                  fill="#14284b"
+                >
+                  -1,000
+                </text>
+                <text
+                  x={CX - R}
+                  y={CY + 39}
+                  textAnchor="middle"
+                  fontSize="10"
+                  fontWeight="500"
+                  fill="#64809c"
+                >
+                  Deficit
+                </text>
+
+                {/* Right label */}
+                <text
+                  x={CX + R}
+                  y={CY + 25}
+                  textAnchor="middle"
+                  fontSize="12"
+                  fontWeight="700"
+                  fill="#14284b"
+                >
+                  +1,000
+                </text>
+                <text
+                  x={CX + R}
+                  y={CY + 39}
+                  textAnchor="middle"
+                  fontSize="10"
+                  fontWeight="500"
+                  fill="#64809c"
+                >
+                  Surplus
+                </text>
+
+                {/* Needle */}
+                <g
+                  style={{
+                    transform: `rotate(${angle}deg)`,
+                    transformOrigin: `${CX}px ${CY}px`,
+                    transition: "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
+                  }}
+                >
+                  <polygon
+                    points={`${CX - 6},${CY} ${CX + 6},${CY} ${CX + 1.2},${CY - 74} ${CX - 1.2},${CY - 74}`}
+                    fill="#14284b"
+                    strokeLinejoin="round"
+                  />
+                  <circle cx={CX} cy={CY} r="12" fill="#14284b" />
+                  <circle cx={CX} cy={CY} r="5" fill="#cfdde8" />
+                </g>
+              </svg>
             </div>
 
-            <div className="bg-white rounded-2xl p-4 w-full shadow-sm text-center">
-              <span
-                className={`inline-block px-3 py-1 rounded-full text-[10px] font-bold mb-2 ${isDeficit ? "bg-[#e4f4e8] text-[#2e9e48]" : "bg-[#fde3e3] text-[#ef5350]"}`}
-              >
-                Calorie {isDeficit ? "Deficit" : "Surplus"}
-              </span>
-              <p
-                className={`text-[36px] font-black leading-none ${isDeficit ? "text-[#2e9e48]" : "text-[#ef5350]"}`}
-              >
-                {isDeficit ? "-" : "+"}
-                {absBalance}{" "}
-                <span className="text-[14px] font-extrabold">kcal</span>
-              </p>
-              <p className="text-[11px] text-gray-500 mt-2 px-4 leading-snug font-medium">
-                You {isDeficit ? "burned" : "consumed"} {absBalance} more
-                calories than you {isDeficit ? "consumed" : "burned"} today.
-              </p>
+            {/* Result Card */}
+            <div className="bg-white rounded-2xl p-4 w-full shadow-sm text-center border border-[#eaedff] z-10 relative">
+              {isBalanced ? (
+                <>
+                  <span className="inline-block px-3 py-1 rounded-full text-[10px] font-bold mb-2 bg-gray-100 text-gray-600">
+                    Balanced
+                  </span>
+                  <p className="text-[36px] font-black leading-none text-gray-700">
+                    0 <span className="text-[14px] font-extrabold">kcal</span>
+                  </p>
+                  <p className="text-[11px] text-gray-500 mt-2 px-4 leading-snug font-medium">
+                    You consumed the same calories as you burned today.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <span
+                    className={`inline-block px-3 py-1 rounded-full text-[10px] font-bold mb-2 ${
+                      isDeficit
+                        ? "bg-[#e4f4e8] text-[#2e9e48]"
+                        : "bg-[#fde3e3] text-[#ef5350]"
+                    }`}
+                  >
+                    Calorie {isDeficit ? "Deficit" : "Surplus"}
+                  </span>
+                  <p
+                    className={`text-[36px] font-black leading-none ${accentText}`}
+                  >
+                    {isDeficit ? "-" : "+"}
+                    {absBalance}{" "}
+                    <span className="text-[14px] font-extrabold">kcal</span>
+                  </p>
+                  <p className="text-[11px] text-gray-500 mt-2 px-4 leading-snug font-medium">
+                    You {isDeficit ? "burned" : "consumed"} {absBalance} more
+                    calories than you {isDeficit ? "consumed" : "burned"} today.
+                  </p>
+                </>
+              )}
             </div>
           </div>
 

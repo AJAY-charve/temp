@@ -1,6 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, ChevronRight, Droplet, Activity } from "lucide-react";
+import { ArrowLeft, ChevronRight, History, TrendingUp } from "lucide-react";
 import logo from "../../assets/daibmetalogo.jpeg";
+
+// Importing your custom images
+import bpImg from "../../assets/bp-sugar/bp.png";
+import sugarImg from "../../assets/bp-sugar/sugar.png";
 
 export default function LogbookHome() {
   const navigate = useNavigate();
@@ -13,7 +17,7 @@ export default function LogbookHome() {
           <div className="h-14 px-4 flex items-center justify-between">
             <button
               onClick={() => navigate("/home")}
-              className="w-9 h-9 flex items-center justify-center rounded-full text-gray-700 active:scale-95"
+              className="w-9 h-9 flex items-center justify-center rounded-full text-gray-700 active:scale-95 hover:bg-gray-50 transition"
             >
               <ArrowLeft size={20} />
             </button>
@@ -36,8 +40,13 @@ export default function LogbookHome() {
             className="w-full rounded-3xl p-4 flex items-center justify-between active:scale-[0.98] transition bg-white border border-[#eaedff] shadow-[0_4px_16px_rgba(0,0,0,0.03)]"
           >
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-[#e0eefc] flex items-center justify-center flex-none">
-                <Activity size={28} className="text-[#2f8cf0]" />
+              {/* Square container for image */}
+              <div className="w-14 h-14 flex items-center justify-center flex-none">
+                <img
+                  src={bpImg}
+                  alt="Blood Pressure"
+                  className="w-full h-full object-contain"
+                />
               </div>
               <div className="text-left">
                 <h2 className="text-[16px] font-extrabold text-[#14284b]">
@@ -48,7 +57,7 @@ export default function LogbookHome() {
                 </p>
               </div>
             </div>
-            <div className="w-8 h-8 rounded-full bg-[#f4f5fb] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full bg-[#f4f5fb] flex items-center justify-center flex-none">
               <ChevronRight size={18} className="text-gray-400" />
             </div>
           </button>
@@ -59,8 +68,13 @@ export default function LogbookHome() {
             className="w-full rounded-3xl p-4 flex items-center justify-between active:scale-[0.98] transition bg-white border border-[#eaedff] shadow-[0_4px_16px_rgba(0,0,0,0.03)]"
           >
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-[#fde3e3] flex items-center justify-center flex-none">
-                <Droplet size={28} className="text-[#ef5350]" />
+              {/* Square container for image */}
+              <div className="w-14 h-14 flex items-center justify-center flex-none">
+                <img
+                  src={sugarImg}
+                  alt="Blood Sugar"
+                  className="w-full h-full object-contain"
+                />
               </div>
               <div className="text-left">
                 <h2 className="text-[16px] font-extrabold text-[#14284b]">
@@ -71,44 +85,50 @@ export default function LogbookHome() {
                 </p>
               </div>
             </div>
-            <div className="w-8 h-8 rounded-full bg-[#f4f5fb] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full bg-[#f4f5fb] flex items-center justify-center flex-none">
               <ChevronRight size={18} className="text-gray-400" />
             </div>
           </button>
 
           {/* Bottom Actions */}
           <div className="grid grid-cols-2 gap-3 mt-2">
+            {/* View History */}
             <button
               onClick={() => navigate("/sugar-bp/history?tab=sugar")}
-              className="bg-white rounded-3xl p-4 border border-[#eaedff] shadow-[0_4px_16px_rgba(0,0,0,0.03)] flex flex-col items-start active:scale-95 transition"
+              className="bg-white rounded-3xl p-4 border border-[#eaedff] shadow-[0_4px_16px_rgba(0,0,0,0.03)] flex flex-col items-start justify-between min-h-[140px] active:scale-95 transition"
             >
               <div className="w-10 h-10 rounded-xl bg-[#fdf1d3] flex items-center justify-center mb-3">
-                <span className="text-[18px]">📋</span>
+                <History size={20} className="text-[#d97706]" />
               </div>
-              <h3 className="text-[13.5px] font-extrabold text-[#14284b]">
-                View History
-              </h3>
-              <p className="text-[10px] text-gray-500 mt-1 text-left leading-tight">
-                See all past readings
-              </p>
+              <div>
+                <h3 className="text-[13.5px] font-extrabold text-[#14284b]">
+                  View History
+                </h3>
+                <p className="text-[10px] text-gray-500 mt-1 text-left leading-tight">
+                  See all past readings
+                </p>
+              </div>
               <div className="mt-3 w-6 h-6 rounded-full bg-[#f4f5fb] flex items-center justify-center self-end">
                 <ChevronRight size={14} className="text-gray-500" />
               </div>
             </button>
 
+            {/* View Trends */}
             <button
               onClick={() => navigate("/sugar-bp/trends?tab=sugar")}
-              className="bg-white rounded-3xl p-4 border border-[#eaedff] shadow-[0_4px_16px_rgba(0,0,0,0.03)] flex flex-col items-start active:scale-95 transition"
+              className="bg-white rounded-3xl p-4 border border-[#eaedff] shadow-[0_4px_16px_rgba(0,0,0,0.03)] flex flex-col items-start justify-between min-h-[140px] active:scale-95 transition"
             >
               <div className="w-10 h-10 rounded-xl bg-[#e4f4e8] flex items-center justify-center mb-3">
-                <span className="text-[18px]">📈</span>
+                <TrendingUp size={20} className="text-[#2e9e48]" />
               </div>
-              <h3 className="text-[13.5px] font-extrabold text-[#14284b]">
-                View Trends
-              </h3>
-              <p className="text-[10px] text-gray-500 mt-1 text-left leading-tight">
-                Graphs and progress
-              </p>
+              <div>
+                <h3 className="text-[13.5px] font-extrabold text-[#14284b]">
+                  View Trends
+                </h3>
+                <p className="text-[10px] text-gray-500 mt-1 text-left leading-tight">
+                  Graphs and progress
+                </p>
+              </div>
               <div className="mt-3 w-6 h-6 rounded-full bg-[#f4f5fb] flex items-center justify-center self-end">
                 <ChevronRight size={14} className="text-gray-500" />
               </div>

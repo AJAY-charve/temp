@@ -427,7 +427,7 @@ export default function DiagnosticDetail() {
               onClick={handleBookClick}
               className="w-full bg-[#0d6b63] hover:bg-[#0a564f] active:scale-[0.98] text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-[#005c55]/25 flex items-center justify-center gap-2 text-[14px]"
             >
-              Request to Book <ArrowRight size={16} />
+              Request Any of the Above Services <ArrowRight size={16} />
             </button>
           </div>
         </div>
@@ -455,9 +455,9 @@ export default function DiagnosticDetail() {
                 <AlertCircle size={30} className="text-[#005c55]" />
               </div>
 
+              {/* Purana text hataya, sirf naya message rakha */}
               <p className="text-[15px] font-bold text-gray-900 px-2 leading-snug">
-                Are you sure, you want to proceed with the booking request for{" "}
-                <span className="text-[#005c55]">{service.title}</span>?
+                Our team will contact you shortly to confirm the details.
               </p>
 
               <div className="flex gap-3 mt-6">

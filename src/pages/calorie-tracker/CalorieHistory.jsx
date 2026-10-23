@@ -1,15 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  ArrowLeft,
-  Calendar,
-  ChevronDown,
-  Check,
-  Utensils,
-  Flame,
-  Activity,
-  Scale,
-} from "lucide-react";
+import { ArrowLeft, Calendar, ChevronDown, Check } from "lucide-react";
 import logo from "../../assets/daibmetalogo.jpeg";
 
 // Mock History Data
@@ -70,33 +61,16 @@ const HISTORY_DATA = [
   },
 ];
 
-const DATE_FILTERS = [
-  "1 Day",
-  "1 Week",
-  "1 Month",
-  "3 Months",
-  "6 Months",
-  "This Year",
-];
+const DATE_FILTERS = ["1 Day", "1 Week", "1 Month", "3 Months", "6 Months"];
 
 export default function CalorieHistory() {
   const navigate = useNavigate();
 
   const [dateFilter, setDateFilter] = useState("1 Month");
   const [showDropdown, setShowDropdown] = useState(false);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
 
   // Filter Logic
   const getFilteredData = () => {
-    if (startDate || endDate) {
-      return HISTORY_DATA.filter((item) => {
-        if (startDate && item.dateStr < startDate) return false;
-        if (endDate && item.dateStr > endDate) return false;
-        return true;
-      });
-    }
-
     const today = new Date("2026-10-20");
     let filterDays = 30;
     if (dateFilter === "1 Day") filterDays = 1;
@@ -104,7 +78,6 @@ export default function CalorieHistory() {
     if (dateFilter === "1 Month") filterDays = 30;
     if (dateFilter === "3 Months") filterDays = 90;
     if (dateFilter === "6 Months") filterDays = 180;
-    if (dateFilter === "This Year") filterDays = 365;
 
     const cutoff = new Date(today);
     cutoff.setDate(today.getDate() - filterDays);
@@ -146,7 +119,7 @@ export default function CalorieHistory() {
               >
                 <div className="flex items-center gap-2">
                   <Calendar size={14} className="text-[#0d6b63]" />
-                  {startDate || endDate ? "Custom Range" : dateFilter}
+                  {dateFilter}
                 </div>
                 <ChevronDown
                   size={14}
@@ -160,45 +133,16 @@ export default function CalorieHistory() {
                       key={f}
                       onClick={() => {
                         setDateFilter(f);
-                        setStartDate("");
-                        setEndDate("");
                         setShowDropdown(false);
                       }}
-                      className={`w-full text-left px-3 py-2 text-[12px] font-semibold flex items-center justify-between ${dateFilter === f && !startDate && !endDate ? "bg-[#E0F2F1] text-[#005c55]" : "text-gray-700 hover:bg-gray-50"}`}
+                      className={`w-full text-left px-3 py-2 text-[12px] font-semibold flex items-center justify-between ${dateFilter === f ? "bg-[#E0F2F1] text-[#005c55]" : "text-gray-700 hover:bg-gray-50"}`}
                     >
                       {f}
-                      {dateFilter === f && !startDate && !endDate && (
-                        <Check size={14} />
-                      )}
+                      {dateFilter === f && <Check size={14} />}
                     </button>
                   ))}
                 </div>
               )}
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className="text-[10px] font-bold text-gray-500 mb-1 block">
-                  Start Date
-                </label>
-                <input
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  className="w-full px-2.5 py-2 bg-[#f4f5fb] rounded-lg text-[11px] font-semibold text-gray-800 outline-none"
-                />
-              </div>
-              <div>
-                <label className="text-[10px] font-bold text-gray-500 mb-1 block">
-                  End Date
-                </label>
-                <input
-                  type="date"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                  className="w-full px-2.5 py-2 bg-[#f4f5fb] rounded-lg text-[11px] font-semibold text-gray-800 outline-none"
-                />
-              </div>
             </div>
           </div>
 

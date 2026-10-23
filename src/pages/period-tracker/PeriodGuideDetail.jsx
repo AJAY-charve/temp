@@ -2,17 +2,25 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ChevronLeft, Info } from "lucide-react";
 import logo from "../../assets/daibmetalogo.jpeg";
 
+// 🔹 Same images jo PeriodHealthGuide mein use hui hain
+import imgKnowPeriod from "../../assets/periodtracker/know-period.png";
+import imgPainRelief from "../../assets/periodtracker/pain-relief.png";
+import imgHygiene from "../../assets/periodtracker/hygiene.png";
+import imgFood from "../../assets/periodtracker/food.png";
+import imgWarning from "../../assets/periodtracker/warning.png";
+import imgMyths from "../../assets/periodtracker/myths.png";
+
 export default function PeriodGuideDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
 
   // ==========================================
-  // ADMIN DATA (Backend se aayega)
+  // STATIC DATA (image + htmlContent)
   // ==========================================
   const guidesData = {
     "know-period": {
       title: "Know About Menstrual Period",
-      icon: "📅",
+      img: imgKnowPeriod,
       htmlContent: `
         <h3>What is a normal cycle?</h3>
         <p>A normal menstrual cycle typically ranges from <b>21 to 35 days</b>, with bleeding lasting 2 to 7 days. It's normal for cycles to vary slightly each month.</p>
@@ -32,7 +40,7 @@ export default function PeriodGuideDetail() {
     },
     "pain-relief": {
       title: "Period Pain Relief",
-      icon: "🤕",
+      img: imgPainRelief,
       htmlContent: `
         <h3>Why does it hurt?</h3>
         <p>Cramps happen when the uterus contracts to shed its lining. A hormone called <i>prostaglandin</i> triggers these contractions.</p>
@@ -51,7 +59,7 @@ export default function PeriodGuideDetail() {
     },
     hygiene: {
       title: "Period Hygiene",
-      icon: "🩸",
+      img: imgHygiene,
       htmlContent: `
         <h3>Changing products</h3>
         <p>Change your pad, tampon, or menstrual cup every <b>4 to 6 hours</b> to prevent infections and odor.</p>
@@ -65,7 +73,7 @@ export default function PeriodGuideDetail() {
     },
     food: {
       title: "Food & Lifestyle",
-      icon: "🥗",
+      img: imgFood,
       htmlContent: `
         <h3>What to eat</h3>
         <p>Eat iron-rich foods (spinach, beans) to replace lost blood. Include calcium and magnesium for muscle relaxation.</p>
@@ -84,7 +92,7 @@ export default function PeriodGuideDetail() {
     },
     warning: {
       title: "Warning Signs",
-      icon: "⚠️",
+      img: imgWarning,
       htmlContent: `
         <h3>When to see a doctor?</h3>
         <p>Consult a gynecologist if you experience any of the following:</p>
@@ -98,7 +106,7 @@ export default function PeriodGuideDetail() {
     },
     myths: {
       title: "Myths vs Facts",
-      icon: "🧠",
+      img: imgMyths,
       htmlContent: `
         <h3>Common Myths</h3>
         <ul>
@@ -117,7 +125,7 @@ export default function PeriodGuideDetail() {
       {/* Background Blush */}
       <div className="absolute top-0 right-0 w-80 h-80 bg-[#ffe4ed] rounded-full blur-3xl opacity-60 pointer-events-none"></div>
 
-      {/* FIXED HEADER: Left Back, Center Title, Right Logo */}
+      {/* FIXED HEADER */}
       <header className="px-4 py-3 flex items-center justify-between bg-white border-b border-gray-100 relative z-10 sticky top-0">
         <button
           onClick={() => navigate("/period-tracker/health-guide")}
@@ -134,17 +142,22 @@ export default function PeriodGuideDetail() {
       </header>
 
       <main className="flex-1 px-4 py-6 overflow-y-auto relative z-10">
-        {/* Title Section */}
+        {/* Title Section — image icon */}
         <div className="flex items-center gap-4 mb-5">
-          <div className="w-16 h-16 rounded-2xl bg-white border border-pink-100 shadow-sm flex items-center justify-center text-3xl flex-shrink-0">
-            {data.icon}
+          <div className="w-16 h-16 rounded-2xl bg-white border border-pink-100 shadow-sm flex items-center justify-center flex-shrink-0 overflow-hidden">
+            <img
+              src={data.img}
+              alt={data.title}
+              draggable={false}
+              className="w-12 h-12 object-contain select-none"
+            />
           </div>
           <h1 className="text-[24px] leading-tight font-black text-[#1a237e] flex-1">
             {data.title}
           </h1>
         </div>
 
-        {/* WHITE CARD WITH DYNAMIC HTML RENDERING */}
+        {/* WHITE CARD WITH DYNAMIC HTML */}
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 mb-6">
           <div
             className="admin-rich-text"
@@ -168,7 +181,7 @@ export default function PeriodGuideDetail() {
         </div>
       </main>
 
-      {/* CUSTOM STYLING FOR ADMIN HTML */}
+      {/* ADMIN HTML STYLING */}
       <style>{`
         .admin-rich-text h3 {
           font-size: 16px;
