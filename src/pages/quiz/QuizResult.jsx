@@ -1,13 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import {
-  ArrowLeft,
-  CheckCircle2,
-  Home,
-  XCircle,
-  Award,
-  Check,
-} from "lucide-react";
-import logo from "../../assets/daibmetalogo.jpeg"; // <-- Path updated
+import { ArrowLeft, Home, Award, Check, FileText } from "lucide-react";
+import logo from "../../assets/daibmetalogo.jpeg";
 
 export default function QuizResult() {
   const navigate = useNavigate();
@@ -34,7 +27,7 @@ export default function QuizResult() {
           <div className="h-14 px-4 flex items-center justify-between">
             <button
               onClick={() => navigate("/home")}
-              className="w-9 h-9 flex items-center justify-center rounded-full text-gray-700 active:scale-95"
+              className="w-9 h-9 flex items-center justify-center rounded-full text-gray-700 hover:bg-gray-100 active:scale-95 transition"
             >
               <ArrowLeft size={20} />
             </button>
@@ -49,16 +42,16 @@ export default function QuizResult() {
 
         {/* MAIN */}
         <main className="flex-1 pb-10 px-4 pt-6">
-          {/* Success Drop */}
-          <div className="bg-[#e4f4e8] border border-[#bde5c4] rounded-2xl p-4 flex items-start gap-3 mb-5">
-            <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center flex-none">
-              <Check size={18} className="text-[#2e9e48]" />
+          {/* Success Banner */}
+          <div className="bg-[#e4f4e8]/60 border border-[#bde5c4] rounded-[20px] p-4 flex items-start gap-3 mb-6">
+            <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center flex-none shadow-sm">
+              <Check size={16} className="text-[#2e9e48]" strokeWidth={3} />
             </div>
             <div>
-              <h4 className="text-[12.5px] font-bold text-[#2e9e48]">
-                Result Saved!
+              <h4 className="text-[12.5px] font-extrabold text-[#2e9e48]">
+                Result Saved Successfully!
               </h4>
-              <p className="text-[10.5px] text-[#2e9e48]/80 mt-0.5 leading-snug">
+              <p className="text-[11px] text-[#2e9e48]/80 mt-0.5 leading-snug font-medium">
                 Your attempt has been recorded. You can view this in your past
                 attempts.
               </p>
@@ -66,94 +59,88 @@ export default function QuizResult() {
           </div>
 
           {/* Score Card */}
-          <div className="bg-white rounded-3xl border border-[#eaedff] p-6 shadow-[0_4px_20px_rgba(15,23,42,0.04)] text-center mb-4">
-            <div className="w-20 h-20 rounded-full bg-[#E0F2F1] flex items-center justify-center mx-auto mb-4">
-              <Award size={40} className="text-[#0d6b63]" strokeWidth={2.2} />
-            </div>
-            <h2 className="text-[22px] font-extrabold text-[#14284b]">
-              {correctCount} / {totalQuestions}
-            </h2>
-            <p className="text-[12px] text-gray-500 font-medium mt-1">
-              Questions Correct
-            </p>
+          <div className="bg-white rounded-[32px] border border-[#eaedff] p-7 shadow-[0_8px_30px_rgba(15,23,42,0.04)] text-center mb-6 relative overflow-hidden">
+            <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-[#E0F2F1]/50 to-transparent pointer-events-none" />
 
-            <div className="mt-4 flex items-center justify-center gap-4 border-t border-[#eaedff] pt-4">
-              <div className="text-center">
-                <p className="text-[16px] font-bold text-[#005c55]">
-                  {attemptedCount}
-                </p>
-                <p className="text-[10px] text-gray-500 uppercase tracking-wide mt-0.5">
-                  Attempted
-                </p>
+            <div className="relative z-10">
+              <div className="w-24 h-24 rounded-full bg-white border-4 border-[#E0F2F1] flex items-center justify-center mx-auto mb-4 shadow-sm">
+                <Award size={48} className="text-[#0d6b63]" strokeWidth={2} />
               </div>
-              <div className="w-px h-8 bg-[#eaedff]" />
-              <div className="text-center">
-                <p className="text-[16px] font-bold text-[#0d6b63]">
-                  {correctCount}
-                </p>
-                <p className="text-[10px] text-gray-500 uppercase tracking-wide mt-0.5">
-                  Correct
-                </p>
-              </div>
-              <div className="w-px h-8 bg-[#eaedff]" />
-              <div className="text-center">
-                <p className="text-[16px] font-bold text-[#e53935]">
-                  {attemptedCount - correctCount}
-                </p>
-                <p className="text-[10px] text-gray-500 uppercase tracking-wide mt-0.5">
-                  Wrong
-                </p>
+              <h2 className="text-[32px] font-extrabold text-[#14284b] tracking-tight">
+                {correctCount}{" "}
+                <span className="text-[20px] text-gray-400 font-bold">
+                  / {totalQuestions}
+                </span>
+              </h2>
+              <p className="text-[12px] text-gray-500 font-bold mt-1 uppercase tracking-wide">
+                Questions Correct
+              </p>
+
+              <div className="mt-6 flex items-center justify-center gap-6 border-t border-[#eaedff] pt-6">
+                <div className="text-center">
+                  <p className="text-[18px] font-extrabold text-[#14284b]">
+                    {attemptedCount}
+                  </p>
+                  <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wide mt-1">
+                    Attempted
+                  </p>
+                </div>
+                <div className="w-px h-10 bg-[#eaedff]" />
+                <div className="text-center">
+                  <p className="text-[18px] font-extrabold text-[#2e9e48]">
+                    {correctCount}
+                  </p>
+                  <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wide mt-1">
+                    Correct
+                  </p>
+                </div>
+                <div className="w-px h-10 bg-[#eaedff]" />
+                <div className="text-center">
+                  <p className="text-[18px] font-extrabold text-[#ef5350]">
+                    {attemptedCount - correctCount}
+                  </p>
+                  <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wide mt-1">
+                    Wrong
+                  </p>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Review Answers */}
-          <div className="bg-white rounded-3xl border border-[#eaedff] p-5 shadow-[0_2px_8px_rgba(0,0,0,0.02)] mb-6">
-            <h3 className="text-[13px] font-bold text-gray-900 mb-4">
-              Review Answers
+          {/* Review Answers (No Correct/Wrong marking) */}
+          <div className="bg-white rounded-[28px] border border-[#eaedff] p-5 shadow-[0_4px_16px_rgba(0,0,0,0.02)] mb-8">
+            <h3 className="text-[14px] font-extrabold text-[#14284b] mb-4 flex items-center gap-2">
+              <FileText size={16} className="text-[#0d6b63]" />
+              Your Answers
             </h3>
             <div className="flex flex-col gap-3">
               {questions.map((q, i) => {
                 const userAns = answers[i];
-                const isCorrect = userAns === q.correctAnswer;
                 const isSkipped = !userAns;
 
                 return (
                   <div
                     key={i}
-                    className="flex items-start gap-3 p-3 rounded-xl bg-[#fafbff] border border-[#f0f2f8]"
+                    className="flex items-start gap-3 p-4 rounded-2xl bg-[#fafbff] border border-[#f0f2f8]"
                   >
-                    <div className="mt-0.5">
-                      {isCorrect ? (
-                        <CheckCircle2 size={16} className="text-[#0d6b63]" />
-                      ) : (
-                        <XCircle size={16} className="text-[#e53935]" />
-                      )}
-                    </div>
                     <div>
-                      <p className="text-[11.5px] font-bold text-gray-900 leading-tight mb-1">
+                      <p className="text-[12px] font-bold text-[#14284b] leading-snug mb-2">
                         {i + 1}. {q.question}
                       </p>
-                      <p className="text-[10.5px] text-gray-500">
+                      <div className="flex items-center gap-1.5 text-[11px]">
+                        <span className="text-gray-400 font-medium">
+                          Your answer:
+                        </span>
                         {isSkipped ? (
-                          <span className="text-orange-500 font-semibold">
-                            Not Attempted
+                          <span className="text-gray-400 font-bold italic">
+                            Not Answered
                           </span>
                         ) : (
-                          <>
-                            Your answer:{" "}
-                            <span
-                              className={
-                                isCorrect
-                                  ? "font-semibold text-[#0d6b63]"
-                                  : "font-semibold text-[#e53935]"
-                              }
-                            >
-                              {userAns}
-                            </span>
-                          </>
+                          <span className="font-bold text-[#0d6b63] bg-[#E0F2F1] px-2 py-0.5 rounded-md">
+                            {userAns}
+                          </span>
                         )}
-                      </p>
+                      </div>
                     </div>
                   </div>
                 );
@@ -164,7 +151,7 @@ export default function QuizResult() {
           {/* Action Button */}
           <button
             onClick={() => navigate("/home")}
-            className="w-full bg-[#0d6b63] text-white font-bold text-[13.5px] py-4 rounded-xl active:scale-[0.98] transition shadow-lg flex items-center justify-center gap-2"
+            className="w-full bg-[#0d6b63] text-white font-bold text-[14.5px] py-4 rounded-2xl active:scale-[0.98] transition-all shadow-[0_8px_20px_rgba(13,107,99,0.25)] flex items-center justify-center gap-2 hover:bg-[#0a5750]"
           >
             <Home size={18} /> Back to Home
           </button>
