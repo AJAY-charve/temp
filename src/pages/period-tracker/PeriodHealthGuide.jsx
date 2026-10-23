@@ -1,12 +1,41 @@
 import { useNavigate } from "react-router-dom";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Info,
-  Calendar,
-  ArrowRight,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, Info, ArrowRight } from "lucide-react";
 import logo from "../../assets/daibmetalogo.jpeg";
+
+import bgWoman from "../../assets/periodtracker/bg-woman.png";
+import imgKnowPeriod from "../../assets/periodtracker/know-period.png";
+import imgPainRelief from "../../assets/periodtracker/pain-relief.png";
+import imgHygiene from "../../assets/periodtracker/hygiene.png";
+import imgFood from "../../assets/periodtracker/food.png";
+import imgWarning from "../../assets/periodtracker/warning.png";
+import imgMyths from "../../assets/periodtracker/myths.png";
+import imgDoctor from "../../assets/periodtracker/doctor.png";
+
+/* ---------- Theme (client image se) ---------- */
+const NAVY = "#1a1f6b";
+const SUB = "#5b62a3";
+const PINK = "#e91e63";
+const CARD_BORDER = "#f6e4ec";
+
+/* Calendar icon for Book Appointment button */
+const CalendarDotsIcon = ({ size = 18 }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
+    <rect x="4" y="6" width="24" height="22" rx="4" fill="#fff" />
+    <path
+      d="M10 3v6M22 3v6"
+      stroke="#fff"
+      strokeWidth="2.8"
+      strokeLinecap="round"
+    />
+    <g fill="#d81b60">
+      <rect x="9" y="14" width="3.2" height="3.2" rx="0.9" />
+      <rect x="14.4" y="14" width="3.2" height="3.2" rx="0.9" />
+      <rect x="19.8" y="14" width="3.2" height="3.2" rx="0.9" />
+      <rect x="9" y="19.5" width="3.2" height="3.2" rx="0.9" />
+      <rect x="14.4" y="19.5" width="3.2" height="3.2" rx="0.9" />
+    </g>
+  </svg>
+);
 
 export default function PeriodHealthGuide() {
   const navigate = useNavigate();
@@ -15,54 +44,63 @@ export default function PeriodHealthGuide() {
   const guideItems = [
     {
       id: "know-period",
-      icon: "📅",
+      img: imgKnowPeriod,
       title: "Know About Menstrual Period",
       sub: "What’s normal?",
     },
     {
       id: "pain-relief",
-      icon: "🤕",
+      img: imgPainRelief,
       title: "Period Pain Relief",
       sub: "Cramps & self-care tips",
     },
     {
       id: "hygiene",
-      icon: "🩸",
+      img: imgHygiene,
       title: "Period Hygiene",
       sub: "Safe hygiene tips",
     },
     {
       id: "food",
-      icon: "🥗",
+      img: imgFood,
       title: "Food & Lifestyle",
       sub: "Nutrition & activity tips",
     },
     {
       id: "warning",
-      icon: "⚠️",
+      img: imgWarning,
       title: "Warning Signs",
       sub: "When to see a doctor",
     },
     {
       id: "myths",
-      icon: "🧠",
+      img: imgMyths,
       title: "Myths vs Facts",
       sub: "Common period myths",
     },
   ];
 
   return (
-    <div className="min-h-screen bg-[#faf8ff] flex flex-col font-nunito relative overflow-hidden">
-      {/* Background Blush */}
-      <div className="absolute top-0 right-0 w-80 h-80 bg-[#ffe4ed] rounded-full blur-3xl opacity-60 pointer-events-none"></div>
+    <div className="min-h-screen bg-gradient-to-b from-[#fde8f1] via-[#fff5f9] to-[#fff9fc] flex flex-col font-nunito relative overflow-hidden">
+      {/* Faded woman silhouette (top right) */}
+      <img
+        src={bgWoman}
+        alt=""
+        aria-hidden="true"
+        draggable={false}
+        className="absolute top-0 right-0 w-[260px] h-auto pointer-events-none select-none"
+      />
 
       {/* FIXED HEADER: Left Back, Center Title, Right Logo */}
       <header className="px-4 py-3 flex items-center justify-between bg-white border-b border-gray-100 relative z-10 sticky top-0">
         <button onClick={() => navigate("/period-tracker")} className="p-1 w-8">
-          <ChevronLeft size={24} className="text-[#1a237e]" />
+          <ChevronLeft size={24} style={{ color: NAVY }} />
         </button>
 
-        <h1 className="text-[17px] font-black text-[#1a237e] flex-1 text-center">
+        <h1
+          className="text-[17px] font-black flex-1 text-center"
+          style={{ color: NAVY }}
+        >
           Health Guide
         </h1>
 
@@ -70,13 +108,17 @@ export default function PeriodHealthGuide() {
       </header>
 
       <main className="flex-1 px-4 py-5 overflow-y-auto relative z-10">
-        <h1 className="text-[28px] leading-tight font-black text-[#1a237e] mb-2">
+        <h1
+          className="text-[28px] leading-tight font-black mb-2"
+          style={{ color: NAVY }}
+        >
           Period Health Guide
         </h1>
-        <p className="text-[13px] text-gray-600 mb-6 font-medium">
+        <p className="text-[13px] mb-6 font-medium" style={{ color: SUB }}>
           Understand your periods and take better care of your menstrual health.
         </p>
 
+        {/* GUIDE CARDS (original vertical layout) */}
         <div className="grid grid-cols-2 gap-3 mb-6">
           {guideItems.map((item) => (
             <button
@@ -84,35 +126,60 @@ export default function PeriodHealthGuide() {
               onClick={() =>
                 navigate(`/period-tracker/health-guide/${item.id}`)
               }
-              className="bg-white rounded-2xl border border-pink-50 p-4 flex flex-col items-center text-center h-[140px] justify-center relative shadow-sm active:scale-95 transition"
+              className="bg-white rounded-2xl border p-4 flex flex-col items-center text-center h-[150px] justify-center relative shadow-[0_2px_10px_rgba(233,30,99,0.07)] active:scale-95 transition"
+              style={{ borderColor: CARD_BORDER }}
             >
-              <div className="w-14 h-14 rounded-full bg-pink-50 flex items-center justify-center text-2xl mb-2">
-                {item.icon}
-              </div>
-              <h3 className="text-[12px] font-extrabold text-[#1a237e] leading-tight mb-1">
+              <img
+                src={item.img}
+                alt={item.title}
+                draggable={false}
+                className="w-16 h-16 object-contain mb-2 select-none"
+              />
+              <h3
+                className="text-[12px] font-extrabold leading-tight mb-1"
+                style={{ color: NAVY }}
+              >
                 {item.title}
               </h3>
-              <p className="text-[10px] text-gray-500 font-medium leading-tight">
+              <p
+                className="text-[10px] font-medium leading-tight"
+                style={{ color: SUB }}
+              >
                 {item.sub}
               </p>
               <ChevronRight
                 size={16}
-                className="absolute bottom-3 right-3 text-[#e91e63]"
+                strokeWidth={2.8}
+                className="absolute bottom-3 right-3"
+                style={{ color: PINK }}
               />
             </button>
           ))}
         </div>
 
-        <div className="bg-[#fdf2f6] rounded-2xl border border-pink-100 p-5 flex flex-col items-center text-center mb-6 relative overflow-hidden">
+        {/* CONSULT A GYNECOLOGIST (original centered layout) */}
+        <div
+          className="bg-gradient-to-br from-[#fff0f6] to-[#fde8f1] rounded-2xl border p-5 flex flex-col items-center text-center mb-6 relative overflow-hidden"
+          style={{ borderColor: "#f8d9e5" }}
+        >
           <div className="flex items-center justify-center mb-4">
-            <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center mr-4 shadow-sm">
-              <span className="text-3xl">👩‍⚕️</span>
-            </div>
+            <img
+              src={imgDoctor}
+              alt="Gynecologist"
+              draggable={false}
+              className="w-20 h-20 object-contain mr-4 select-none"
+            />
             <div className="text-left">
-              <h2 className="text-[18px] font-black text-[#1a237e] leading-tight">
+              <h2
+                className="text-[18px] font-black leading-tight"
+                style={{ color: NAVY }}
+              >
                 Consult a Gynecologist
               </h2>
-              <p className="text-[11px] text-gray-600 font-medium mt-1 leading-snug">
+              <p
+                className="text-[11px] font-medium mt-1 leading-snug"
+                style={{ color: SUB }}
+              >
                 Expert advice for menstrual and women’s health concerns.
               </p>
             </div>
@@ -120,22 +187,37 @@ export default function PeriodHealthGuide() {
 
           <button
             onClick={() => navigate("/appointment")}
-            className="w-full bg-[#e91e63] text-white font-bold text-[14px] py-3.5 rounded-xl flex items-center justify-center gap-2 shadow-md"
+            className="w-full bg-gradient-to-r from-[#e0185f] to-[#d81b60] text-white font-bold text-[14px] py-3.5 rounded-xl flex items-center justify-center gap-2 shadow-[0_4px_12px_rgba(216,27,96,0.3)]"
           >
-            <Calendar size={18} /> Book Appointment <ArrowRight size={18} />
+            <CalendarDotsIcon size={18} /> Book Appointment{" "}
+            <ArrowRight size={18} strokeWidth={2.5} />
           </button>
 
-          <p className="text-[10px] text-gray-500 font-medium mt-2">
+          <p className="text-[10px] font-medium mt-2" style={{ color: SUB }}>
             Consultation services are currently available only in Indore, MP.
           </p>
         </div>
 
-        <div className="bg-[#fdf2f6] rounded-2xl border border-pink-100 p-4 flex items-start gap-3">
-          <div className="w-6 h-6 rounded-full bg-[#e91e63] flex items-center justify-center flex-shrink-0 mt-0.5">
-            <Info size={14} className="text-white" />
+        {/* IMPORTANT NOTE */}
+        <div
+          className="bg-[#fff3f8] rounded-2xl border p-4 flex items-start gap-3"
+          style={{ borderColor: "#f8d9e5" }}
+        >
+          <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 bg-[#fde0ec]">
+            <div
+              className="w-6 h-6 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: PINK }}
+            >
+              <Info size={14} className="text-white" strokeWidth={3} />
+            </div>
           </div>
-          <div className="text-[11px] text-gray-600 leading-relaxed font-medium">
-            <p className="font-extrabold text-[#e91e63] mb-1">Important</p>
+          <div
+            className="text-[11px] leading-relaxed font-medium"
+            style={{ color: SUB }}
+          >
+            <p className="font-extrabold mb-1" style={{ color: PINK }}>
+              Important
+            </p>
             <p>
               Before following any advice given in this section, please consult
               a qualified doctor. This information is for general awareness only

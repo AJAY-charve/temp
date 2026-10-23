@@ -1,7 +1,10 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Activity, Calendar, Clock } from "lucide-react";
+import { ArrowLeft, Calendar, Clock } from "lucide-react";
 import logo from "../../assets/daibmetalogo.jpeg";
+
+// Importing your custom BP image
+import bpImg from "../../assets/bp-sugar/bp.png";
 
 export default function AddBP() {
   const navigate = useNavigate();
@@ -50,7 +53,7 @@ export default function AddBP() {
           <div className="h-14 px-4 flex items-center justify-between">
             <button
               onClick={() => navigate(-1)}
-              className="w-9 h-9 flex items-center justify-center rounded-full text-gray-700 active:scale-95"
+              className="w-9 h-9 flex items-center justify-center rounded-full text-gray-700 active:scale-95 hover:bg-gray-50 transition"
             >
               <ArrowLeft size={20} />
             </button>
@@ -66,10 +69,14 @@ export default function AddBP() {
         </header>
 
         <main className="flex-1 px-4 pt-5 pb-10 flex flex-col gap-5">
-          {/* Banner */}
+          {/* Banner with custom image */}
           <div className="bg-white rounded-2xl p-4 flex items-center gap-4 border border-[#eaedff] shadow-sm">
-            <div className="w-12 h-12 rounded-full bg-[#e0eefc] flex items-center justify-center flex-none">
-              <Activity size={24} className="text-[#2f8cf0]" />
+            <div className="w-12 h-12 flex items-center justify-center flex-none">
+              <img
+                src={bpImg}
+                alt="Blood Pressure"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
               <h2 className="text-[15px] font-extrabold text-[#14284b]">
@@ -208,13 +215,13 @@ export default function AddBP() {
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="E.g. Feeling well, after exercise, etc."
-              className="w-full px-4 py-3 rounded-xl border border-[#eaedff] bg-white outline-none text-[13px] text-gray-800 resize-none h-24 shadow-sm"
+              className="w-full px-4 py-3 rounded-xl border border-[#eaedff] bg-white outline-none text-[13px] text-gray-800 resize-none h-24 shadow-sm focus:border-[#0d6b63] transition"
             />
           </div>
 
           <button
             onClick={handleSave}
-            className="w-full bg-[#0d6b63] text-white font-bold text-[14px] py-4 rounded-xl active:scale-[0.98] transition shadow-lg mt-2"
+            className="w-full bg-[#0d6b63] text-white font-bold text-[14px] py-4 rounded-xl active:scale-[0.98] transition shadow-lg mt-2 hover:bg-[#0a5750]"
           >
             Save Reading
           </button>

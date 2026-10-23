@@ -2,15 +2,133 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ChevronLeft,
-  ChevronRight,
-  Calendar,
+  ChevronDown,
+  ArrowRight,
   Clock,
   Bell,
-  Info,
   X,
   Check,
 } from "lucide-react";
 import logo from "../../assets/daibmetalogo.jpeg";
+
+/* ---------- Icons (reference ke style mein) ---------- */
+const CalendarDotsIcon = ({ size = 16, className = "" }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 32 32"
+    fill="none"
+    className={className}
+  >
+    <rect
+      x="4"
+      y="7"
+      width="24"
+      height="21"
+      rx="4"
+      stroke="currentColor"
+      strokeWidth="2.8"
+    />
+    <path d="M4 14h24" stroke="currentColor" strokeWidth="2.8" />
+    <path
+      d="M10 3.5v6M22 3.5v6"
+      stroke="currentColor"
+      strokeWidth="2.8"
+      strokeLinecap="round"
+    />
+    <g fill="currentColor">
+      <rect x="9" y="17.5" width="3.2" height="3.2" rx="0.9" />
+      <rect x="14.4" y="17.5" width="3.2" height="3.2" rx="0.9" />
+      <rect x="19.8" y="17.5" width="3.2" height="3.2" rx="0.9" />
+      <rect x="9" y="22.5" width="3.2" height="3.2" rx="0.9" />
+      <rect x="14.4" y="22.5" width="3.2" height="3.2" rx="0.9" />
+    </g>
+  </svg>
+);
+
+const NotePencilIcon = ({ size = 16 }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
+    <path
+      d="M17 4.5H9a3.5 3.5 0 0 0-3.5 3.5v16A3.5 3.5 0 0 0 9 27.5h9"
+      stroke="#f0245f"
+      strokeWidth="2.6"
+      strokeLinecap="round"
+    />
+    <path
+      d="M17 4.5 24 11.500h-4.500a2.500 2.500 0 0 1-2.500-2.500V4.500Z"
+      stroke="#f0245f"
+      strokeWidth="2.4"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M10.500 14.500h6M10.500 19.500h4.500"
+      stroke="#f0245f"
+      strokeWidth="2.4"
+      strokeLinecap="round"
+    />
+    <path
+      d="m26 17.500-8 8-3.500.8.800-3.500 8-8a1.800 1.800 0 0 1 2.600 0l.1.1a1.800 1.800 0 0 1 0 2.600Z"
+      fill="#f0245f"
+    />
+  </svg>
+);
+
+const CalendarAlertIcon = ({ size = 16 }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
+    <rect
+      x="3.500"
+      y="6.500"
+      width="23"
+      height="21"
+      rx="4"
+      stroke="#f0245f"
+      strokeWidth="2.6"
+    />
+    <path d="M3.500 13.500h23" stroke="#f0245f" strokeWidth="2.6" />
+    <path
+      d="M9.500 3v6M20.500 3v6"
+      stroke="#f0245f"
+      strokeWidth="2.6"
+      strokeLinecap="round"
+    />
+    <g fill="#f0245f">
+      <rect x="8" y="17" width="3" height="3" rx="0.8" />
+      <rect x="13.500" y="17" width="3" height="3" rx="0.8" />
+      <rect x="8" y="22" width="3" height="3" rx="0.8" />
+    </g>
+    <circle
+      cx="25"
+      cy="24.500"
+      r="6"
+      fill="#f0245f"
+      stroke="#ffe1ea"
+      strokeWidth="1.500"
+    />
+    <rect x="24" y="20.500" width="2" height="5" rx="1" fill="#fff" />
+    <circle cx="25" cy="27.500" r="1.100" fill="#fff" />
+  </svg>
+);
+
+const InfoIcon = ({ size = 18 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 34 34"
+    fill="none"
+    className="flex-shrink-0"
+  >
+    <circle cx="17" cy="17" r="16" fill="#1aa1f0" />
+    <circle cx="17" cy="9.500" r="2" fill="#fff" />
+    <rect x="15" y="13.500" width="4" height="12" rx="2" fill="#fff" />
+  </svg>
+);
+
+/* Round pink badge */
+const Badge = ({ children }) => (
+  <div className="w-8 h-8 rounded-full bg-[#ffe1ea] flex items-center justify-center flex-shrink-0">
+    {children}
+  </div>
+);
 
 export default function PeriodReminders() {
   const navigate = useNavigate();
@@ -35,7 +153,7 @@ export default function PeriodReminders() {
   const openTimePicker = (target, currentTime) => {
     const [time, ampm] = currentTime.split(" ");
     const [h, m] = time.split(":");
-    setTempHour(h);
+    setTempHour(h.padStart(2, "0"));
     setTempMinute(m);
     setTempAmPm(ampm);
     setCurrentPickerTarget(target);
@@ -51,7 +169,7 @@ export default function PeriodReminders() {
   };
 
   return (
-    <div className="min-h-screen bg-[#faf8ff] flex flex-col font-nunito relative">
+    <div className="min-h-screen bg-gradient-to-b from-[#fff4f8] via-[#fff8fb] to-[#fff4f8] flex flex-col font-nunito relative">
       {/* COMPACT HEADER */}
       <header className="px-3 py-3 flex items-center justify-between bg-white border-b border-gray-200 sticky top-0 z-40">
         <button
@@ -77,17 +195,17 @@ export default function PeriodReminders() {
 
       <main className="flex-1 px-3 py-4 overflow-y-auto space-y-3 pb-8">
         {/* 1. UPCOMING */}
-        <div className="bg-white rounded-xl border border-gray-100 p-3.5 shadow-sm">
+        <div className="bg-white rounded-xl border border-[#fadce7] p-3.5 shadow-sm">
           <div className="flex items-start justify-between mb-2">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-pink-50 flex items-center justify-center flex-shrink-0">
-                <Calendar size={16} className="text-[#e91e63]" />
-              </div>
+              <Badge>
+                <CalendarDotsIcon size={16} className="text-[#f0245f]" />
+              </Badge>
               <div className="flex-1 min-w-0 pr-2">
-                <h3 className="text-[12.5px] font-extrabold text-[#1a237e] leading-tight">
+                <h3 className="text-[12.5px] font-extrabold text-[#1a1f9c] leading-tight">
                   1. Upcoming Period Reminder
                 </h3>
-                <p className="text-[9.5px] text-gray-500 font-medium leading-tight mt-0.5">
+                <p className="text-[9.5px] text-[#6b7390] font-medium leading-tight mt-0.5">
                   Get a reminder before your expected period.
                 </p>
               </div>
@@ -99,10 +217,10 @@ export default function PeriodReminders() {
           </div>
 
           {upcomingToggle && (
-            <div className="bg-[#fdf2f6] rounded-lg p-2.5 border border-pink-100 mt-2">
-              <p className="text-[10.5px] font-extrabold text-[#1a237e] mb-2">
+            <div className="bg-[#fff0f5] rounded-lg p-2.5 border border-[#fbe1ea] mt-2">
+              <p className="text-[10.5px] font-extrabold text-[#1a1f9c] mb-2">
                 Remind me{" "}
-                <span className="font-medium text-gray-600">
+                <span className="font-medium text-[#6b7390]">
                   before expected period:
                 </span>
               </p>
@@ -114,52 +232,25 @@ export default function PeriodReminders() {
                   "3 days before",
                   "7 days before",
                 ].map((d) => (
-                  <button
+                  <RadioChip
                     key={d}
+                    active={upcomingDays === d}
                     onClick={() => setUpcomingDays(d)}
-                    className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg border transition ${
-                      upcomingDays === d
-                        ? "border-[#e91e63] bg-white text-[#e91e63]"
-                        : "border-gray-200 bg-white text-gray-600"
-                    }`}
-                  >
-                    <div
-                      className={`w-3 h-3 rounded-full border flex items-center justify-center mb-1 ${upcomingDays === d ? "border-[#e91e63]" : "border-gray-300"}`}
-                    >
-                      {upcomingDays === d && (
-                        <div className="w-1.5 h-1.5 rounded-full bg-[#e91e63]" />
-                      )}
-                    </div>
-                    <span className="text-[8.5px] font-bold text-center leading-tight whitespace-pre-wrap">
-                      {d.replace(" ", "\n")}
-                    </span>
-                  </button>
+                    label={d.replace(" ", "\n")}
+                    multiline
+                  />
                 ))}
               </div>
 
               <div className="flex flex-col gap-2">
-                <div>
-                  <p className="text-[9.5px] font-bold text-[#1a237e] mb-1">
-                    Reminder time
-                  </p>
-                  <div
-                    onClick={() => openTimePicker("upcoming", upcomingTime)}
-                    className="bg-white border border-gray-200 rounded-md p-2 flex items-center justify-between cursor-pointer"
-                  >
-                    <div className="flex items-center gap-1.5 text-gray-600 text-[11px] font-bold">
-                      <Clock size={14} className="text-gray-400" />{" "}
-                      {upcomingTime} (Recommended)
-                    </div>
-                    <ChevronRight
-                      size={14}
-                      className="rotate-90 text-gray-400"
-                    />
-                  </div>
-                </div>
-                <div className="bg-[#e3f2fd] rounded-md p-2 flex items-start gap-1.5">
-                  <Calendar
+                <TimeField
+                  value={upcomingTime}
+                  onClick={() => openTimePicker("upcoming", upcomingTime)}
+                />
+                <div className="bg-[#e4f0fd] rounded-md p-2 flex items-start gap-1.5">
+                  <CalendarDotsIcon
                     size={14}
-                    className="text-[#2196F3] flex-shrink-0 mt-0.5"
+                    className="text-[#1a237e] flex-shrink-0 mt-0.5"
                   />
                   <p className="text-[9.5px] text-[#1a237e] font-medium leading-tight">
                     You will get a reminder <b>{upcomingDays}</b> your expected
@@ -172,17 +263,17 @@ export default function PeriodReminders() {
         </div>
 
         {/* 2. PERIOD LOG */}
-        <div className="bg-white rounded-xl border border-gray-100 p-3.5 shadow-sm">
+        <div className="bg-white rounded-xl border border-[#fadce7] p-3.5 shadow-sm">
           <div className="flex items-start justify-between mb-2">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-pink-50 flex items-center justify-center flex-shrink-0">
-                <span className="text-[14px]">📝</span>
-              </div>
+              <Badge>
+                <NotePencilIcon size={16} />
+              </Badge>
               <div className="flex-1 min-w-0 pr-2">
-                <h3 className="text-[12.5px] font-extrabold text-[#1a237e] leading-tight">
+                <h3 className="text-[12.5px] font-extrabold text-[#1a1f9c] leading-tight">
                   2. Period Log Reminder
                 </h3>
-                <p className="text-[9.5px] text-gray-500 font-medium leading-tight mt-0.5">
+                <p className="text-[9.5px] text-[#6b7390] font-medium leading-tight mt-0.5">
                   Get a daily reminder at night to record your bleeding and
                   symptoms while your period is ongoing.
                 </p>
@@ -192,30 +283,16 @@ export default function PeriodReminders() {
           </div>
 
           {logToggle && (
-            <div className="bg-[#fdf2f6] rounded-lg p-2.5 border border-pink-100 mt-2">
+            <div className="bg-[#fff0f5] rounded-lg p-2.5 border border-[#fbe1ea] mt-2">
               <div className="flex flex-col gap-2">
-                <div>
-                  <p className="text-[9.5px] font-bold text-[#1a237e] mb-1">
-                    Reminder time
-                  </p>
-                  <div
-                    onClick={() => openTimePicker("log", logTime)}
-                    className="bg-white border border-gray-200 rounded-md p-2 flex items-center justify-between cursor-pointer"
-                  >
-                    <div className="flex items-center gap-1.5 text-gray-600 text-[11px] font-bold">
-                      <Clock size={14} className="text-gray-400" /> {logTime}{" "}
-                      (Recommended)
-                    </div>
-                    <ChevronRight
-                      size={14}
-                      className="rotate-90 text-gray-400"
-                    />
-                  </div>
-                </div>
-                <div className="bg-[#e3f2fd] rounded-md p-2 flex items-start gap-1.5">
+                <TimeField
+                  value={logTime}
+                  onClick={() => openTimePicker("log", logTime)}
+                />
+                <div className="bg-[#e4f0fd] rounded-md p-2 flex items-start gap-1.5">
                   <Bell
                     size={14}
-                    className="text-[#2196F3] flex-shrink-0 mt-0.5"
+                    className="text-[#1a237e] flex-shrink-0 mt-0.5"
                   />
                   <p className="text-[9.5px] text-[#1a237e] font-medium leading-tight">
                     You will get this reminder every night at <b>{logTime}</b>{" "}
@@ -228,20 +305,17 @@ export default function PeriodReminders() {
         </div>
 
         {/* 3. MISSED */}
-        <div className="bg-white rounded-xl border border-gray-100 p-3.5 shadow-sm">
+        <div className="bg-white rounded-xl border border-[#fadce7] p-3.5 shadow-sm">
           <div className="flex items-start justify-between mb-2">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-pink-50 flex items-center justify-center flex-shrink-0 relative">
-                <Calendar size={16} className="text-[#e91e63]" />
-                <div className="absolute top-0 right-0 w-2.5 h-2.5 bg-[#e91e63] rounded-full border border-white flex items-center justify-center text-white text-[6px] font-bold">
-                  !
-                </div>
-              </div>
+              <Badge>
+                <CalendarAlertIcon size={18} />
+              </Badge>
               <div className="flex-1 min-w-0 pr-2">
-                <h3 className="text-[12.5px] font-extrabold text-[#1a237e] leading-tight">
+                <h3 className="text-[12.5px] font-extrabold text-[#1a1f9c] leading-tight">
                   3. Missed Period Reminder
                 </h3>
-                <p className="text-[9.5px] text-gray-500 font-medium leading-tight mt-0.5">
+                <p className="text-[9.5px] text-[#6b7390] font-medium leading-tight mt-0.5">
                   Get a reminder if your period has not started after your
                   expected date.
                 </p>
@@ -251,62 +325,34 @@ export default function PeriodReminders() {
           </div>
 
           {missedToggle && (
-            <div className="bg-[#fdf2f6] rounded-lg p-2.5 border border-pink-100 mt-2">
-              <p className="text-[10.5px] font-extrabold text-[#1a237e] mb-2">
+            <div className="bg-[#fff0f5] rounded-lg p-2.5 border border-[#fbe1ea] mt-2">
+              <p className="text-[10.5px] font-extrabold text-[#1a1f9c] mb-2">
                 Remind me after{" "}
-                <span className="font-medium text-gray-600">
+                <span className="font-medium text-[#6b7390]">
                   my expected period is delayed by:
                 </span>
               </p>
 
               <div className="grid grid-cols-5 gap-1 mb-3">
                 {["1 day", "2 days", "3 days", "5 days", "7 days"].map((d) => (
-                  <button
+                  <RadioChip
                     key={d}
+                    active={missedDays === d}
                     onClick={() => setMissedDays(d)}
-                    className={`flex flex-col items-center justify-center py-1.5 px-0.5 rounded-lg border transition ${
-                      missedDays === d
-                        ? "border-[#e91e63] bg-white text-[#e91e63]"
-                        : "border-gray-200 bg-white text-gray-600"
-                    }`}
-                  >
-                    <div
-                      className={`w-3 h-3 rounded-full border flex items-center justify-center mb-1 ${missedDays === d ? "border-[#e91e63]" : "border-gray-300"}`}
-                    >
-                      {missedDays === d && (
-                        <div className="w-1.5 h-1.5 rounded-full bg-[#e91e63]" />
-                      )}
-                    </div>
-                    <span className="text-[8.5px] font-bold text-center leading-tight whitespace-nowrap">
-                      {d}
-                    </span>
-                  </button>
+                    label={d}
+                  />
                 ))}
               </div>
 
               <div className="flex flex-col gap-2">
-                <div>
-                  <p className="text-[9.5px] font-bold text-[#1a237e] mb-1">
-                    Reminder time
-                  </p>
-                  <div
-                    onClick={() => openTimePicker("missed", missedTime)}
-                    className="bg-white border border-gray-200 rounded-md p-2 flex items-center justify-between cursor-pointer"
-                  >
-                    <div className="flex items-center gap-1.5 text-gray-600 text-[11px] font-bold">
-                      <Clock size={14} className="text-gray-400" /> {missedTime}{" "}
-                      (Recommended)
-                    </div>
-                    <ChevronRight
-                      size={14}
-                      className="rotate-90 text-gray-400"
-                    />
-                  </div>
-                </div>
-                <div className="bg-[#e3f2fd] rounded-md p-2 flex items-start gap-1.5">
-                  <Calendar
+                <TimeField
+                  value={missedTime}
+                  onClick={() => openTimePicker("missed", missedTime)}
+                />
+                <div className="bg-[#e4f0fd] rounded-md p-2 flex items-start gap-1.5">
+                  <CalendarDotsIcon
                     size={14}
-                    className="text-[#2196F3] flex-shrink-0 mt-0.5"
+                    className="text-[#1a237e] flex-shrink-0 mt-0.5"
                   />
                   <p className="text-[9.5px] text-[#1a237e] font-medium leading-tight">
                     You will get a reminder <b>{missedDays}</b> after your
@@ -319,12 +365,14 @@ export default function PeriodReminders() {
           )}
         </div>
 
-        <button className="w-full bg-[#e91e63] text-white font-extrabold text-[14px] py-3.5 rounded-full flex items-center justify-center gap-2 active:scale-95 shadow-md mt-2">
-          Save Reminder Settings <ChevronRight size={18} />
+        <button className="w-full bg-[#f0245f] text-white font-extrabold text-[14px] py-3.5 rounded-full flex items-center justify-center gap-2 active:scale-95 shadow-[0_6px_16px_rgba(240,36,95,0.3)] mt-2">
+          Save Reminder Settings <ArrowRight size={18} />
         </button>
 
-        <div className="bg-[#e3f2fd] rounded-lg p-2.5 flex items-start gap-2">
-          <Info size={16} className="text-[#2196F3] flex-shrink-0 mt-0.5" />
+        <div className="bg-[#e4f0fd] rounded-lg p-2.5 flex items-start gap-2">
+          <div className="mt-0.5">
+            <InfoIcon size={18} />
+          </div>
           <p className="text-[9.5px] text-[#1a237e] leading-tight font-medium">
             These reminders are based on the information you record. Predicted
             dates are estimates, not diagnoses. Please consult a doctor if you
@@ -372,7 +420,11 @@ export default function PeriodReminders() {
                     <button
                       key={h}
                       onClick={() => setTempHour(h)}
-                      className={`w-12 h-8 flex items-center justify-center rounded-lg font-bold text-sm snap-center ${tempHour === h ? "bg-pink-100 text-[#e91e63]" : "text-gray-600 hover:bg-gray-50"}`}
+                      className={`w-12 h-8 flex items-center justify-center rounded-lg font-bold text-sm snap-center ${
+                        tempHour === h
+                          ? "bg-[#fde1ea] text-[#f0245f]"
+                          : "text-gray-600 hover:bg-gray-50"
+                      }`}
                     >
                       {h}
                     </button>
@@ -389,7 +441,11 @@ export default function PeriodReminders() {
                     <button
                       key={m}
                       onClick={() => setTempMinute(m)}
-                      className={`w-12 h-8 flex items-center justify-center rounded-lg font-bold text-sm snap-center ${tempMinute === m ? "bg-pink-100 text-[#e91e63]" : "text-gray-600 hover:bg-gray-50"}`}
+                      className={`w-12 h-8 flex items-center justify-center rounded-lg font-bold text-sm snap-center ${
+                        tempMinute === m
+                          ? "bg-[#fde1ea] text-[#f0245f]"
+                          : "text-gray-600 hover:bg-gray-50"
+                      }`}
                     >
                       {m}
                     </button>
@@ -405,7 +461,11 @@ export default function PeriodReminders() {
                     <button
                       key={ap}
                       onClick={() => setTempAmPm(ap)}
-                      className={`w-12 h-8 flex items-center justify-center rounded-lg font-bold text-sm ${tempAmPm === ap ? "bg-pink-100 text-[#e91e63]" : "text-gray-600 hover:bg-gray-50"}`}
+                      className={`w-12 h-8 flex items-center justify-center rounded-lg font-bold text-sm ${
+                        tempAmPm === ap
+                          ? "bg-[#fde1ea] text-[#f0245f]"
+                          : "text-gray-600 hover:bg-gray-50"
+                      }`}
                     >
                       {ap}
                     </button>
@@ -416,7 +476,7 @@ export default function PeriodReminders() {
 
             <button
               onClick={confirmTime}
-              className="w-full bg-[#e91e63] text-white font-bold text-[14px] py-3.5 rounded-xl flex items-center justify-center gap-2 active:scale-95"
+              className="w-full bg-[#f0245f] text-white font-bold text-[14px] py-3.5 rounded-xl flex items-center justify-center gap-2 active:scale-95"
             >
               <Check size={18} /> Confirm Time
             </button>
@@ -427,14 +487,66 @@ export default function PeriodReminders() {
   );
 }
 
+/* ---------- Small reusable pieces ---------- */
+function RadioChip({ active, onClick, label, multiline = false }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg border transition ${
+        active
+          ? "border-[#f0245f] bg-[#fde8f0] text-[#f0245f]"
+          : "border-[#e3e8f4] bg-white text-[#4b5575]"
+      }`}
+    >
+      <div
+        className={`w-3 h-3 rounded-full border flex items-center justify-center mb-1 ${
+          active ? "border-[#f0245f]" : "border-gray-400"
+        }`}
+      >
+        {active && <div className="w-1.5 h-1.5 rounded-full bg-[#f0245f]" />}
+      </div>
+      <span
+        className={`text-[8.5px] font-bold text-center leading-tight ${
+          multiline ? "whitespace-pre-wrap" : "whitespace-nowrap"
+        }`}
+      >
+        {label}
+      </span>
+    </button>
+  );
+}
+
+function TimeField({ value, onClick }) {
+  return (
+    <div>
+      <p className="text-[9.5px] font-bold text-[#1a1f9c] mb-1">
+        Reminder time
+      </p>
+      <div
+        onClick={onClick}
+        className="bg-white border border-[#e3e8f4] rounded-md p-2 flex items-center justify-between cursor-pointer active:bg-gray-50"
+      >
+        <div className="flex items-center gap-1.5 text-[#1a237e] text-[11px] font-bold">
+          <Clock size={14} className="text-[#6b7390]" /> {value} (Recommended)
+        </div>
+        <ChevronDown size={14} className="text-[#6b7390]" />
+      </div>
+    </div>
+  );
+}
+
 function ToggleSwitch({ checked, onChange }) {
   return (
     <button
       onClick={() => onChange(!checked)}
-      className={`w-10 h-5 rounded-full relative transition-colors flex-shrink-0 ${checked ? "bg-[#e91e63]" : "bg-gray-300"}`}
+      className={`w-10 h-5 rounded-full relative transition-colors flex-shrink-0 ${
+        checked ? "bg-[#f0245f]" : "bg-gray-300"
+      }`}
     >
       <div
-        className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform ${checked ? "translate-x-5" : "translate-x-0"}`}
+        className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform ${
+          checked ? "translate-x-5" : "translate-x-0"
+        }`}
       />
     </button>
   );
