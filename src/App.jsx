@@ -15,6 +15,9 @@ import DiabetesAssessment from "./pages/diabetes/DiabetesAssessment";
 import DiabetesResult from "./pages/diabetes/DiabetesResult";
 import DiabetesHealthPlanDetail from "./pages/diabetes/DiabetesHealthPlanDetail";
 
+// Health Packages Module
+import HealthPackageDetail from "./pages/health-packages/HealthPackageDetail";
+
 // Period Tracker Module
 import PeriodLock from "./pages/period-tracker/PeriodLock";
 import PeriodSetup from "./pages/period-tracker/PeriodSetup";
@@ -58,12 +61,15 @@ import CalorieHome from "./pages/calorie-tracker/CalorieHome";
 import NutritionIntake from "./pages/calorie-tracker/NutritionIntake";
 import CalorieBurn from "./pages/calorie-tracker/CalorieBurn";
 import CalorieBalance from "./pages/calorie-tracker/CalorieBalance";
-import CalorieHistory from "./pages/calorie-tracker/CalorieHistory"; // <-- Naya Import
+import CalorieHistory from "./pages/calorie-tracker/CalorieHistory";
 
 // Store Imports
 import Store from "./pages/store/Store";
 import BookingHistory from "./pages/store/BookingHistory";
 import ProductDetail from "./pages/store/ProductDetail";
+import CategoryProducts from "./pages/store/CategoryProducts";
+import Cart from "./pages/store/Cart";
+import SellerInfo from "./pages/store/SellerInfo"; // <-- NEW IMPORT
 
 // Quiz Imports
 import QuizStart from "./pages/quiz/QuizStart";
@@ -90,6 +96,8 @@ export default function App() {
         path="/health-plan/:category/:planType"
         element={<HealthPlanDetail />}
       />
+      {/* Health Packages Routes */}
+      <Route path="/health-packages/:slug" element={<HealthPackageDetail />} />
       {/* Diabetes Routes */}
       <Route path="/diabetes" element={<DiabetesAssessment />} />
       <Route path="/diabetes/result" element={<DiabetesResult />} />
@@ -136,17 +144,20 @@ export default function App() {
       <Route path="/calorie-tracker/intake" element={<NutritionIntake />} />
       <Route path="/calorie-tracker/burn" element={<CalorieBurn />} />
       <Route path="/calorie-tracker/balance" element={<CalorieBalance />} />
-      <Route
-        path="/calorie-tracker/history"
-        element={<CalorieHistory />}
-      />{" "}
-      {/* <-- Naya Route */}
+      <Route path="/calorie-tracker/history" element={<CalorieHistory />} />
       {/* Records Route */}
       <Route path="/records" element={<Records />} />
       {/* Store Routes */}
       <Route path="/store" element={<Store />} />
       <Route path="/store/history" element={<BookingHistory />} />
       <Route path="/store/product/:id" element={<ProductDetail />} />
+      <Route
+        path="/store/category/:categoryKey"
+        element={<CategoryProducts />}
+      />
+      <Route path="/store/cart" element={<Cart />} />
+      <Route path="/store/seller" element={<SellerInfo />} />{" "}
+      {/* <-- NEW ROUTE */}
       {/* Know Your Diseases Routes */}
       <Route path="/diseases" element={<DiseasesList />} />
       <Route path="/diseases/:id" element={<DiseaseDetail />} />
